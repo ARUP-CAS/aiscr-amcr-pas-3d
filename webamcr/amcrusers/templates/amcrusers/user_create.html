@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block content %}
+<script>
+    $('.menu_administration').addClass('active')
+    $('.menu_users').addClass('active')
+</script>
+<!-- page title area start -->
+<div class="page-title-area title-usr mb-3">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{% trans "Administrace" %}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{% trans "Administrace" %}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul-usr">{{MAIN_MENU}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/user/list" class="main-modul-usr">{% trans "Uživatelé" %}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a class="main-modul-usr">{{ context.title }}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main content - create user -->
+<div class="main-content-inner mb-5">
+    <p class="h2 font-weight-light card-heading ml-0">{{ context.title }}</p>
+    <!-- User create form -->
+    <form method="post">
+        <!-- Form row - Image + user details -->
+        <div class="form-row">
+            <!-- First column - User image -->
+            <div class="col-12 col-md-4 col-lg-3">
+                <div class="card">
+                    <div class="card-body pb-0 pb-sm-4">
+                        <!-- Profile image -->
+                        <div class="col-12">
+                            <div class=" profile">
+                                <div class="profile-image mt-5 mb-5">
+                                    <img src="{% static "loga/user.svg" %}"
+                                        class="profile-image-round user-create-image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Second column - User details -->
+            <div class="col-12 col-md-8 col-lg-9">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Form row -->
+                        <div class="form-row">
+                            <!-- First column - user details -->
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <!-- Form error validation -->
+                                {% csrf_token %}
+                                {% if form.errors %}
+                                {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                                <!-- Username input -->
+                                <div class="form-group">
+                                    <label for="manage_username">{{ form.manage_username.label }}</label>
+                                    {% render_field form.manage_username class="form-control form-control-sm" id="manage_username"%}
+                                    <!-- Validation -->
+                                    <div class="invalid-feedback">
+                                        {{ form.manage_username.errors.0 }}
+                                    </div>
+                                </div>
+                                <!-- User Surname input -->
+                                <div class="form-group">
+                                    <label for="manage_surname">{{ form.manage_surname.label }}</label>
+                                    {% render_field form.manage_surname class="form-control form-control-sm" id="manage_surname" %}
+                                    <!-- Validation -->
+                                    <div class="invalid-feedback">
+                                        {{ form.manage_surname.errors.0 }}
+                                    </div>
+                                </div>
+                                <!-- User Email input -->
+                                <div class="form-group">
+                                    <label for="manage_email">{{ form.manage_email.label }}</label>
+                                    {% render_field form.manage_email class="form-control form-control-sm" id="manage_email" %}
+                                    <!-- Validation -->
+                                    <div class="invalid-feedback">
+                                        {{ form.manage_email.errors.0 }}
+                                    </div>
+                                </div>
+                                <!-- User Phone number input -->
+                                <div class="form-group">
+                                    <label for="manage_phone_number">{{ form.manage_phone_number.label }}</label>
+                                    {% render_field form.manage_phone_number class="form-control form-control-sm" id="manage_phone_number"%}
+                                    <!-- Validation -->
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.manage_phone_number.errors.0 }}
+                                    </div>
+                                </div>
+                                <!-- User organization input -->
+                                <div class="form-group">
+                                    <label for="manage_organization">{{ form.manage_organization.label }}</label>
+                                    {% render_field form.manage_organization class="form-control form-control-sm selectpicker" data-size='10' data-dropup-auto="false" id="manage_organization" data-live-search="true" %}
+                                    <!-- Validation -->
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.manage_organization.errors.0 }}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Second column - user details -->
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <!-- User role input -->
+                                <div class="form-group">
+                                    <label for="manage_role">{{ form.manage_role.label }}</label>
+                                    {% render_field form.manage_role class="form-control form-control-sm selectpicker" data-dropup-auto="false" id="manage_role" %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.manage_role.errors.0 }}
+                                    </div>
+                                </div>
+                                <!-- User permissions input - Multiple -->
+                                <div class="form-group">
+                                    <label for="manage_permissions">{{ form.manage_permissions.label }}</label>
+                                    {% render_field form.manage_permissions class="form-control form-control-sm selectpicker" data-dropup-auto="false" multiple="true" id="manage_permissions" data-live-search="true" %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.manage_permissions.errors.0 }}
+                                    </div>
+                                </div>
+                                <!-- User password input -->
+                                <div class="form-group">
+                                    <label for="manage_password">{{ form.manage_password.label }}</label>
+                                    {% render_field form.manage_password class="form-control form-control-sm" id="manage_password" %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.manage_password.errors.0 }}
+                                    </div>
+                                </div>
+                                <!-- User password check input -->
+                                <div class="form-group">
+                                    <label
+                                        for="manage_password_control">{{ form.manage_password_control.label }}</label>
+                                    {% render_field form.manage_password_control class="form-control form-control-sm" id="manage_password_control" %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.manage_password_control.errors.0 }}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Form row - Button controls -->
+        <div class="form-row mt-3">
+            <div class="col-6 col-md-2 col-lg-1">
+                <button class="btn btn-secondary btn-block" onclick="goBack();return false;" return
+                    false;>{% trans "Zpět" %}</button>
+            </div>
+            <div class="col-6 col-md-2 col-lg-1">
+                <input type="submit" class="btn btn-secondary btn-block" value="{% trans "Uložit" %}" id="sub">
+            </div>
+        </div>
+    </form>
+    {% endblock %}
+    {% block script %}
+    <script>
+        //Password match validation
+        bootstrapValidate('#manage_password_control','matches:#manage_password:{% trans "Vámi zadaná hesla se neshodují" %}')
+        //Required fields
+        bootstrapValidate(['#manage_username', '#manage_surname', '#manage_email', '#manage_organization', '#manage_password', '#manage_password_control', '#manage_role'],'required:{% trans "Pole nesmí být prázdné" %}')
+        //Required fields
+        bootstrapValidate('#manage_email','email:{% trans "Hodnota musí být validní email" %}')
+    </script>
+    {% endblock %}

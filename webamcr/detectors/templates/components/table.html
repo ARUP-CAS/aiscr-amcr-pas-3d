@@ -1,0 +1,70 @@
+{% load i18n %}
+<!-- Table component -->
+<table id="detector_table" data-locale="cs-CZ" data-min-width="560" data-toggle="table" data-toolbar="#toolbar" data-pagination="true"
+    data-show-pagination-switch="true" data-pagination-pre-text="Předchozí" data-pagination-next-text="Další" data-search="true"
+    data-show-columns="true" data-show-toggle="true" data-show-export="true" data-page-size="100" data-height="500"
+    data-pagination-loop="false" data-mobile-responsive="true" data-show-jump-to="true" data-buttons-class="amcr btn-xs"
+    class="table table-hover table-borderless table-amcr">
+    <!--Table head-->
+    <thead scope="col" class="col-detectors-head">
+        <tr>
+            <th data-field="detail" data-width="50" data-halign="center" data-align="center">
+                <i class="ti-new-window d-none d-sm-inline"></i>
+                <span class="d-inline d-sm-none">{% trans "Detail nálezu" %}</span>
+            </th>
+            <th data-field="historie" data-width="50" data-halign="center" data-align="center">
+                <i class="ti-timer d-none d-sm-inline"></i>
+                <span class="d-inline d-sm-none">{% trans "Historie nálezu" %}</span>
+            </th>
+            <th data-field="ident_cely" data-sortable="true" data-align="left">{% trans "Nález" %}</th>
+            <th data-field="stav" data-sortable="true" data-align="left">{% trans "Stav" %}</th>
+            <th data-field="okres" class="table-short" data-sortable="true" data-align="left">{% trans "Okres" %}</th>
+            <th data-field="katastr" class="table-short" data-sortable="true" data-align="left">{% trans "Katastr" %}</th>
+            <th data-field="lokalizace" data-sortable="true" data-align="left">{% trans "Lokalizace" %}</th>
+            <th data-field="obdobi" data-sortable="true" data-align="left">{% trans "Období" %}</th>
+            <th data-field="druh_nalezu" data-sortable="true" data-align="left" class="table-short">{% trans "Nález" %}</th>
+            <th data-field="specifikace" data-sortable="true" data-align="left">{% trans "Materiál" %}</th>
+            <th data-field="nalezce" data-sortable="true" data-align="left">{% trans "Nálezce" %}</th>
+            <th data-field="datum_nalezu" data-sortable="true" data-align="left" data-width="100">{% trans "Datum nálezu" %}</th>
+            <th data-field="predano_organizace" data-sortable="true" data-align="left">{% trans "Uložení" %}</th>
+            <th data-field="inv_cislo" data-sortable="true" data-align="left" data-width="140">{% trans "Evidenční číslo" %}</th>
+            <th data-field="predano" data-sortable="true" data-align="left" data-width="90">{% trans "Předáno" %}</th>
+            <th data-field="datum_vlozeni" data-sortable="true" data-align="left">{% trans "Datum zápisu" %}</th>
+            <th data-field="datum_archivace" data-sortable="true" data-align="left">{% trans "Datum Archivace" %}</th>
+
+        </tr>
+    </thead>
+    <!-- Table body -->
+    <tbody>
+        {% for row in table %}
+        <tr>
+            <td>
+                <a class="icon-container" href="{% url 'pas:create' %}{{row.ident_cely}}"  data-toggle="tooltip" data-placement="right" title="{% trans "Detail nálezu" %} {{row.ident_cely}}">
+                    <i class="ti-new-window"></i>
+                </a>
+            </td>
+            <td>
+                <a class="icon-container" href="{% url 'pas:detectors_history' row.ident_cely %}" data-toggle="tooltip" data-placement="left" title="{% trans "Historie nálezu" %} {{row.ident_cely}}">
+                    <i class="ti-timer"></i>
+                </a>
+            </td>
+            <td>{{row.ident_cely}}</td>
+            <td>{{row.stav}}</td>
+            <td>{{row.okres}}</td>
+            <td>{{row.katastr}}</td>
+            <td>{{row.lokalizace}}</td>
+            <td>{{row.obdobi}}</td>
+            <td>{{row.druh_nalezu}}</td>
+            <td>{{row.specifikace}}</td>
+            <td>{{row.nalezce}}</td>
+            <td>{{row.datum_nalezu}}</td>
+            <td>{{row.predano_organizace}}</td>
+            <td>{{row.inv_cislo}}</td>
+            <td>{{row.predano}}</td>
+            <td>{{row.datum_vlozeni}}</td>
+            <td>{{row.datum_archivace}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<!-- Table component END-->

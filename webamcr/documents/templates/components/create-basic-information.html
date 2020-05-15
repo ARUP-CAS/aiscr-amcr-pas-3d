@@ -1,0 +1,116 @@
+{% load widget_tweaks %}
+{% load i18n %}
+<div class="col-12 col-sm-12 col-md-9 col-lg-10">
+    <div class="card create-card">
+        <div class="card-body">
+            <div class="form-row">
+                <!-- First col -->
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                    <!-- Type -->
+                    <div class="form-group">
+                        <label for="typ_dokumentu">{{ formCreate.typ_dokumentu.label }}</label>
+                        {% render_field formCreate.typ_dokumentu class="form-control form-control-sm selectpicker" data-size="10" data-live-search="true" data-dropup-auto="false" id="typ_dokumentu" %}
+                    </div>
+                    <!-- Organisation -->
+                    <div class="form-group">
+                        <label for="organizace_autora">{{ formCreate.organizace_autora.label }}</label>
+                        {% render_field formCreate.organizace_autora class="form-control form-control-sm selectpicker" data-size="10" data-live-search="true" data-dropup-auto="false" id="organizace_autora"%}
+                    </div>
+                    <!-- Marking of original -->
+                    <div class="form-group">
+                        <label for="oznaceni_originalu">{{ formCreate.oznaceni_originalu.label }}</label>
+                        {% render_field formCreate.oznaceni_originalu class="form-control form-control-sm selectpicker" data-size="10" data-live-search="true" data-dropup-auto="false" id="oznaceni_originalu"  %}
+                    </div>
+                </div>
+                <!-- Second Col -->
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                    <!-- Format -->
+                    <div class="form-group">
+                        <label for="format">{{ formCreate.format.label }}</label>
+                        {% render_field formCreate.format class="form-control form-control-sm selectpicker" data-size="10" data-live-search="true" data-dropup-auto="false" id="format"  %}
+                    </div>
+                    <!-- sub-row -->
+                    <div class="form-row">
+                        <!-- First sub-column -->
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <!-- Year of creation -->
+                            <div class="form-group">
+                                <label for="rok_vzniku">{{ formCreate.rok_vzniku.label }}</label>
+                                <div class="input-group date">
+                                    {% render_field formCreate.rok_vzniku class="form-control form-control-sm" data-provide="datepicker" id="rok_vzniku" %}
+                                    <div class="input-group-append">
+                                        <span class="input-group-text input-group-3d" id="basic-addon1">
+                                            <i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Second sub-column -->
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                            <!-- Credibility -->
+                            <div class="form-group" style="margin-bottom: 0px;">
+                                <label for="duveryhodnost" class="range-label"
+                                    style="margin-bottom: 0px;">{{ formCreate.duveryhodnost.label }}</label>
+                                <div class="slider-wrapper">
+                                    <div class="range-slider">
+                                        {% render_field formCreate.duveryhodnost class="form-control form-control-sm js-range-slider" name="my_range" value="" id="duveryhodnost" %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Full width row Description & Note -->
+            <div class="form-row">
+                <div class="col-12">
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="popis">{{ formCreate.popis.label }}</label>
+                        {% render_field formCreate.popis class="form-control form-control-sm" rows="2"  id="popis" %}
+                    </div>
+                    <!-- Note -->
+                    <div class="form-group">
+                        <label for="poznamka">{{ formCreate.poznamka.label }}</label>
+                        {% render_field formCreate.poznamka class="form-control form-control-sm" rows="2" id="poznamka" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Side buttons  -->
+<div class="col-12 col-sm-12 col-md-3 col-lg-2">
+    <div class="card create-card">
+        <div class="card-body">
+            <div>
+                <button id="saveFormButtonId" class="btn btn-amcr-3d btn-block" name="button_save"
+                    disabled="true">{% if context.showDetails %}{% trans "Uložit změny" %}{% else %}{% trans "Zapsat" %}{% endif %}</button>
+            </div>
+            {% if context.showDetails %}
+            <div class="mt-2">
+                <button type="button" id="send_to_confirm_button" onclick="checkPhotoAndAuthor()"
+                    class="btn btn-amcr-3d btn-block checkchanges" data-toggle="modal" data-target=""
+                    {% if not context.canSend %}disabled="true" {% endif %}>{% trans "Odeslat" %}</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% block script %}
+<script>
+    // -------- Checks --------
+    function checkPhotoAndAuthor() {
+        var conf_button = $('#send_to_confirm_button')
+        var $table = $("#file_table")
+        var data_length = $table.bootstrapTable('getData').length
+        var authors_length = $("#authors").length
+
+        if (data_length == 0 || authors_length == 0 ) {
+            conf_button.attr('data-target', '#check_required_fields')
+        } else {
+            conf_button.attr('data-target', '#send_model_to_confirm')
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block content %}
+<script>
+    $('.menu_detectors').addClass('active')
+    $('.menu_choose_det').addClass('active')
+</script>
+<!-- Title & breadcrumbs START -->
+<div class="page-title-area title-det mb-4">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{MODUL_DETECTOR}}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{{MODUL_DETECTOR}}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul-det">{{MAIN_MENU}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/pas/" class="main-modul-det">{{MODUL_DETECTOR}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/pas/choose/" class="main-modul-det">{{CHOOSE_ENTRY}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Choose main content -->
+<div class="main-content-inner ml-2 mr-2 mb-4">
+    <form method="post" id="chooseForm">
+        {% csrf_token %}
+        <div class="form-row">
+            <!-- Form column -->
+            <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- First inner col -->
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                <!--Project ID input-->
+                                <div class="form-group">
+                                    <label for="detector_project_id">{{ formChoose.detector_project_id.label }}</label>
+                                    {% render_field formChoose.detector_project_id class="form-control form-control-sm selectpicker" min="1" id="detector_project_id"  %}
+                                </div>
+                                <!--Finding ID input-->
+                                <div class="form-group">
+                                    <label for="detector_finding_id">{{ formChoose.detector_finding_id.label }}</label>
+                                    {% render_field formChoose.detector_finding_id class="form-control form-control-sm selectpicker" id="detector_finding_id"%}
+                                </div>
+                                <!--Process state input-->
+                                <div class="form-group">
+                                    <label
+                                        for="detector_process_state">{{ formChoose.detector_process_state.label }}</label>
+                                    {% render_field formChoose.detector_process_state class="form-control form-control-sm selectpicker" id="detector_process_state"%}
+                                </div>
+                                <!--District input-->
+                                <div class="form-group">
+                                    <label for="detector_district"> {{ formChoose.detector_district.label }}</label>
+                                    {% render_field formChoose.detector_district class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_district" %}
+                                </div>
+                                <!-- Cadastry -->
+                                <div class="form-group">
+                                    <label for="detector_cadastry">{{ formChoose.detector_cadastry.label }}</label>
+                                    {% render_field formChoose.detector_cadastry class="form-control form-control-sm selectpicker selectpicker" id="detector_cadastry" data-size='10' data-live-search="true" %}
+                                </div>
+                                <!--Region input-->
+                                <!--<div class="form-group">
+                                    <label for="detector_region"> {{ formChoose.detector_region.label }}</label>
+                                    {% render_field formChoose.detector_region class="form-control form-control-sm selectpicker" disabled="true" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_region"%}
+                                </div> -->
+                                <!--Finder input-->
+                                <div class="form-group">
+                                    <label for="detector_finder">
+                                        {{ formChoose.detector_finder.label }}</label>
+                                    {% render_field formChoose.detector_finder class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_finder" %}
+                                </div>
+                                <!--Date input - DATE OF CHANGE-->
+                                <!--<div class="row forms_year_row">
+                                    <div class="col-6 form-date-from">
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_date_of_change_from">{{ formChoose.detector_date_of_change_from.label }}</label>
+                                            <div class='input-group date'>
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text input-group-detector"
+                                                        id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                                {% render_field formChoose.detector_date_of_change_from class="form-control form-control-sm" data-provide="datepicker" disabled="true" id="detector_date_of_change_from" placeholder=".../.../..../" %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 form-date-to">
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_date_of_change_to">{{ formChoose.detector_date_of_change_to.label }}</label>
+                                            <div class='input-group date'>
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text input-group-detector"
+                                                        id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                                {% render_field formChoose.detector_date_of_change_to class="form-control form-control-sm" data-provide="datepicker" disabled="true" id="detector_date_of_change_to" placeholder=".../.../..../" %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <!--Date input - FIND DATE -->
+                                <div class="row forms_year_row">
+                                    <div class="col-6 form-date-from">
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_find_date_from">{{ formChoose.detector_find_date_from.label }}</label>
+                                            <div class="input-group date">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text input-group-detector"
+                                                        id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                                {% render_field formChoose.detector_find_date_from class="form-control form-control-sm" data-provide="datepicker" id="detector_find_date_from" placeholder=".../.../..../" %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 form-date-to">
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_find_date_to">{{ formChoose.detector_find_date_to.label }}</label>
+                                            <div class="input-group date">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text input-group-detector"
+                                                        id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                                {% render_field formChoose.detector_find_date_to class="form-control form-control-sm" data-provide="datepicker" id="detector_find_date_to" placeholder=".../.../..../" %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Detector accessibility input-->
+                                <div class="form-group">
+                                    <label for="detector_accessibility">
+                                        {{ formChoose.detector_accessibility.label }}</label>
+                                    {% render_field formChoose.detector_accessibility class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" id="detector_accessibility" %}
+                                </div>
+                            </div>
+                            <!-- Second inner col -->
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                <!--User input-->
+                                <!--<div class="form-group">
+                                    <label for="detector_user">
+                                        {{ formChoose.detector_user.label }}</label>
+                                    {% render_field formChoose.detector_user class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" disable="true" id="detector_user" %}
+                                </div> -->
+                                <!--Description details input-->
+                                <!--<div class="form-group">
+                                    <label for="detector_description_details">
+                                        {{ formChoose.detector_description_details.label }}</label>
+                                    {% render_field formChoose.detector_description_details class="form-control form-control-sm" disabled="true" id="detector_description_details" %}
+                                </div> -->
+                                <!--Detector dating input-->
+                                <div class="form-group">
+                                    <label for="detector_dating">
+                                        {{ formChoose.detector_dating.label }}</label>
+                                    {% render_field formChoose.detector_dating class="form-control form-control-sm selectpicker droplevel" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_dating" %}
+                                </div>
+                                <!--Detector kind input-->
+                                <div class="form-group">
+                                    <label for="detector_kind">
+                                        {{ formChoose.detector_kind.label }}</label>
+                                    {% render_field formChoose.detector_kind class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true"  id="detector_kind" %}
+                                </div>
+                                <!--Detector material input-->
+                                <div class="form-group">
+                                    <label for="detector_material">
+                                        {{ formChoose.detector_material.label }}</label>
+                                    {% render_field formChoose.detector_material class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_material" %}
+                                </div>
+                                <!--Detector organisation input-->
+                                <div class="form-group">
+                                    <label for="detector_organisation">
+                                        {{ formChoose.detector_organisation.label }}</label>
+                                    {% render_field formChoose.detector_organisation class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_organisation" %}
+                                </div>
+                                <!-- Detector project leader input-->
+                                <div class="form-group">
+                                    <label for="detector_project_leader">
+                                        {{ formChoose.detector_project_leader.label }}</label>
+                                    {% render_field formChoose.detector_project_leader class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_project_leader" %}
+                                </div>
+                                <!-- Detector evidence number input-->
+                                <div class="form-group">
+                                    <label for="detector_evidence_number">
+                                        {{ formChoose.detector_evidence_number.label }}</label>
+                                    {% render_field formChoose.detector_evidence_number class="form-control form-control-sm" id="detector_evidence_number" %}
+                                </div>
+                                <!-- Detector find passed input-->
+                                <div class="form-group">
+                                    <label for="detector_find_passed">
+                                        {{ formChoose.detector_find_passed.label }}</label>
+                                    {% render_field formChoose.detector_find_passed class="form-control form-control-sm selectpicker" id="detector_find_passed" %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Button column -->
+            <div class="col-12 col-md-2 col-lg-2 mt-2 mt-sm-2 mt-md-0">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Choose button -->
+                            <div class="col-6 col-md-12">
+                                <button class="btn btn-amcr btn-block">{% trans "Vybrat" %}</button>
+                            </div>
+                            <div class="col mt-0 separator d-none d-md-block">
+                                <hr>
+                            </div>
+                            <!-- Reset button -->
+                            <div class="col-6 col-md-12">
+                                <button type="button" class="btn btn-amcr btn-block" onclick="Reset()">{% trans "Vyčistit" %}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- Choose main END -->
+    {% endblock %}
+
+    {% block script %}
+    <script>
+        $(document).ready(function () {
+            /* DATE PICKER FOR FIND DATE*/
+            const findFrom = $('#detector_find_date_from')
+            const findTo = $('#detector_find_date_to')
+            const fromFindDate = findFrom.val();
+            const toFindDate = findFrom.val();
+
+            //Function that sets the options for both datepickers
+            $(function () {
+                $('#detector_find_date_from, #detector_find_date_to').datepicker({
+                    format: 'dd/mm/yyyy',
+                    todayBtn: true,
+                    todayBtn: "linked",
+                    language: 'cs',
+                    autoclose: true,
+                    todayHighlight: true,
+                    endDate: toFindDate,
+                    startDate: fromFindDate,
+                    weekStart: 1
+                });
+            })
+            //Two functions that helps with validation
+            findFrom.on("changeDate", function (e) {
+                findTo.datepicker('setStartDate', e.date);
+            });
+            findTo.on("changeDate", function (e) {
+                findFrom.datepicker('setEndDate', e.date);
+            });
+
+            /*DATE PICKER FOR CHANGE DATE*/
+            const changeFrom = $('#detector_date_of_change_from')
+            const changeTo = $('#detector_date_of_change_to')
+            const fromChangeDate = changeFrom.val();
+            const toChangeDate = changeFrom.val();
+
+            //Function that sets the options for both datepickers
+            $(function () {
+                $('#detector_date_of_change_from, #detector_date_of_change_to').datepicker({
+                    format: 'dd/mm/yyyy',
+                    todayBtn: true,
+                    todayBtn: "linked",
+                    language: 'cs',
+                    autoclose: true,
+                    todayHighlight: true,
+                    endDate: toChangeDate,
+                    startDate: fromChangeDate,
+                    weekStart: 1
+                });
+            })
+            //Two functions that helps with validation
+            changeFrom.on("changeDate", function (e) {
+                changeTo.datepicker('setStartDate', e.date);
+            });
+            changeTo.on("changeDate", function (e) {
+                changeFrom.datepicker('setEndDate', e.date);
+            });
+
+            //If statement for both dropdowns
+            //Disabling Cadastry if district is selected
+            $('#detector_district').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                $('#detector_cadastry').selectpicker('refresh');
+                if (clickedIndex > 0) {
+                    $('#detector_cadastry').prop('disabled', true);
+                    $('#detector_cadastry').selectpicker('refresh');
+                }
+                else {
+                    $('#detector_cadastry').prop('disabled', false);
+                    $('#detector_cadastry').selectpicker('refresh');
+                }
+            });
+
+            //Disabling district if cadastry is selected
+            $('#detector_cadastry').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                $('#detector_district').selectpicker('refresh');
+                if (clickedIndex > 0) {
+                    $('#detector_district').prop('disabled', true);
+                    $('#detector_district').selectpicker('refresh');
+                }
+                else {
+                    $('#detector_district').prop('disabled', false);
+                    $('#detector_district').selectpicker('refresh');
+                }
+            });
+        });
+        //Reset form function
+        function Reset() {
+            //Clearing all selectpickers -default value
+            $(".selectpicker").val('default');
+            $(".selectpicker").selectpicker("refresh");
+            //Clearing disabled selectpickers manually
+            $('#detector_district').prop('disabled', false);
+            $('#detector_district').selectpicker('refresh');
+            $('#detector_cadastry').prop('disabled', false);
+            $('#detector_cadastry').selectpicker('refresh');
+            //Clearing form
+            document.getElementById("chooseForm").reset();
+            return false;
+        }
+    </script>
+    {% endblock %}

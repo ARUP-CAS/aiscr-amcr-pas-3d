@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static "/css/ion.rangeSlider.min.css" %}">
+<script src="{% static "/js/ion.rangeSlider.min.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+<script>
+    $('.menu_library').addClass('active')
+    $('.menu_choose_3d').addClass('active')
+</script>
+<div class="page-title-area title-doc mb-3">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{LIBRARY_3D}}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{{LIBRARY_3D}}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul-doc">{{MAIN_MENU}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/documents" class="main-modul-doc">{{LIBRARY_3D}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/documents/choose" class="main-modul-doc">{{CHOOSE_ENTRY}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-content-inner mr-2 ml-2">
+    <form method="post" id="chooseForm">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="col-12 col-md-10">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- First col -->
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                <!--ID Model-->
+                                <div class="form-group">
+                                    <label for="ident_cely">{{ formChoose.ident_cely.label }}</label>
+                                    {% render_field formChoose.ident_cely class="form-control form-control-sm" min="1" id="ident_cely" %}
+                                </div>
+                                <!--Author input-->
+                                <div class="form-group">
+                                    <label for="autori">{{ formChoose.autori.label }}</label>
+                                    {% render_field formChoose.autori class="form-control form-control-sm selectpicker" id="autori"  data-dropup-auto="false" data-live-search="true" %}
+                                </div>
+                                <!--Date created input-->
+                                <div class="form-group">
+                                    <label for="rok_vzniku">{{ formChoose.rok_vzniku.label }}</label>
+                                    {% render_field formChoose.rok_vzniku class="form-control form-control-sm selectpicker" id="rok_vzniku" %}
+                                </div>
+                                <!--Organization input-->
+                                <div class="form-group">
+                                    <label for="organizace">{{ formChoose.organizace.label }}</label>
+                                    {% render_field formChoose.organizace class="form-control form-control-sm selectpicker" data-dropup-auto="false" data-live-search="true" id="organizace"%}
+                                </div>
+                                <!-- Model Type input -->
+                                <div class="form-group">
+                                    <label for="typ_dokumentu">
+                                        {{ formChoose.typ_dokumentu.label }}</label>
+                                    {% render_field formChoose.typ_dokumentu class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" id="typ_dokumentu"  data-live-search="true" %}
+                                </div>
+                                <!-- Description input -->
+                                <div class="form-group">
+                                    <label for="popis"> {{ formChoose.popis.label }}</label>
+                                    {% render_field formChoose.popis class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="popis" %}
+                                </div>
+                            </div>
+                            <!-- Second col -->
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                <!--Credibility type input-->
+                                <div class="form-group" style="margin-bottom: 0px;">
+                                    <label for="duveryhodnost" class="range-label"
+                                        style="margin-bottom: 0px;">{{ formChoose.duveryhodnost.label }}</label>
+                                    <div class="slider-wrapper">
+                                        <div class="range-slider">
+                                            {% render_field formChoose.duveryhodnost class="form-control form-control-sm js-range-slider" name="my_range" value="" id="duveryhodnost"%}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--process states input-->
+                                <div class="form-group">
+                                    <label for="procesni_stavy">{{ formChoose.procesni_stavy.label }}</label>
+                                    {% render_field formChoose.procesni_stavy class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" id="procesni_stavy" %}
+                                </div>
+                                <!-- Changes input-->
+                                <div class="form-group">
+                                    <label for="zmeny">{{ formChoose.zmeny.label }}</label>
+                                    {% render_field formChoose.zmeny class="form-control form-control-sm selectpicker" id="zmeny" %}
+                                </div>
+                                <!-- Changes date input-->
+                                <div class="row forms_year_row">
+                                    <div class="col-6 form-date-from">
+                                        <div class="form-group">
+                                            <label for="zmena_od">{{ formChoose.zmena_od.label }}</label>
+                                            <div class="input-group date">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text input-group-3d" id="basic-addon1"><i
+                                                            class="fa fa-calendar"></i></span>
+                                                </div>
+                                                {% render_field formChoose.zmena_od class="form-control form-control-sm" data-provide="datepicker" id="zmena_od" placeholder=".../.../..../" %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 form-date-to">
+                                        <div class="form-group">
+                                            <label for="zmena_do">{{ formChoose.zmena_do.label }}</label>
+                                            <div class="input-group date">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text input-group-3d" id="basic-addon1"><i
+                                                            class="fa fa-calendar"></i></span>
+                                                </div>
+                                                {% render_field formChoose.zmena_do class="form-control form-control-sm" data-provide="datepicker" id="zmena_do" placeholder=".../.../..../" %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- user input-->
+                                <div class="form-group">
+                                    <label for="zmena_uzivatel">{{ formChoose.zmena_uzivatel.label }}</label>
+                                    {% render_field formChoose.zmena_uzivatel class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="zmena_uzivatel" %}
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="seperator mt-3 mb-3">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <!--Period input-->
+                                <div class="form-group">
+                                    <label for="obdobi">{{ formChoose.obdobi.label }}</label>
+                                    {% render_field formChoose.obdobi class="form-control form-control-sm selectpicker" data-live-search="true" min="1" data-size="10" data-dropup-auto="false" id="obdobi" %}
+                                </div>
+                                <!--Activity input-->
+                                <div class="form-group">
+                                    <label for="aktivity">{{ formChoose.aktivity.label }}</label>
+                                    {% render_field formChoose.aktivity class="form-control form-control-sm selectpicker" data-dropup-auto="false" id="aktivity" %}
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <!--Areal input-->
+                                <div class="form-group">
+                                    <label for="areal">{{ formChoose.areal.label }}</label>
+                                    {% render_field formChoose.areal class="form-control form-control-sm selectpicker" min="1" data-size="10" data-dropup-auto="false" id="areal" %}
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mt-3 mb-3">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <!--Type of subject input-->
+                                <div class="form-group">
+                                    <label for="druh_predmetu">{{ formChoose.druh_predmetu.label }}</label>
+                                    {% render_field formChoose.druh_predmetu class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" id="druh_predmetu" %}
+                                </div>
+                                <!--Specification of subject input-->
+                                <div class="form-group">
+                                    <label
+                                        for="specifikace_predmetu">{{ formChoose.specifikace_predmetu.label }}</label>
+                                    {% render_field formChoose.specifikace_predmetu id="specifikace_predmetu" class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true"%}
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <!--Type of object input-->
+                                <div class="form-group">
+                                    <label for="druh_objektu">{{ formChoose.druh_objektu.label }}</label>
+                                    {% render_field formChoose.druh_objektu class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" id="druh_objektu" %}
+                                </div>
+                                <!--Specification of object input-->
+                                <div class="form-group">
+                                    <label for="specifikace_objektu">{{ formChoose.specifikace_objektu.label }}</label>
+                                    {% render_field formChoose.specifikace_objektu id="specifikace_objektu" class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true"%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-2 mt-2 mt-sm-2 mt-md-0">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Choose button -->
+                            <div class="col-6 col-md-12">
+                                <button class="btn btn-amcr-3d btn-block"  href="javascript:void(0)">{% trans "Vybrat" %}</button>
+                            </div>
+                            <div class="col mt-0 separator d-none d-md-block">
+                                <hr>
+                            </div>
+                            <!-- Reset button -->
+                            <div class="col-6 col-md-12">
+                                <button type="button" class="btn btn-amcr-3d btn-block" onclick="Reset()">{% trans "Vyčistit" %}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block script %}
+<script>
+        function formClear() {
+            document.getElementById("chooseForm").reset();
+            $(".selectpicker").val('----').selectpicker("refresh");
+        }
+
+        //Range slider
+        $(".js-range-slider").ionRangeSlider({
+            skin: "flat",
+            min: 0,
+            max: 100,
+            hide_min_max: "true",
+            postfix: "%",
+            grid: "false"
+        });
+
+        //Reset form function
+        function Reset() {
+            //Clearing all selectpickers -default value
+            $(".selectpicker").val("default");
+            $(".selectpicker").selectpicker("refresh");
+            //Clearing form
+            document.getElementById("chooseForm").reset();
+            $(".js-range-slider").data("ionRangeSlider").reset();
+            return false;
+        }
+
+        //Declaring Variables for elements(ids)
+        const fromDateInput = $('#zmena_od')
+        const toDateInput = $('#zmena_do')
+        const fromDate = fromDateInput.val();
+        const toDate = fromDateInput.val();
+
+        //Function that sets the options for both datepickers
+        $(function () {
+            $('#zmena_od, #zmena_do').datepicker({
+                format: 'dd/mm/yyyy',
+                todayBtn: true,
+                todayBtn: "linked",
+                language: 'cs',
+                autoclose: true,
+                todayHighlight: true,
+                endDate: toDate,
+                startDate: fromDate,
+                weekStart: 1
+            });
+        })
+        //Two functions that helps with validation
+        fromDateInput.on("changeDate", function (e) {
+            toDateInput.datepicker('setStartDate', e.date);
+        });
+        toDateInput.on("changeDate", function (e) {
+            fromDateInput.datepicker('setEndDate', e.date);
+        });
+</script>
+{% endblock %}

@@ -1,0 +1,13 @@
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+media
+.vscode/
+logging/webamcr.log
+env
+venv
+.scannerwork

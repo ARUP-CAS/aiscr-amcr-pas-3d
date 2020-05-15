@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block content %}
+<script>
+    $('.menu_library').addClass('active')
+    $('.menu_create_3d').addClass('active')
+</script>
+<!-- page title area start -->
+<div class="page-title-area title-doc mb-3">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{LIBRARY_3D}}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{{LIBRARY_3D}}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul-doc">{{MAIN_MENU}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/documents" class="main-modul-doc">{{LIBRARY_3D}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/documents/create" class="main-modul-doc">{{CREATE_ENTRY}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="{% url 'documents:detail' ident_cely %}" class="main-modul-doc">{{ident_cely}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left">
+                    <li class="main-modul-doc">{% trans "Autoři" %}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-content-inner mb-5">
+    <div class="form-row">
+        <div class="col-12 col-sm-12 col-md-11 col-lg-10 col-xl-6">
+            <p class="h2 font-weight-light card-heading ml-0">{% trans "Autoři dokumentu" %} {{ident_cely}}</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card create-card m-0">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group" id="autor1div">
+                                    <label for="author1">{{ editAuthorForm.author1.label }}</label>
+                                    {% render_field editAuthorForm.author1 id="author1" class="form-control form-control-sm selectpicker prvni" data-dropup-auto="false" data-live-search="true"%}
+                                </div>
+                                <div class="form-group" id="autor2div">
+                                    <label for="author2">{{ editAuthorForm.author2.label }}</label>
+                                    {% render_field editAuthorForm.author2 id="author2" class="form-control form-control-sm selectpicker druhy" data-dropup-auto="false" data-live-search="true"%}
+                                </div>
+                                <div class="form-group" id="autor3div">
+                                    <label for="author3">{{ editAuthorForm.author3.label }}</label>
+                                    {% render_field editAuthorForm.author3 id="author3" class="form-control form-control-sm selectpicker treti" data-dropup-auto="false" data-live-search="true"%}
+                                </div>
+                                <div class="form-group" id="autor4div">
+                                    <label for="author4">{{ editAuthorForm.author4.label }}</label>
+                                    {% render_field editAuthorForm.author4 id="author4" class="form-control form-control-sm selectpicker ctvrty" data-dropup-auto="false" data-live-search="true"%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0 ">
+                        <a class="btn btn-amcr-3d btn-block" href="{% url 'documents:detail' ident_cely %}">{% trans "Zpět" %}</a>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-2 mt-md-0 ">
+                        <button type="button" class="btn btn-amcr-3d btn-block" data-toggle="modal"
+                            data-target="#new_author">{% trans "Nové jméno" %}</a>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0 ">
+                        <button type="submit" class="btn btn-amcr-3d btn-block">{% trans "Uložit" %}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Add new author MODAL -->
+    <div class="modal fade" id="new_author" tabindex="-1" role="dialog" aria-labelledby="new_authorTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="new_authorTitle">{% trans "Přidání nového autora" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="{% url 'documents:create_name' %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="jmeno">{{ addNameForm.jmeno.label }}</label>
+                                    {% render_field addNameForm.jmeno class="form-control form-control-sm" id="jmeno"   %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="prijmeni">{{ addNameForm.prijmeni.label }}</label>
+                                    {% render_field addNameForm.prijmeni class="form-control form-control-sm" id="prijmeni"  %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary display-block"
+                            data-dismiss="modal">{% trans "Zrušit" %}</button>
+                        <button type="submit" class="btn btn-amcr-3d display-block">{% trans "Přidat Autora" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+{% block script %}
+
+<script>
+    $(document).ready(function () {
+        $('.druhy').on('loaded.bs.select', function (e) {
+            if(this.value == ''){
+                $('#autor2div').hide()
+            }
+        });
+        $('.treti').on('loaded.bs.select', function (e) {
+            if(this.value == ''){
+                $('#autor3div').hide()
+            }
+        });
+        $('.ctvrty').on('loaded.bs.select', function (e) {
+            if(this.value == ''){
+                $('#autor4div').hide()
+            }
+        });
+
+        // Changes in selectpickers
+        $('.selectpicker').on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+            if(this.id=='author1'){
+                if(clickedIndex == 0){
+                    $('#autor2div, #autor3div, #autor4div').hide();
+                    $('.druhy, .treti, .ctvrty').val('default');
+                } else {
+                    $('#autor2div').show()
+                }
+            } else if(this.id=='author2'){
+                if(clickedIndex == 0){
+                    $('#autor3div, #autor4div').hide();
+                    $('.treti, .ctvrty').val('default');
+                } else {
+                    $('#autor3div').show()
+                }
+            } else if(this.id=='author3'){
+                if(clickedIndex == 0){
+                    $('#autor4div').hide();
+                    $('.ctvrty').val('default');
+                } else {
+                    $('#autor4div').show()
+                }
+            } else {
+                console.log("Unknown field id.")
+            }
+            $('.selectpicker').selectpicker('render');
+            $('.selectpicker').selectpicker('refresh');
+        });
+    });
+</script>
+
+{% endblock %}

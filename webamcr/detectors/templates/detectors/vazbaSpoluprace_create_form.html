@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block content %}
+<script>
+    $('.menu_detectors').addClass('active')
+    $('.menu_cooperate_det').addClass('active')
+</script>
+<!-- page title area start -->
+<div class="page-title-area title-det mb-4">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{MODUL_DETECTOR}}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{{MODUL_DETECTOR}}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul-det">{{MAIN_MENU}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/pas/" class="main-modul-det">{{MODUL_DETECTOR}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/pas/cooperate/" class="main-modul-det">{{COOP_DETECTOR}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a class="main-modul-det">Nová žádost o spolupráci</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-content-inner mb-5">
+    <div class="form-row">
+    <div class="col-12 col-sm-12 col-md-11 col-lg-10 col-xl-6">
+        <p class="h2 font-weight-light card-heading ml-0">{% trans "Žádost o spolupráci" %}</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="card create-card m-0">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            {% for err in context.errors %}
+                            <font color="red">{{err.1}}</font>
+                            {% endfor %}
+                            <div class="form-group">
+                                <label for="archeolog">{{ newCooperationForm.archeolog.label }}</label>
+                                {% render_field newCooperationForm.archeolog class="form-control form-control-sm selectpicker" id="archeolog" data-live-search="true" placeholder="Zadejte email archeologa pro spolupráci" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0 ">
+                    <a class="btn btn-amcr btn-block" href="{% url 'pas:cooperate' %}">{% trans "Zpět" %}</a>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0 ">
+                <button type="submit" class="btn btn-amcr btn-block">{% trans "Zažádat" %}</button>
+            </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

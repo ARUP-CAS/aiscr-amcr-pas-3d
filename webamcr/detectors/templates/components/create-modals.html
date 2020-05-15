@@ -1,0 +1,185 @@
+{% load i18n %}
+{% load widget_tweaks %}
+<!-- MODAL SMAZAT DETEKTOR -->
+<div class="modal fade" id="delete_detector" tabindex="-1" role="dialog" aria-labelledby="deleteDetectorTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteDetectorTitle">{% trans "Vymazání samostatného nálezu" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Opravdu chcete tento samostatný nález vymazat?" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-amcr btn-block" data-dismiss="modal">Ne</button>
+                <button class="btn btn-amcr btn-block" name="button_delete">Ano</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF MODAL SMAZAT DETEKTOR-->
+
+<!-- MODAL KE SCHVÁLENÍ DETEKTOR -->
+<div class="modal fade" id="send_to_confirm" tabindex="-1" role="dialog" aria-labelledby="sendToConfirmTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendToConfirmTitle">{% trans "Odeslat" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Opravdu chcete tento samostatný nález odeslat ke schválení?" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-amcr btn-block" data-dismiss="modal">{% trans "Ne" %}</button>
+                <button class="btn btn-amcr btn-block" name="button_send_to_confirm">{% trans "Ano" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF MODAL KE SCVHÁLENÍ DETEKTOR-->
+
+<!-- MODAL DOPLN FOTO -->
+<div class="modal fade" id="add_photo_first" tabindex="-1" role="dialog" aria-labelledby="addPhotoFirstTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPhotoFirstTitle">{% trans "Zkontroluje prosím vyplnění povinných údajů" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Nález musí mít alespoň jednu fotografii a polohu vyznačenou v mapě" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-amcr btn-block" data-dismiss="modal" name="add_photo_ok">{% trans "OK" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF MODAL DOPLN FOTO-->
+
+
+<!-- MODAL POTVRD PREDANI  -->
+<div class="modal fade" id="confirm_find_passed" tabindex="-1" role="dialog" aria-labelledby="confirmFindPassedTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmFindPassedTitle">{% trans "Potvrďte že jste nález obdržel" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Potvrďte, že jste nález fyzicky obdržel a bylo mu přiděleno evidenční číslo" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-amcr btn-block" data-dismiss="modal" name="confirm_find_passed_ok">{% trans "OK" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF POTVRD PREDANI -->
+
+<!-- MODAL VRÁTIT DETEKTOR -->
+<div class="modal fade" id="return_detector" tabindex="-1" role="dialog" aria-labelledby="returnDetectorTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="returnDetectorTittle">{% trans "Vrácení samostatného nálezu" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Opravdu chcete tento samostatný nález vrátit?" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-amcr btn-block" data-dismiss="modal">{% trans "Ne" %}</button>
+                <button class="btn btn-amcr btn-block" name="button_back_1">{% trans "Ano" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF MODAL VRÁTIT DETEKTOR-->
+
+<!-- MODAL ARCHIVOVAT DETEKTOR -->
+<div class="modal fade" id="archive_detector" tabindex="-1" role="dialog" aria-labelledby="archiveDetectorTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="archiveDetectorTitle">{% trans "Archivace samostatného nálezu" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Opravdu chcete tento samostatný nález archivovat?" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-amcr btn-block" data-dismiss="modal">{% trans "Ne" %}</button>
+                <button class="btn btn-amcr btn-block" name="button_archive">{% trans "Ano" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF MODAL ARCHIVOVAT DETEKTOR-->
+
+<!-- MODAL ZAHAJIT EDITACI DETEKTOR -->
+<div class="modal fade" id="force_edit_detector" tabindex="-1" role="dialog" aria-labelledby="forceEditDetectorTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forceEditDetectorTitle">{% trans "Zahájení editace samostatného nálezu" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Opravdu chcete zahájit editaci tohoto samostatného nálezu?" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-amcr btn-block" data-dismiss="modal">{% trans "Ne" %}</button>
+                <button class="btn btn-amcr btn-block" name="button_force_edit">{% trans "Ano" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF ZAHAJIT EDITACI DETEKTOR-->
+
+<!-- MODAL POTVRDIT DETEKTOR -->
+<div class="modal fade" id="send_to_approve" tabindex="-1" role="dialog" aria-labelledby="confirmDetectorTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDetectorTitle">{% trans "Potvrzení samostatného nálezu" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Opravdu chcete tento samostatný nález Potvrdit?" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-amcr btn-block" data-dismiss="modal">{% trans "Ne" %}</button>
+                <button class="btn btn-amcr btn-block" name="button_confirm">{% trans "Ano" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF MODAL POTVRDIT DETEKTOR-->
+

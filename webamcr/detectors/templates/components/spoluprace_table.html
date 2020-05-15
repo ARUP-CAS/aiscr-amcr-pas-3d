@@ -1,0 +1,91 @@
+{% load i18n %}
+<!--Table-->
+<table id="coop_table" data-locale="cs-CZ" data-min-width="560" data-toggle="table" data-toolbar="#toolbar" data-pagination="true"
+    data-pagination-pre-text="Předchozí" data-pagination-next-text="Další" data-show-columns="true" data-search="true"
+    data-show-toggle="true" data-mobile-responsive="true"  data-buttons-class="amcr btn-xs"
+    class="table table-hover table-borderless">
+    <!--Table head-->
+    <thead scope="col" class="col-detectors-head">
+        <tr>
+            <th data-field="detail" data-width="50" data-halign="center" data-align="center">
+                <i class="ti-new-window d-none d-sm-inline"></i>
+                <span class="d-inline d-sm-none">{% trans "Detail spolupráce" %}</span>
+            </th>
+            <th data-field="historie" data-width="50" data-halign="center" data-align="center">
+                <i class="ti-timer d-none d-sm-inline"></i>
+                <span class="d-inline d-sm-none">{% trans "Historie nálezu" %}</span>
+            </th>
+            <th data-field="badatel" data-sortable="true" class="table-long">{% trans "Badatel" %}</th>
+            <th data-field="badatelOrganizace" data-sortable="true" data-visible="true" class="table-long">{% trans "Organizace (badatel)" %}</th>
+            <th data-field="badatelEmail" data-sortable="true" data-visible="true">{% trans "Email (badatel)" %}</th>
+            <th data-field="archeolog" data-sortable="true" class="table-long">{% trans "Archeolog" %}</th>
+            <th data-field="archeologOrganizace" class="table-long-2" data-sortable="true" data-visible="true">{% trans "Organizace (archeolog)" %}</th>
+            <th data-field="archeologEmail" data-sortable="true" data-visible="true">{% trans "Email (archeolog)" %}</th>
+            <th data-field="aktivni" data-sortable="true" class="table-short">{% trans "Aktivní" %}</th>
+            <th data-field="potvrzeno" data-sortable="true" class="table-short">{% trans "Potvrzeno" %}</th>
+            <th data-field="potvrzeni" data-sortable="true" class="table-long">{% trans "Datum potvrzení" %}</th>
+            {% if context.canDelete %}
+            <th data-field="smazat" data-width="50" data-halign="center" data-align="center">
+                <i class="ti-close d-none d-sm-inline"></i>
+                <span class="d-inline d-sm-none">{% trans "Smazat spolupráci" %}</span>
+            </th>
+            {% endif %}
+        </tr>
+    </thead>
+    <!--Table head-->
+    <!--Table body-->
+    <tbody>
+        {% for s in context.spoluprace %}
+        <tr>
+            <td>
+                <a class="icon-container" href="{% url 'pas:cooparate_update' s.id %}" data-toggle="tooltip" data-placement="right" title="{% trans "Detail spolupráce" %}">
+                    <i class="ti-new-window"></i>
+                </a>
+            </td>
+            <td>
+                <a class="icon-container" href="{% url 'pas:cooperate_history' s.id %}" data-toggle="tooltip" data-placement="right" title="{% trans "Historie spolupráce" %}">
+                    <i class="ti-timer"></i>
+                </a>
+            </td>
+            <td>{{s.badatel}}</td>
+            <td>{{s.badatel_organizace}}</td>
+            <td>{{s.badatel_email}} ({{s.badatel_ident}})</td>
+            <td>{{s.archeolog}}</td>
+            <td>{{s.archeolog_organizace}}</td>
+            <td>{{s.archeolog_email}} ({{s.archeolog_ident}})</td>
+            <td>{{s.aktivni}}</td>
+            <td>{{s.potvrzeno}}</td>
+            <td>{{s.zmena_potvrzeni.datum_zmeny|date:'Y-m-d H:i'}}</td>
+            {% if context.canDelete %}
+            <td>
+                <a class="icon-container" data-toggle="tooltip" data-placement="left" title="{% trans "Smazat spolupráci" %}">
+                    <i class="ti-close" data-toggle="modal" data-target="#delete_cooperation-{{ s.id }}"></i>
+                </a>
+            </td>
+                <!-- MODAL DELETE PHOTO -->
+                <div class="modal fade" id="delete_cooperation-{{ s.id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="deleteCooperationTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="w-100 modal-title" id="deleteCooperationTitle">{% trans "Smazat spolupráci" %}</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>{% trans "Opravdu chcete tuto spolupráci smazat?" %}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-amcr btn-block" href="" data-dismiss="modal">{% trans "Ne" %}</a>
+                                <a class="btn btn-amcr btn-block" href="{% url 'pas:cooparate_delete' s.id %}">{% trans "Ano" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF MODAL DELETE PHOTO-->
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    <!--Table body-->
+</table>
+

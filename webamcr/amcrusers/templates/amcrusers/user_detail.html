@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block content  %}
+<script>
+    $('.menu_administration').addClass('active')
+    $('.menu_users').addClass('active')
+</script>
+<!-- page title area start -->
+<div class="page-title-area title-usr mb-3">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{ USER_SETTINGS }}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{{ USER_SETTINGS }}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul-usr">{{ USER_SETTINGS }}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main content - users detail -->
+<div class="main-content-inner mb-5">
+    <form method="post">
+        <!-- Form error validation -->
+        {% csrf_token %}
+        {% if formUser.errors %}
+        {% for field in formUser %}
+        {% for error in field.errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endfor %}
+        {% for error in formUser.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <!-- Form row -->
+        <div class="form-row">
+            <!-- Second column - User details -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-md-3 col-lg-2">
+                                <div class=" profile">
+                                    <div class="profile-image">
+                                        <img src="{% static "loga/user.svg" %}" class="profile-image-round">
+                                    </div>
+                                    <!-- User details -->
+                                    <div class="profile-content text-center pt-0 pt-md-2">
+                                        <p class="user-profile-name">{{current_user.jmeno}} {{current_user.prijmeni}}
+                                        </p>
+                                        <span class="user-profile-role">{{ userDetail.role_opravneni.role }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- First col -->
+                            <div class="col-12 col-md-4 col-lg-5">
+                                <!--User name  input-->
+                                <div class="form-group">
+                                    <label for="jmeno">{{ formUser.jmeno.label }}</label>
+                                    {% render_field formUser.jmeno class="form-control form-control-sm" min="1" id="jmeno" disabled="true" %}
+                                </div>
+                                <!--user surname  input-->
+                                <div class="form-group">
+                                    <label for="prijmeni">{{ formUser.prijmeni.label }}</label>
+                                    {% render_field formUser.prijmeni class="form-control form-control-sm" id="prijmeni" disabled="true"%}
+                                </div>
+                                <div class="form-group">
+                                    <label for="ident_cely">{{ formUser.ident_cely.label }}</label>
+                                    {% render_field formUser.ident_cely class="form-control form-control-sm" id="ident_cely" disabled="true"%}
+                                </div>
+                                <!-- User email input-->
+                                <div class="form-group">
+                                    <label for="email">{{ formUser.email.label }}</label>
+                                    {% render_field formUser.email class="form-control form-control-sm" id="email" disabled="true" %}
+                                </div>
+                                <!--user number input-->
+                                <div class="form-group">
+                                    <label for="telefon">
+                                        {{ formUser.telefon.label }}</label>
+                                    {% render_field formUser.telefon class="form-control form-control-sm " id="telefon" %}
+                                </div>
+                            </div>
+                            <!-- Second col -->
+                            <div class="col-12 col-md-4 col-lg-5">
+                                <!--user organisation input-->
+                                <div class="form-group">
+                                    <label for="organizace">
+                                        {{ formUser.organizace.label }}</label>
+                                    {% render_field formUser.organizace|append_attr:"readonly:readonly" class="form-control form-control-sm" id="organizace" disabled="true" %}
+                                </div>
+                                <!-- user password input -->
+                                <div class="form-group">
+                                    <label for="heslo">
+                                        {{ formUser.heslo.label }}</label>
+                                    {% render_field formUser.heslo class="form-control form-control-sm" id="heslo" %}
+                                </div>
+                                <!-- user password check input -->
+                                <div class="form-group">
+                                    <label for="heslo_kontrola">
+                                        {{ formUser.heslo_kontrola.label }}</label>
+                                    {% render_field formUser.heslo_kontrola class="form-control form-control-sm" id="heslo_kontrola" %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="jazyk">
+                                        {{ formUser.jazyk.label }}</label>
+                                    {% render_field formUser.jazyk class="form-control form-control-sm selectpicker" id="jazyk" %}
+                                </div>
+                                <!--user notifications input-->
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        {% if notifikace_nalezu %}
+                                        <input type="checkbox" class="custom-control-input" id="notifikace_nalezu"
+                                            value="ano" name="notifikace_nalezu" checked>
+                                        {% else %}
+                                        <input type="checkbox" class="custom-control-input" id="notifikace_nalezu"
+                                            value="ano" name="notifikace_nalezu">
+                                        {% endif %}
+                                        <label class="custom-control-label"
+                                            for="notifikace_nalezu">{% trans "Emailové notifikace AMČR-PAS" %}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-3">
+            <div class="col-6 col-md-2 col-lg-1 mt-2 mt-sm-0 ">
+                <button class="btn btn-secondary btn-block" onclick="goBack()">{% trans "Zpět" %}</button>
+            </div>
+            <div class="col-6 col-md-2 col-lg-1 mt-2 mt-sm-0 ">
+                <button class="btn btn-secondary btn-block">{% trans "Uložit" %}</button>
+            </div>
+        </div>
+    </form>
+    {% endblock %}
+
+    {% block script %}
+    <script>
+        //Password match validation
+        bootstrapValidate('#heslo_kontrola', 'matches:#heslo: {% trans "Vámi zadaná hesla se neshodují" %}')
+        //Checking for password length
+        bootstrapValidate(['#heslo_kontrola', '#heslo'], 'min:7:{% trans "Heslo musí mít minimálně 7 znaků" %}')
+    </script>
+    {% endblock %}

@@ -1,0 +1,44 @@
+{% load i18n %}
+<div class="button-group mb-md-3 mr-1 ml-1">
+    <div class="row mt-2 pr-0 pr-md-2">
+        <div class="col col-md-2">
+            <button type="button" class="btn btn-amcr-3d btn-block checkchanges" onclick="goBack()">{% trans "Zpět" %}</button>
+        </div>
+        {% if context.canEdit and context.showDetails %}
+        <div class="col-6 col-md-2">
+            <a class="btn btn-amcr-3d btn-block" data-toggle="modal"
+                data-target="#deleteDocument3d">{% trans "Smazat" %}</a>
+        </div>
+        {% endif %}
+        {% if context.canReturn %}
+        <div class="col-6 col-md-2 mt-2 mt-md-0">
+            <a class="btn btn-amcr-3d btn-block checkchanges" href="{% url 'documents:return_model' ident_cely %}">{% trans "Vrátit" %}</a>
+        </div>
+        {% elif context.showDetails %}
+        <div class="col-6 col-md-2 mt-2 mt-md-0">
+            <button type="button" class="btn btn-amcr-3d btn-block disabled" disabled="true">{% trans "Vrátit" %}</button>
+        </div>
+        {% endif %}
+
+    </div>
+    <div class="row mt-2 pr-0 pr-md-2">
+        {% if context.canArchive %}
+        <div class="col-6 col-md-2">
+            <button type="button" class="btn btn-amcr-3d btn-block checkchanges" data-toggle="modal"
+                data-target="#send_to_archive" name="button_archive">{% trans "Archivovat" %}</button>
+        </div>
+        {% elif context.showDetails %}
+        <div class="col-6 col-md-2">
+            <button type="button" class="btn btn-amcr-3d btn-block disabled" disabled="true">{% trans "Archivovat" %}</button>
+        </div>
+        {% endif %}
+
+
+        {% if context.showDetails %}
+        <div class="col-6 col-md-2">
+            <a class="btn btn-amcr-3d btn-block checkchanges"
+                href="{% url 'documents:documents_history' ident_cely %}">{% trans "Historie" %}</a>
+        </div>
+        {% endif %}
+    </div>
+</div>

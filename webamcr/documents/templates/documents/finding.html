@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block content %}
+<script>
+	$('.menu_library').addClass('active')
+	$('.menu_create_3d').addClass('active')
+</script>
+<!-- page title area start -->
+<div class="page-title-area title-doc mb-3">
+	<div class="row align-items-center">
+		<div class="col-sm-12">
+			<div class="breadcrumbs-area clearfix">
+				<h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{LIBRARY_3D}}</h4>
+				<h4 class="page-title pull-left d-none d-lg-block">{{LIBRARY_3D}}</h4>
+				<ul class="breadcrumbs pull-left">
+					<li><a href="/" class="main-modul-doc">{{MAIN_MENU}}</a></li>
+				</ul>
+				<ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+					<li><a href="/documents" class="main-modul-doc">{{LIBRARY_3D}}</a></li>
+				</ul>
+				<ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+					<li><a href="/documents/create" class="main-modul-doc">{{CREATE_ENTRY}}</a></li>
+				</ul>
+				<ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+					<li><a href="{% url 'documents:detail' context.ident_cely %}"
+							class="main-modul-doc">{{context.ident_cely}}</a></li>
+				</ul>
+				<ul class="breadcrumbs pull-left">
+					<li class="main-modul-doc">{% trans "Nálezy" %}</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="main-content-inner mb-3">
+	<div class="form-row">
+		<div class="col-12 col-md-11 col-lg-10 col-xl-6">
+			{% if not context.detail %}
+			<p class="h2 font-weight-light card-heading">{% trans "Nový nález 3D modelu" %} {{ context.ident_cely }}</p>
+			{% else %}
+			<p class="h2 font-weight-light card-heading">{% trans "Detail nálezu 3D modelu" %} {{ context.ident_cely }}</p>
+			{% endif %}
+			<form method="post">
+				{% csrf_token %}
+				<!-- Header -->
+				<div class="card create-card">
+					<div class="card-body">
+						<div class="form-row">
+							<!-- First col -->
+							<div class="col-12 col-md-6">
+								<div class="form-group">
+									<label for="typ_nalezu">{{ form.typ_nalezu.label }}</label>
+									{% render_field form.typ_nalezu class="form-control form-control-sm selectpicker" id="typ_nalezu" %}
+								</div>
+								<div class="form-group object">
+									<label for="druh_objektu">{{ form.druh_objektu.label }}</label>
+									{% render_field form.druh_objektu class="form-control form-control-sm selectpicker druh-objektu objekt" data-size="10" data-live-search="true" data-dropup-auto="false" id="druh_objektu"  %}
+								</div>
+								<div class="form-group object">
+									<label for="druh_predmetu">{{ form.druh_predmetu.label }}</label>
+									{% render_field form.druh_predmetu class="form-control form-control-sm selectpicker druh-predmetu predmet" data-size="10" data-live-search="true" data-dropup-auto="false" id="druh_predmetu" %}
+								</div>
+							</div>
+							<!-- Second col -->
+							<div class="col-12 col-md-6">
+								<div class="form-group">
+									<label for="pocet">{{ form.pocet.label }}</label>
+									{% render_field form.pocet class="form-control form-control-sm" id="pocet" %}
+								</div>
+								<div class="form-group">
+									<label for="specifikace_objektu">{{ form.specifikace_objektu.label }}</label>
+									{% render_field form.specifikace_objektu class="form-control form-control-sm selectpicker objekt" data-size="10" data-live-search="true" data-dropup-auto="false" id="specifikace_objektu" %}
+								</div>
+								<div class="form-group">
+									<label for="specifikace_predmetu">{{ form.specifikace_predmetu.label }}</label>
+									{% render_field form.specifikace_predmetu class="form-control form-control-sm selectpicker predmet" data-size="10" data-live-search="true" data-dropup-auto="false" id="specifikace_predmetu" %}
+								</div>
+							</div>
+							<!-- Full width col -->
+							<div class="col-12">
+								<div class="form-group">
+									<label for="poznamka">{{ form.poznamka.label }}</label>
+									{% render_field form.poznamka class="form-control form-control-sm" rows="2" id="poznamka" %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Button group -->
+				<div class="row mt-3 pl-2 pr-2">
+					<div class="col-6 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0">
+						<a class="btn btn-amcr-3d btn-block" href="{% url 'documents:detail' context.ident_cely %}"
+							return false;>Zpět</a>
+					</div>
+					<div class="col-6 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0 ">
+						{% if context.detail %}
+						<button type="submit" class="btn btn-amcr-3d btn-block">{% trans "Uložit" %}</button>
+						{% else %}
+						<button type="submit" class="btn btn-amcr-3d btn-block">{% trans "Vytvořit" %}</button>
+						{% endif %}
+					</div>
+				</div>
+		</div>
+	</div>
+	</form>
+</div>
+
+{% endblock %}
+{% block script %}
+<script>
+	$(document).ready(function () {
+
+		const selectElement = document.getElementById('typ_nalezu');
+		const OBJEKT_OPTION = 1
+		const PREDMET_OPTION = 2
+
+
+		// Inicializace vzdy na disabled
+		$(selectElement).on('loaded.bs.select', function (e, selectedIndex) {
+			if (e.currentTarget.selectedIndex == OBJEKT_OPTION) {
+				$('.predmet').prop('disabled', true);
+				$('.objekt').prop('disabled', false);
+			} else if (e.currentTarget.selectedIndex == PREDMET_OPTION) {
+				$('.predmet').prop('disabled', false);
+				$('.objekt').prop('disabled', true);
+			} else {
+				$('.predmet').prop('disabled', true);
+				$('.objekt').prop('disabled', true);
+			}
+			$('.selectpicker').selectpicker('refresh');
+		});
+
+		// On change pak podle toho co je vybrano
+		$(selectElement).on('changed.bs.select', function (e, clickedIndex) {
+			if (clickedIndex == OBJEKT_OPTION) {
+				$('.predmet').prop('disabled', true);
+				$('.objekt').prop('disabled', false);
+				$('#druh_objektu').prop('required', true);
+				$('#druh_predmetu').prop('required', false);
+				$('.druh-predmetu button').removeClass('select-invalid');
+				$('.druh-objektu button').addClass('select-invalid');
+				$('.predmet').val('default');
+			} else if (clickedIndex == PREDMET_OPTION) {
+				$('.predmet').prop('disabled', false);
+				$('.objekt').prop('disabled', true);
+				$('#druh_predmetu').prop('required', true);
+				$('#druh_objektu').prop('required', false);
+				$('.druh-objektu button').removeClass('select-invalid');
+				$('.druh-predmetu button').addClass('select-invalid');
+				$('.objekt').val('default');
+			} else {
+				$('.predmet').prop('disabled', true);
+				$('.objekt').prop('disabled', true);
+				$('.druh-objektu button').removeClass('select-invalid');
+				$('.druh-predmetu button').removeClass('select-invalid');
+				$('.predmet').val('default');
+				$('.objekt').val('default');
+			}
+			$('.selectpicker').selectpicker('refresh');
+		});
+	}
+	)
+</script>
+{% endblock %}

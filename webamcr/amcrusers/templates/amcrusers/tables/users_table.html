@@ -1,0 +1,78 @@
+{% load i18n %}
+<table id="user_table" data-locale="cs-CZ" data-min-width="560" data-toggle="table" data-pagination="true" data-pagination-pre-text="Předchozí" data-show-pagination-switch="true" data-show-jump-to="true"
+    data-pagination-next-text="Další" data-show-columns="true" data-show-toggle="true" data-height="500" data-show-export="true" data-page-size="100" data-pagination-loop="false" data-toolbar="#toolbar" data-search="true"
+    data-mobile-responsive="true" class="table table-hover table-borderless">
+    <!--Table head-->
+    <thead scope="col" class="col-users-head">
+        <tr>
+            <th data-field="detail" data-width="50" data-halign="center" data-align="center">
+                <i class="ti-new-window d-none d-sm-inline"></i>
+                <span class="d-inline d-sm-none">{% trans "Detail uživatele" %}</span>
+            </th>
+            <th data-field="jmeno" data-sortable="true">{% trans "Jméno" %}</th>
+            <th data-field="prijmeni" data-sortable="true">{% trans "Příjmení" %}</th>
+            <th data-field="ident" data-sortable="true">{% trans "ID" %}</th>
+            <th data-field="email" data-sortable="true">{% trans "Email" %}</th>
+            <th data-field="telefon" data-sortable="true">{% trans "Telefon" %}</th>
+            <th data-field="organizace_zkr" data-sortable="true">{% trans "Organizace" %}</th>
+            <th data-field="role" data-sortable="true">{% trans "Role" %}</th>
+            <th data-field="confirmation" data-sortable="true">{% trans "Email ověřen" %}</th>
+            <th data-field="opravneni" data-sortable="true">{% trans "Oprávnění" %}</th>
+        </tr>
+    </thead>
+    <!--Table head-->
+    <!--Table body-->
+    <tbody>
+        {% for row in context.uzivatele %}
+        <tr>
+            <td>
+                <a class="icon-container" href="{% url 'amcrusers:user_edit' row.id_id %}" data-toggle="tooltip" data-placement="right" title="{% trans "Detail uživatele" %}" {{row.jmeno}} {{row.prijmeni}}">
+                    <i class="ti-new-window"></i>
+                </a>
+            </td>
+            <td>{{row.jmeno}}</td>
+            <td>{{row.prijmeni}}</td>
+            <td>{{row.ident_cely}}</td>
+            <td>{{row.email}}</td>
+            <td>{{row.telefon}}</td>
+            <td>{{row.organizace_zkr}}</td>
+            <td>{{row.role}}</td>
+            {% if row.confirmation %}
+                <td>Ne</td>
+            {% else %}
+                <td>Ano</td>
+            {% endif %}
+            {% if row.opravneni %}
+                <td>
+                {% for opr in row.opravneni %}
+                    {{ opr }},
+                {% endfor %}
+                </td>
+            {% else %}
+                <td></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    <!--Table body-->
+</table>
+{% block script %}
+<script>
+    $(document).ready(function () {
+            var $table = $('#user_table')
+            //Controls sizing
+            $table.bootstrapTable('refreshOptions', {
+                iconSize: "xs",
+                exportTypes: ['csv', 'xml', 'json'],
+                exportOptions: {
+                    fileName: function () {
+                        return getExportDate()
+                    },
+                    ignoreColumn: ['detail']
+                }
+            })
+            //Tooltip toggle
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+</script>
+{% endblock %}

@@ -1,0 +1,526 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block content %}
+<script>
+    $('.menu_detectors').addClass('active')
+    $('.menu_create_det').addClass('active')
+</script>
+<!-- page title area start -->
+<div class="page-title-area title-det mb-3">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{MODUL_DETECTOR}}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{{MODUL_DETECTOR}}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul-det">{{MAIN_MENU}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/pas/" class="main-modul-det">{{MODUL_DETECTOR}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/pas/create/" class="main-modul-det">{{CREATE_ENTRY}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li class="main-modul-det">
+                        {% if ident_cely != '0' %} {{ident_cely}} ({{currentStav}}) {% endif %}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main content -->
+<div class="main-content-inner mr-2 ml-2">
+    <!-- Navigation tabs -->
+    <nav class="create-tabs">
+        <div class="nav nav-tabs nav-tab-detector" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link nav-link-detector active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                role="tab" aria-controls="nav-home" aria-selected="true">{% trans "Nález" %}</a>
+        </div>
+    </nav>
+    <!-- Tab 1 content -->
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active create-det-tab" id="nav-home" role="tabpanel"
+            aria-labelledby="nav-home-tab">
+            <form method="post">
+                {% csrf_token %}
+                <!-- Photography Table + buttons -->
+                <p class="h2 font-weight-light card-heading ml-0">{% trans "Fotografie" %}</p>
+                <div class="form-row">
+                    <div class="col-12 col-md-9 col-lg-10 pr-1">
+                        <!-- Files Card -->
+                        <div class="card create-card ">
+                            <!-- Table -->
+                            <div class="card-body">
+                                <div class="file_table">
+                                    {% include "documents/file_table.html" %}
+                                    <div class="col-12 col-md-3 col-xl-3 pl-0 mt-4">
+                                        {% if canEdit or canConfirm or canArchive %}
+                                        {% if context.showFiles == "True" %}
+                                        <a class="btn btn-amcr btn-sm "
+                                            href="{% url 'pas:upload' projectId ident_cely %}">{% trans "Přidat fotografii" %}</a>
+                                        {% else %}
+                                        <button class="btn btn-amcr btn-sm disabled" readonly="true"
+                                            title="{% trans "Fotografie lze přidávat až po prvním uložení změn ve formuláři nálezu." %}">{% trans "Přidat fotografii" %}</button>
+                                        {% endif %}
+                                        {% else %}
+                                        <button class="btn btn-amcr btn-sm disabled" readonly="true"
+                                            title="{% trans "Nemáte příslušné oprávnění." %}">{% trans "Přidat fotografii" %}</button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Side buttons -->
+                    <div class="col-12 col-md-3 col-lg-2 pl-1">
+                        <div class="card create-card">
+                            <div class="card-body">
+                                <!-- Save button -->
+                                {% if canEdit or canConfirm or canArchive %}
+                                <button class="btn btn-amcr btn-block"
+                                    name="button_save">{% trans "Uložit změny" %}</button>
+                                {% else %}
+                                <button class="btn btn-amcr btn-block"
+                                    readonly="true">{% trans "Uložit změny" %}</button>
+                                {% endif %}
+                                <!-- To confirm button -->
+                                <div class="mt-2">
+                                    {% if canEdit and smStav == 1 %}
+                                    <button type="button" id="send_to_confirm_button" onclick="checkPhotoAndCoord()"
+                                        class="btn btn-amcr btn-block" data-toggle="modal"
+                                        data-target="">{% trans "Odeslat" %}</button>
+                                    {% else %}
+                                    <button class="btn btn-amcr btn-block disabled"
+                                        readonly="true">{% trans "Odeslat" %}</button>
+                                    {% endif %}
+                                </div>
+                                <!-- Confirm button -->
+                                <div class="mt-2">
+                                    {% with 'Archeolog Archivář Admin' as list_archeolog %}
+                                    {% if userDetail.role_opravneni.role in list_archeolog %}
+                                    {% if canConfirm and smStav == 2 %}
+                                    <button type="button" id="send_to_approve_button" onclick="checkFindingHanded()"
+                                        class="btn btn-amcr btn-block" data-toggle="modal"
+                                        data-target="">{% trans "Potvrdit" %}</button>
+                                    {% else %}
+                                    <button class="btn btn-amcr btn-block disabled"
+                                        readonly="true">{% trans "Potvrdit" %}</button>
+                                    {% endif%}
+                                    {% endif %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Circum & Finding & Map -->
+                <div class="form-row">
+                    <!-- Finding circumstances + finding -->
+                    <div class="col-12 col-md-6 pr-1">
+                        <p class="h2 font-weight-light card-heading ml-0">{% trans "Nálezové okolnosti" %}</p>
+                        <div class="card create-card">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <!-- Project -->
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_project">{{ formDetCreate.detector_project.label }}</label>
+                                            {% if canProject  %}
+                                            {% render_field formDetCreate.detector_project class="form-control form-control-sm selectpicker" id="detector_project" data-size='10' data-live-search="true"%}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_project|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_project" data-size='10' data-live-search="true" %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <!-- Cadastry -->
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_cadastry">{{ formDetCreate.detector_cadastry.label }}</label>
+                                            {% render_field formDetCreate.detector_cadastry|append_attr:"readonly:readonly" class="form-control form-control-sm" id="detector_cadastry" %}
+                                        </div>
+                                    </div>
+                                    <!-- Localization -->
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_localization">{{ formDetCreate.detector_localization.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive  %}
+                                            {% render_field formDetCreate.detector_localization class="form-control form-control-sm" id="detector_localization"  %}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_localization|append_attr:"readonly:readonly" class="form-control form-control-sm" id="detector_localization"  %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <!-- Finder + Circumstences  -->
+                                    <div class="col-12 col-md-6">
+                                        <!-- Nálezce -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_finder">{{ formDetCreate.detector_finder.label }}</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <a data-toggle="modal" {% if canEdit or canConfirm or canArchive %}href="#new_name"{% endif %} title="{% trans "Nové jméno" %}">
+                                                        <span class="input-group-text input-group-detector">
+                                                            <span class="fa fa-plus"></span>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                {% if canEdit or canConfirm or canArchive  %}
+                                                {% render_field formDetCreate.detector_finder class="form-control form-control-sm selectpicker" id="detector_finder" data-size='10' data-live-search="true"  %}
+                                                {% else %}
+                                                {% render_field formDetCreate.detector_finder|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_finder" data-size='10' data-live-search="true"  %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <!-- Okolnosti -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_circumstances">{{ formDetCreate.detector_circumstances.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive  %}
+                                            {% render_field formDetCreate.detector_circumstances class="form-control form-control-sm selectpicker" id="detector_circumstances" data-size='10'%}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_circumstances|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_circumstances" data-size='10' %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <!-- Date of find -->
+                                    <div class="col-12 col-md-6">
+                                        <!-- Datum nálezu -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_find_date">{{ formDetCreate.detector_find_date.label }}</label>
+                                            <div class="input-group date">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text input-group-detector"
+                                                        id="basic-addon1">
+                                                        <i class="fa fa-calendar"></i></span>
+                                                </div>
+                                                {% if canEdit or canConfirm or canArchive  %}
+                                                {% render_field formDetCreate.detector_find_date class="form-control form-control-sm" data-provide="datepicker" id="detector_find_date"  %}
+                                                {% else %}
+                                                {% render_field formDetCreate.detector_find_date|append_attr:"readonly:readonly" class="form-control form-control-sm" data-provide="datepicker" id="detector_find_date"  %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <!-- Hloubka -->
+                                        <div class="form-group">
+                                            <label for="detector_depth">{{ formDetCreate.detector_depth.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive  %}
+                                            {% render_field formDetCreate.detector_depth class="form-control form-control-sm" id="detector_depth" %}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_depth|append_attr:"readonly:readonly" class="form-control form-control-sm" id="detector_depth" %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Finding -->
+                        <p class="h2 font-weight-light card-heading ml-0 ">{% trans "Nález" %}</p>
+                        <div class="card create-card ">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-12 col-md-6">
+                                        <!-- Datace -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_dating">{{ formDetCreate.detector_dating.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive  %}
+                                            {% render_field formDetCreate.detector_dating name="detector_dating" class="form-control form-control-sm selectpicker droplevel" id="detector_dating" data-size='10' data-live-search="true" data-dropup-auto="false" %}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_dating|append_attr:"readonly:readonly" name="detector_dating" class="form-control form-control-sm selectpicker" id="detector_dating" data-size='10' data-live-search="true" data-dropup-auto="false"%}
+                                            {% endif %}
+                                        </div>
+                                        <!-- Počet -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_quantity">{{ formDetCreate.detector_quantity.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive  %}
+                                            {% render_field formDetCreate.detector_quantity name="detector_quantity" class="form-control form-control-sm"  id="detector_quantity"  %}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_quantity|append_attr:"readonly:readonly" name="detector_quantity" class="form-control form-control-sm"  id="detector_quantity"  %}
+                                            {% endif %}
+                                        </div>
+                                        <!-- Materiál -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_material">{{ formDetCreate.detector_material.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive  %}
+                                            {% render_field formDetCreate.detector_material name="detector_material" class="form-control form-control-sm selectpicker" id="detector_material" data-size='10' data-live-search="true" data-dropup-auto="false" %}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_material|append_attr:"readonly:readonly" name="detector_material" class="form-control form-control-sm selectpicker" id="detector_material" data-size='10' data-live-search="true" data-dropup-auto="false" %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <!-- Druh -->
+                                        <div class="form-group">
+                                            <label for="detector_kind">{{ formDetCreate.detector_kind.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive  %}
+                                            {% render_field formDetCreate.detector_kind name="detector_kind" class="form-control form-control-sm selectpicker droplevel"  id="detector_kind" data-size='10' data-dropup-auto="false" data-live-search="true" %}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_kind|append_attr:"readonly:readonly" name="detector_kind" class="form-control form-control-sm selectpicker"  id="detector_kind"  data-size='10' data-dropup-auto="false" data-live-search="true" %}
+                                            {% endif %}
+                                        </div>
+                                        <!-- Přesná datace -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_exact_dating">{{ formDetCreate.detector_exact_dating.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive  %}
+                                            {% render_field formDetCreate.detector_exact_dating name="detector_exact_dating" class="form-control form-control-sm"  id="detector_exact_dating"%}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_exact_dating|append_attr:"readonly:readonly" name="detector_exact_dating" class="form-control form-control-sm"  id="detector_exact_dating"%}
+                                            {% endif %}
+                                        </div>
+                                        <!-- Poznámka -->
+                                        <div class="form-group">
+                                            <label for="detector_note">{{ formDetCreate.detector_note.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive  %}
+                                            {% render_field formDetCreate.detector_note name="detector_note" class="form-control form-control-sm" id="detector_note"  %}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_note|append_attr:"readonly:readonly" name="detector_note" class="form-control form-control-sm" id="detector_note"  %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Mapa -->
+                    <div class="col-12 col-md-6 ml-0 pl-1">
+                        <!-- Interacive Map Card -->
+                        <p class="h2 font-weight-light card-heading ml-0 ">{% trans "Mapa" %}</p>
+                        <div class="card create-card ">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-3 col-md-4 col-lg-3">
+                                        <!-- Koordinaty -->
+                                        <div class="form-group">
+                                            <label for="detector_system_coordinates"
+                                                class="d-none d-sm-none d-md-block">{{ formDetCreate.detector_system_coordinates.label }}</label>
+                                            <label for="detector_system_cordinates"
+                                                class="d-block d-md-none d-lg-none">{% trans "Souř. S." %}</label>
+                                            {% render_field formDetCreate.detector_system_coordinates class="form-control form-control-sm sysCord" id="detector_system_coordinates"   onchange="switch_coordinate_system()" %}
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <!-- Koordinaty X -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_coordinates_x">{{ formDetCreate.detector_coordinates_x.label }}</label>
+                                            {% render_field formDetCreate.detector_coordinates_x class="form-control form-control-sm float"  id="detector_coordinates_x"%}
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <!-- Koordinaty Y -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_coordinates_y">{{ formDetCreate.detector_coordinates_y.label }}</label>
+                                            {% render_field formDetCreate.detector_coordinates_y class="form-control form-control-sm float"  id="detector_coordinates_y"%}
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-2 col-lg-3">
+                                        <!-- Current Location -->
+                                        <div class="form-group map">
+                                            <label for="detector_coordinates_y">{% trans "Poloha" %}</label>
+                                            {% if canEdit or canConfirm or canArchive  %}
+                                            <button type="button" data-toggle="tooltip" data-placement="top" title="{% trans "Současná poloha" %}" class="btn btn-amcr btn-sm form-control form-control-sm" onclick="getLocation()">
+                                                <i class="ti-location-pin" style="font-size: 1rem;"></i>
+                                            </button>
+                                            {% else%}
+                                            <button type="button"
+                                                class="btn btn-amcr btn-sm form-control form-control-sm" disabled>
+                                                <i class="ti-location-pin" style="font-size: 1rem;"></i>
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Map component -->
+                                <div class="col-12 p-0 map-wrapper">
+                                    {% include "components/map_det.html" %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Save information -->
+                <div class="form-row">
+                    <div class="col-12 col-md-6 pr-1">
+                        <p class="h2 font-weight-light card-heading ml-0 ">{% trans "Uložení" %}</p>
+                        <div class="card create-card mb-3">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-12 col-md-6">
+                                        <!-- Předáno organizaci -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_organisation_passed">{{ formDetCreate.detector_organisation_passed.label }}</label>
+                                            {% render_field formDetCreate.detector_organisation_passed|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker selectpicker" data-size='10' id="detector_organisation_passed"  data-dropup-auto="false" %}
+                                        </div>
+                                        <!-- Nález předán -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_find_passed">{{ formDetCreate.detector_find_passed.label }}</label>
+                                            {% if canConfirm or canArchive %}
+                                            {% render_field formDetCreate.detector_find_passed class="form-control form-control-sm " id="detector_find_passed"   %}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_find_passed|append_attr:"readonly:readonly" class="form-control form-control-sm " id="detector_find_passed" value="false" %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <!-- Evidenční číslo -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_evidence_number">{{ formDetCreate.detector_evidence_number.label }}</label>
+                                            {% if canConfirm or canArchive %}
+                                            {% render_field formDetCreate.detector_evidence_number class="form-control form-control-sm" id="detector_evidence_number" required="true" %}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_evidence_number|append_attr:"readonly:readonly" class="form-control form-control-sm"id="detector_evidence_number"  %}
+                                            {% endif %}
+                                        </div>
+                                        <!-- Přístupnost -->
+                                        <div class="form-group">
+                                            <label
+                                                for="detector_accessibility">{{ formDetCreate.detector_accessibility.label }}</label>
+                                            {% if canConfirm or canArchive  %}
+                                            {% render_field formDetCreate.detector_accessibility class="form-control form-control-sm selectpicker" id="detector_accessibility"  %}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_accessibility|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_accessibility"  %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- buttons group component -->
+                    {% include "components/button-group-det.html" %}
+                <!-- Modals component -->
+                {% include "components/create-modals.html" %}
+            </form>
+
+            <!-- Add new name MODAL must be outside of the original form -->
+            <div class="modal fade" id="new_name" tabindex="-1" role="dialog" aria-labelledby="new_nameTitle"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="new_nameTitle">{% trans "Přidání nového jména" %}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="post" action="{% url 'documents:create_name' %}">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="form-row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="jmeno">{{ addNameForm.jmeno.label }}</label>
+                                            {% render_field addNameForm.jmeno class="form-control form-control-sm" id="jmeno"   %}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="prijmeni">{{ addNameForm.prijmeni.label }}</label>
+                                            {% render_field addNameForm.prijmeni class="form-control form-control-sm" id="prijmeni"  %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-block btn-amcr"
+                                    data-dismiss="modal">{% trans "Zrušit" %}</button>
+                                <button type="submit" class="btn btn-block btn-amcr ">{% trans "Přidat jméno" %}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        //Tooltip initialization
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+        // -------- Checks --------
+        function checkPhotoAndCoord() {
+            var conf_button = $('#send_to_confirm_button')
+            var $table = $("#file_table")
+            var $coord_x = $('#detector_coordinates_x')
+            var $coord_y = $('#detector_coordinates_y')
+            var data_length = $table.bootstrapTable('getData').length
+
+
+            if (data_length == 0 || !$coord_x.val() || !$coord_y.val()) {
+                conf_button.attr('data-target', '#add_photo_first')
+            } else {
+                conf_button.attr('data-target', '#send_to_confirm')
+            }
+        }
+
+        function checkFindingHanded() {
+            var approve_button = $('#send_to_approve_button')
+            var $findPassed = $('#detector_find_passed')
+            var $findNumber = $('#detector_evidence_number')
+            if ($findPassed.val().toString() == 'False' || !$findNumber.val()) {
+                approve_button.attr('data-target', '#confirm_find_passed')
+            } else {
+                approve_button.attr('data-target', '#send_to_approve')
+            }
+        }
+
+        // datepicker
+        $(document).ready(function () {
+/*             //dropdowns will change on mobile to software native scroll dropdown
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+                $('.selectpicker').selectpicker('mobile');
+            } */
+
+            $('input.float').on('input', function () {
+                this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+                if (set_numeric_coordinates()) {
+                    addUniquePointToPoiLayer($("#detector_coordinates_x").val(), $("#detector_coordinates_y").val())
+                }
+            });
+
+            $('[readonly]').prop("disabled", true);
+            $('form').submit(function () { $('[readonly]').removeAttr('disabled'); switch_coor_system(1) })
+            //Show only ears in datepicker field
+            $("#detector_find_date").datepicker({
+                format: "dd/mm/yyyy",
+                language: 'cs',
+                weekStart: 1,
+                autoclose: true,
+                todayBtn: true,
+                todayHighlight: true,
+            });+
+
+            //Targeting second index of coordinates system - as default
+            $('.sysCord option[value="3"]').prop('selected', true)
+            {% if canConfirm or canEdit %}
+            addUniquePointToPoiLayer($("#detector_coordinates_x").val(), $("#detector_coordinates_y").val())
+            {% else  %}
+            addReadOnlyUniquePointToPoiLayer($("#detector_coordinates_x").val(), $("#detector_coordinates_y").val())
+            {% endif %}
+
+            //Margin for group-buttons component after MERGE
+            //$(".button-group").addClass("ml-md-4");
+
+            //Changing CSS classes on upload table
+            $('#uploads_table').removeClass('col-documents col-documents-head').addClass('col-detectors col-detectors-head');
+
+        });
+
+    </script>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<script>
+    $('.menu_library').addClass('active')
+    $('.menu_home_3d').addClass('active')
+</script>
+<!-- page title area start -->
+<div class="page-title-area title-doc mb-3">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{LIBRARY_3D}}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{{LIBRARY_3D}}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul-doc">{{MAIN_MENU}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="" class="main-modul-doc">{{LIBRARY_3D}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-content-inner mr-2 ml-2 mb-5">
+    <!-- Main menu CARD area start -->
+    <div class="row mt-4 mb-5">
+        <div class="owl-carousel owl-theme">
+            <div class="amcr-card cardhover create-doc">
+                <a href="{% url 'documents:create' %}">
+                    <div class="card">
+                        <img class="card-amcr-logo img-responsive amcr-overlay"
+                            src="{% static "loga/hover_logo.svg" %}">
+                        <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-knihovna-3d.png" %}"
+                            alt="amcr_brick">
+                        <div class="card-body">
+                            <h2 class="card-text display-4 font-weight-light text-center">{{CREATE_ENTRY}}</h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="amcr-card cardhover my-doc">
+                <a href="{% url 'documents:my_models'%}">
+                    <div class="card">
+                        <img class="card-amcr-logo img-responsive amcr-overlay"
+                            src="{% static "loga/hover_logo.svg" %}">
+                        <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-knihovna-3d.png" %}"
+                            alt="amcr_brick">
+                        <div class="card-body">
+                            <h2 class="card-text display-4 font-weight-light text-center">{{MY_ENTRY}}</h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% if 'Správce 3D' in userDetail.role_opravneni.opravneni %}
+            <div class="amcr-card cardhover choose-doc">
+                    <a href="{% url 'documents:choose' %}">
+                        <div class="card">
+                            <img class="card-amcr-logo img-responsive amcr-overlay"
+                                src="{% static "loga/hover_logo.svg" %}">
+                            <img class="card-img-top img-responsive"
+                                src="{% static "loga/AMCR-brick-knihovna-3d.png" %}" alt="amcr_brick">
+                            <div class="card-body">
+                                <h2 class="card-text display-4 font-weight-light text-center">{{CHOOSE_ENTRY}}</h2>
+                            </div>
+                        </div>
+                </a>
+            </div>
+            {% endif %}
+            {% if 'Správce 3D' in userDetail.role_opravneni.opravneni %}
+            <div class="amcr-card cardhover manage-doc">
+                    <a href="{% url 'documents:manage_models'%}">
+                        <div class="card">
+                            <img class="card-amcr-logo img-responsive amcr-overlay"
+                                src="{% static "loga/hover_logo.svg" %}">
+                            <img class="card-img-top img-responsive"
+                                src="{% static "loga/AMCR-brick-knihovna-3d.png" %}" alt="amcr_brick">
+                            <div class="card-body">
+                                <h2 class="card-text display-4 font-weight-light text-center">{{MANAGE_DOC}}</h2>
+                            </div>
+                        </div>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- Texts related to cards -->
+    <div class="card-text-wrapper text-justify col-12 col-md-11">
+        <!-- Create detector text -->
+        <div class="create-doc d-none">
+            <p><strong>{% trans "AMČR - Knihovna 3D - Zapsat" %}</strong></p>
+            <hr>
+            <p>{% trans "Slouží k zápisu nového modelu. Zápis může provést každý registrovaný uživatel. K modelu je třeba přiložit jeho náhled, popisné údaje a v relevantních případech také prostorovou lokalizaci." %}</strong>
+            </p>
+        </div>
+        <!-- My detector text -->
+        <div class="my-doc d-none">
+            <p><strong>{% trans "AMČR - Knihovna 3D - Moje" %}</strong></p>
+            <hr>
+            <p>{% trans "Nabídka zobrazí seznam vámi vložených modelů." %}
+            </p>
+        </div>
+        <!-- Choose detector text -->
+        <div class="choose-doc d-none">
+            <p><strong>{% trans "AMČR - Knihovna 3D - Vybrat" %}</strong></p>
+            <hr>
+            <p>{% trans "Slouží k výběru modelů podle zadaných kritérií. K celkovému procházení a prohledávání všech archivovaných modelů slouží aplikace Digitální archiv AMČR (https://digiarchiv.aiscr.cz/)." %}
+            </p>
+        </div>
+        <!-- Coop detector text -->
+        <div class="manage-doc d-none">
+            <p><strong>{% trans "AMČR - Knihovna 3D - Spravovat" %}</strong></p>
+            <hr>
+            <p>{% trans "Seznam modelů vložených badateli a čekajících na archivaci." %}
+            </p>
+        </div>
+    </div>
+    {% endblock %}
+    {% block script %}
+    <script>
+        //Texts on amcr-card hover
+        $(".amcr-card").hover(
+            function (e) {
+                //Toggle both classes of hovered element (refine)
+                var hoveredElement = "." + e.currentTarget.classList[2]
+                $(hoveredElement).toggleClass('open'); e
+            });
+        //Cards slider
+        $(document).ready(function () {
+            $('.owl-carousel').owlCarousel({
+                loop: false,
+                margin: 15,
+                dots: true,
+                navigation: false,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 2,
+                        nav: false,
+                        mergeFit: true
+                    },
+                    600: {
+                        items: 3,
+                        nav: false
+                    },
+                    1000: {
+                        items: 6,
+                        nav: false,
+                        loop: false
+                    }
+                }
+            })
+        })
+    </script>
+    {% endblock %}

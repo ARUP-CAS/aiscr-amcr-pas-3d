@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<script>
+    $('.menu_detectors').addClass('active')
+    $('.menu_home_det').addClass('active')
+</script>
+<style>
+    @font-face {
+        font-family: museo;
+        src: url('{% static 'fonts/museo.otf' %}');
+    }
+</style>
+<!-- page title area start -->
+<div class="page-title-area title-det mb-3">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{MODUL_DETECTOR}}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{{MODUL_DETECTOR}}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul-det">{{MAIN_MENU}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="" class="main-modul-det">{{MODUL_DETECTOR}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-content-inner mr-2 ml-2">
+    <!-- Main menu CARD area start -->
+    <div class="row mt-4 mb-5">
+        <div class="owl-carousel owl-theme">
+            <!-- Detector - Create -->
+            <div class="amcr-card cardhover create-det">
+                <a href="{% url 'pas:create' %}">
+                    <div class="card">
+                        <img class="card-amcr-logo img-responsive amcr-overlay"
+                            src="{% static "loga/hover_logo.svg" %}">
+                        <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-detektor.png" %}"
+                            alt="amcr_brick">
+                        <div class="card-body">
+                            <h2 class="card-text display-4 font-weight-light text-center">{{CREATE_ENTRY}}</h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- Detector - My detectors -->
+            {% with 'Badatel Archeolog Archivář Admin' as list_badatel %}
+            {% if userDetail.role_opravneni.role in list_badatel %}
+            <div class="amcr-card cardhover my-det">
+                <a href="{% url 'pas:moje_list' %}">
+                    <div class="card">
+                        <img class="card-amcr-logo img-responsive amcr-overlay"
+                            src="{% static "loga/hover_logo.svg" %}">
+                        <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-detektor.png" %}"
+                            alt="amcr_brick">
+                        <div class="card-body">
+                            <h2 class="card-text display-4 font-weight-light text-center">{{MY_ENTRY}}</h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            {% endwith %}
+            <!-- Detector - Choose -->
+            <div class="amcr-card cardhover choose-det">
+                <a href="{% url 'pas:choose' %}">
+                    <div class="card">
+                        <img class="card-amcr-logo img-responsive amcr-overlay"
+                            src="{% static "loga/hover_logo.svg" %}">
+                        <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-detektor.png" %}"
+                            alt="amcr_brick">
+                        <div class="card-body">
+                            <h2 class="card-text display-4 font-weight-light text-center">{{CHOOSE_ENTRY}}</h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- Detector - Cooperation -->
+            <div class="amcr-card cardhover coop-det">
+                <a href="{% url 'pas:cooperate' %}">
+                    <div class="card">
+                        <img class="card-amcr-logo img-responsive amcr-overlay"
+                            src="{% static "loga/hover_logo.svg" %}">
+                        <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-detektor.png" %}"
+                            alt="amcr_brick">
+                        <div class="card-body">
+                            <h2 class="card-text display-4 font-weight-light text-center">{{COOP_DETECTOR}}</h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- Detector - Confirm -->
+            {% with 'Archeolog Archivář Admin' as list_archeolog %}
+            {% if userDetail.role_opravneni.role in list_archeolog %}
+            <div class="amcr-card cardhover confirm-det">
+                <a href="{% url 'pas:confirm' %}">
+                    <div class="card">
+                        <img class="card-amcr-logo img-responsive amcr-overlay"
+                            src="{% static "loga/hover_logo.svg" %}">
+                        <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-detektor.png" %}"
+                            alt="amcr_brick">
+                        <div class="card-body">
+                            <h2 class="card-text display-4 font-weight-light text-center">{{CONFIRM_DETECTOR}}
+                            </h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            {% endwith %}
+            <!-- Detector - Archive -->
+            {% with 'Archivář Admin' as list_archivar %}
+            {% if userDetail.role_opravneni.role in list_archivar %}
+            <div class="amcr-card cardhover archive-det">
+                <a href="{% url 'pas:archive' %}">
+                    <div class="card">
+                        <img class="card-amcr-logo img-responsive amcr-overlay"
+                            src="{% static "loga/hover_logo.svg" %}">
+                        <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-detektor.png" %}"
+                            alt="amcr_brick">
+                        <div class="card-body">
+                            <h2 class="card-text display-4 font-weight-light text-center">{{ARCHIVE_DETECTOR}}
+                            </h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    <!-- Texts related to cards -->
+    <div class="card-text-wrapper text-justify col-12 col-md-11">
+        <!-- Create detector text -->
+        <div class="create-det d-none">
+            <p><strong>{% trans "AMČR PAS - Zapsat" %}</strong></p>
+            <hr>
+            <p>{% trans "Slouží k zápisu nového nálezu. Pro zápis nálezu je třeba mít navázanou spolupráci s konkrétním archeologem oprávněným provádět archeologické výzkumy a znát číslo odpovídajícího terénního projektu. K nálezu je třeba dále vložit jeho fotografii, lokalizaci a základní popisné údaje." %}
+                <strong>{% trans "Každý takto evidovaný nález musí být v souladu s památkovým zákonem získán ve spolupráci s oprávněnou organizací a následně předán do její správy." %}</strong></p>
+        </div>
+        <!-- My detector text -->
+        <div class="my-det d-none">
+            <p><strong>{% trans "AMČR PAS - Moje" %}</strong></p>
+            <hr>
+            <p>{% trans "Nabídka badateli zobrazí výčet jeho evidovaných nálezů, archeologovi nabízí seznam samostatných nálezů od spolupracovníků jeho oprávněné organizace." %}</p>
+        </div>
+        <!-- Choose detector text -->
+        <div class="choose-det d-none">
+            <p><strong>{% trans "AMČR PAS - Vybrat" %}</strong></p>
+            <hr>
+            <p>{% trans "Slouží k výběru vašich nálezů podle zadaných kritérií (pro badatele), k výběru nálezů vaší oprávněné organizace (pro archeologa), případně k procházení všech evidovaných nálezů (pro archiváře). K celkovému procházení a prohledávání všech evidovaných nálezů slouží aplikace Digitální archiv AMČR (https://digiarchiv.aiscr.cz/)." %}</p>
+        </div>
+        <!-- Coop detector text -->
+        <div class="coop-det d-none">
+            <p><strong>{% trans "AMČR PAS - Spolupráce" %}</strong></p>
+            <hr>
+            <p>{% trans "Zde může badatel zřizovat nové vazby na archeology a archeolog potvrzovat žádosti o spolupráci. Jeden badatel může mít vazbu na neomezené množství archeologů/institucí, archeolog může mít neomezené množství spolupracovníků. Vazby lze zpětně deaktivovat." %}</p>
+        </div>
+        <!-- Confirm detector text -->
+        <div class="confirm-det d-none">
+            <p><strong>{% trans "AMČR PAS - Potvrdit" %}</strong></p>
+            <hr>
+            <p>{% trans "Výčet samostatných nálezů od spolupracovníků vaší organizace čekajících na potvrzení. "%}</p>
+        </div>
+        <!-- Archive detector text -->
+        <div class="archive-det d-none">
+            <p><strong>{% trans "AMČR PAS - Archivovat" %}</strong></p>
+            <hr>
+            <p>{% trans "Výčet všech nálezů potvrzených archeologem čekajících na archivaci a zveřejnění." %}</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        //Texts on amcr-card hover
+        $(".amcr-card").hover(
+            function (e) {
+                //Toggle both classes of hovered element (refine)
+                var hoveredElement = "." + e.currentTarget.classList[2]
+                $(hoveredElement).toggleClass('open');
+            });
+        //Cards slider
+        $(document).ready(function () {
+            $('.owl-carousel').owlCarousel({
+                loop: false,
+                margin: 15,
+                dots: true,
+                navigation: false,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 2,
+                        nav: false,
+                        mergeFit: true
+                    },
+                    600: {
+                        items: 3,
+                        nav: false
+                    },
+                    1000: {
+                        items: 6,
+                        nav: false,
+                        loop: false
+                    }
+                }
+            })
+        })
+    </script>
+{% endblock %}

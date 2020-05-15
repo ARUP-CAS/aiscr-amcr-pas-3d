@@ -1,0 +1,92 @@
+{% load i18n %}
+<!-- Delete document MODAL -->
+<div class="modal fade" id="deleteDocument3d" tabindex="-1" role="dialog" aria-labelledby="deleteDocument3dTitle"
+aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteDocument3dTitle">{% trans "Vymazání modelu" %}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>{% trans "Opravdu chcete tento model vymazat?" %}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-amcr-3d btn-block" data-dismiss="modal">{% trans "Ne" %}</button>
+            <button class="btn btn-amcr-3d btn-block" name="button_delete">Ano</button>
+        </div>
+    </div>
+</div>
+</div>
+<!-- MODAL KE SCHVÁLENÍ DOKUMENT -->
+<div class="modal fade" id="send_model_to_confirm" tabindex="-1" role="dialog" aria-labelledby="sendToConfirmTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendToConfirmTitle">{% trans "Odeslat model" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Opravdu chcete tento model odeslat ke schválení?" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-amcr-3d btn-block" data-dismiss="modal">{% trans "Ne" %}</button>
+                <button class="btn btn-amcr-3d btn-block" name="button_send_modal_to_confirm">{% trans "Ano" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF MODAL KE SCVHÁLENÍ DOKUMENT-->
+
+<!-- MODAL KE ARCHIVACI DOKUMENT -->
+<div class="modal fade" id="send_to_archive" tabindex="-1" role="dialog" aria-labelledby="sendToArchiveTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendToArchiveTitle">{% trans "Archivovat model" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p> {% trans "Opravdu chcete tento model archivovat?" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-amcr-3d btn-block" data-dismiss="modal">{% trans "Ne" %}</button>
+                <button class="btn btn-amcr-3d btn-block" name="button_archive">{% trans "Ano" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF MODAL KE ARCHIVACI DOKUMENT-->
+
+
+<!-- MODAL DOPLN FOTO -->
+<div class="modal fade" id="check_required_fields" tabindex="-1" role="dialog" aria-labelledby="check_required_fieldsTittle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="check_required_fieldsTittle">
+                    {% trans "Zkontroluje prosím vyplnění povinných údajů" %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Model musí mít alespoň jednu fotografii a jednoho autora" %}</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-amcr-3d btn-block" data-dismiss="modal"
+                    name="add_photo_ok">{% trans "OK" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF MODAL DOPLN FOTO-->

@@ -1,0 +1,22 @@
+{% load i18n %}
+
+<!-- Changes modal -->
+<div class="modal fade" id="formChangeModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Formulář byl editován" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{% trans "Ve formuláři jsou neuložené změny." %}</p>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-amcr-3d btn-block" href="{% url 'documents:detail' ident_cely %}">{% trans "Zahodit změny" %}</a>
+        <button class="btn btn-amcr-3d btn-block" name="button_save">{% trans "Uložit změny" %}</button>
+      </div>
+    </div>
+  </div>
+</div>

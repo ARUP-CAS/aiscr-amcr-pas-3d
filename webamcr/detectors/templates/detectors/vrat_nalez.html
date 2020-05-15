@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block content %}
+<script>
+  $('.menu_detectors').addClass('active')
+  $('.menu_create_det').addClass('active')
+</script>
+<!-- page title area start -->
+<div class="page-title-area title-det mb-4">
+  <div class="row align-items-center">
+    <div class="col-sm-12">
+      <div class="breadcrumbs-area clearfix">
+        <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{MODUL_DETECTOR}}</h4>
+        <h4 class="page-title pull-left d-none d-lg-block">{{MODUL_DETECTOR}}</h4>
+        <ul class="breadcrumbs pull-left">
+          <li><a href="/" class="main-modul-det">{{MAIN_MENU}}</a></li>
+        </ul>
+        <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+          <li><a href="/pas/" class="main-modul-det">{{MODUL_DETECTOR}}</a></li>
+        </ul>
+        <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+          <li><a href="/pas/create/" class="main-modul-det">{{CREATE_ENTRY}}</a></li>
+        </ul>
+        <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+          <li class="main-modul-det">Vrátit nález</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="main-content-inner mb-5">
+  <div class="form-row">
+    <div class="col-12 col-sm-12 col-md-11 col-lg-10 col-xl-6">
+      <p class="h2 font-weight-light card-heading ml-0">{% trans "Vrácení nálezu" %}</p>
+      <form method="post">
+        {% csrf_token %}
+        <div class="card create-card m-0">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <p class="mb-3">{% trans "Chcete skutečně vrátit stav nálezu" %} {{ nalez.ident_cely }} {% trans "ze stavu" %} "{{ old_state }}"
+                    {% trans "do stavu" %} "{{ new_state }}" ?</p>
+                  {% render_field form.reason id="reason" class="form-control form-control-sm" placeholder=form.reason.label %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0 ">
+            <button class="btn btn-amcr btn-block" onclick="goBack()">{% trans "Zpět" %}</button>
+          </div>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0 ">
+            <button type="submit" class="btn btn-amcr btn-block" id="vratNalez">{% trans "Vrať nález" %}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endblock %}

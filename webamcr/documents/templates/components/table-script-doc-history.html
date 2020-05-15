@@ -1,0 +1,14 @@
+<script>
+    $(document).ready(function () {
+        //History Table
+        var $table_history = $('#history_table_doc')
+        $table_history.bootstrapTable('refreshOptions',{
+            exportTypes: ['csv', 'xml', 'json'],
+            exportOptions: {
+                fileName: function () {
+                    return getExportDate()
+                }
+            }
+        })
+    })
+</script>

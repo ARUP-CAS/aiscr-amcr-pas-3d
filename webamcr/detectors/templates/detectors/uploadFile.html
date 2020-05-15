@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<script>
+  $('.menu_detectors').addClass('active')
+  $('.menu_create_det').addClass('active')
+</script>
+<!-- page title area start -->
+<div class="page-title-area title-det mb-4">
+  <div class="row align-items-center">
+    <div class="col-sm-12">
+      <div class="breadcrumbs-area clearfix">
+        <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{MODUL_DETECTOR}}</h4>
+        <h4 class="page-title pull-left d-none d-lg-block">{{MODUL_DETECTOR}}</h4>
+        <ul class="breadcrumbs pull-left">
+          <li><a href="/" class="main-modul-det">{{MAIN_MENU}}</a></li>
+        </ul>
+        <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+          <li><a href="/pas/" class="main-modul-det">{{MODUL_DETECTOR}}</a></li>
+        </ul>
+        <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+          <li><a href="/pas/create/" class="main-modul-det">{{CREATE_ENTRY}}</a></li>
+        </ul>
+        <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+          <li><p class="main-modul-det">{{UPLOAD}}</p></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="main-content-inner mb-5">
+  <div class="form-row">
+    <div class="col-12 col-md-11 col-lg-10 col-xl-6">
+      <p class="h2 font-weight-light card-heading ml-0">{% trans "Nahrání fotografie" %}</p>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="card create-card m-0">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button type="submit" class="btn btn-amcr" id="fileUpload"
+                      onclick="return Uploadcheck()">{% trans "Nahrát" %}</button>
+                  </div>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="myFile" accept="image/*" id="detector_upload">
+                    <label class="custom-file-label" for="detector_upload">{% trans "Vyberte soubor" %}</label>
+                  </div>
+                  <p class="mt-3 text-secondary">{% trans "Nahráním souboru udělujete souhlas s jeho trvalým využitím a šířením pod licencí" %} <a href="https://creativecommons.org/licenses/by-nc/4.0/">{% trans "Creative Commons Uveďte původ-Neužívejte komerčně 4.0 Mezinárodní (CC BY-NC 4.0)" %}</a>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <img id="detector_upload_preview" class="mt-2">
+      <div class="col-12 pl-0">
+        <a class="btn btn-amcr mt-2" href="{% url 'pas:detail' findingIdentCely %}">{% trans "Zpět" %}</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <!-- Wrong File modal -->
+  <div class="modal fade" id="wrongFile" tabindex="-1" role="dialog" aria-labelledby="wrongFileLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="wrongFileLabel">{% trans "Špatný typ souboru" %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="text-center">{% trans "Pro samostatný nález můžete nahrát pouze obrázky." %}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-amcr btn-block" data-dismiss="modal">{% trans "OK" %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Empty File modal -->
+  <div class="modal fade" id="emptyUpload" tabindex="-1" role="dialog" aria-labelledby="emptyUploadLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="emptyUploadLabel">{% trans "Nevybrán žádný soubor" %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>{% trans "Vyberte soubor, který chcete k nálezu nahrát" %}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-amcr btn-block" data-dismiss="modal">{% trans "OK" %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modals end -->
+  {% endblock %}
+
+  {% block script %}
+  <script>
+    //Upload empty field validation check
+    function Uploadcheck() {
+      var uploadFile = document.getElementById('detector_upload');
+      if (uploadFile.value === null || uploadFile.value === "") {
+        $('#emptyUpload').modal('show')
+        return false;
+      }
+      else {
+        return true
+      }
+    }
+
+    //Image type validation and preview
+    document.getElementById("detector_upload").onchange = function () {
+      var reader = new FileReader();
+      if (this.files[0].type.indexOf("image") == -1) {
+        $('#wrongFile').modal('show');
+        $("#detector_upload_preview").attr("src", "blank");
+        $("#detector_upload_preview").hide();
+        $('#detector_upload').wrap('<form>').closest('form').get(0).reset();
+        $('#detector_upload').unwrap();
+        return false;
+      }
+      reader.onload = function (e) {
+        document.getElementById("detector_upload_preview").src = e.target.result;
+      };
+      reader.readAsDataURL(this.files[0]);
+    };
+
+    // Name of file appear in selection
+    $(".custom-file-input").on("change", function () {
+      var fileName = $(this).val().split("\\").pop();
+      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+  </script>
+  {% endblock %}

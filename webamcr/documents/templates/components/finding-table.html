@@ -1,0 +1,76 @@
+{% load i18n %}
+{% load static %}
+{% block head %}
+<script src="{% static "/js/bootstrap-table-mobile.min.js" %}"></script>
+{% endblock %}
+<table id="finding_table" data-toggle="table" data-mobile-responsive="true"
+    class="table table-hover table-borderless table-amcr file-table">
+    <!--Table head-->
+    <thead scope="col" id="finding_table_header" class="col-documents-head">
+        <tr>
+            <th data-field="detail" data-halign="center" data-align="center">{% trans "Detail" %}</th>
+            <th data-field="typ" class="table-short" data-sortable="true">{% trans "Typ nálezu" %}</th>
+            <th data-field="druh" class="table-short" data-sortable="true">{% trans "Druh nálezu" %}</th>
+            <th data-field="pocet" class="table-short" data-sortable="true">{% trans "Počet" %}</th>
+            <th data-field="poznamka" class="table-long" data-sortable="true">{% trans "Poznámka" %}</th>
+            <th data-field="smazat" data-halign="left" data-align="center">{% trans "Smazat" %}</th>
+        </tr>
+    </thead>
+    <!--Table head-->
+    <!--Table body-->
+    <tbody>
+        {% for row in context.nalezy %}
+        <tr>
+            <td>
+                {% if context.canEdit %}
+                <a class="icon-container checkchanges" href="{% url 'documents:update_finding' row.id %}"
+                    data-toggle="tooltip" data-placement="right" title="{% trans "Detail nálezu" %}">
+                    <i class="ti-new-window"></i>
+                </a>
+                {% else %}
+                <i class="ti-new-window icon-disabled"></i>
+                {% endif %}
+                </a>
+            </td>
+            <td>{{row.typ_nalezu}}</td>
+            <td>{{row.druh_nalezu}}</td>
+            <td>{{row.pocet}}</td>
+            <td>{{row.poznamka}}</td>
+            <td>
+                {% if context.canEdit %}
+                <a class="icon-container checkchanges" data-toggle="modal" data-target="#delete_finding-{{row.id}}"><i
+                        class="ti-close" data-toggle="tooltip" data-placement="left"
+                        title="{% trans "Smazat nález" %}"></i></a>
+                {% else %}
+                <i class="ti-close icon-disabled"></i>
+                {% endif %}
+            </td>
+            <!-- MODAL DELETE PHOTO -->
+            <div class="modal fade" id="delete_finding-{{row.id}}" tabindex="-1" role="dialog"
+                aria-labelledby="deleteFindingTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteFindingTitle">{% trans "Smazat nález" %}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <p>{% trans "Opravdu chcete tento nález smazat?" %}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-amcr-3d btn-block"
+                                data-dismiss="modal">{% trans "Ne" %}</button>
+                            <a class="btn btn-amcr-3d btn-block"
+                                href="{% url 'documents:delete_finding' row.id %}">{% trans "Ano" %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF MODAL DELETE PHOTO-->
+        </tr>
+        <!-- End of modal - delete photo -->
+        {% endfor %}
+    </tbody>
+    <!--Table body-->
+</table>

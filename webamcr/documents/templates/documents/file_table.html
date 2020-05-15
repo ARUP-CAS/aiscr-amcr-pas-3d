@@ -1,0 +1,64 @@
+{% load i18n %}
+<table id="file_table" data-toggle="table" data-mobile-responsive="true" class="table table-hover table-borderless table-amcr file-table">
+    <!--Table head-->
+    <thead scope="col" id="uploads_table" class="col-documents-head">
+        <tr>
+            <th data-field="nazev" class="table-short" data-sortable="true">{% trans "Název" %}</th>
+            <th data-field="typ" class="table-short" data-sortable="true">{% trans "Typ" %}</th>
+            <th data-field="velikost" class="table-short" data-sortable="true" data-halign="left" data-align="right">{% trans "Velikost" %}</th>
+            <th data-field="dautm_vytovreni" class="table-long" data-sortable="true">{% trans "Datum vytvoření" %}</th>
+            <th data-field="stahnout" data-halign="left" data-align="center">{% trans "Stáhnout" %}</th>
+            <th data-field="smazat" data-halign="left" data-align="center">{% trans "Smazat" %}</th>
+        </tr>
+    </thead>
+    <!--Table head-->
+    <!--Table body-->
+    <tbody>
+        {% for row in context.soubory %}
+        <tr>
+            <td>{{row.nazev}}</td>
+            <td>{{row.mimetype}}</td>
+            <td>{{row.size_bytes}}</td>
+            <td>{{row.vytvoreno}}</td>
+            <td><a class="icon-container" href="{% url 'documents:download_file' row.id %}"><i class="ti-save"></i></a>
+            </td>
+
+            <td>
+                {% if context.canEdit %}
+                <a class="icon-container checkchanges" data-toggle="modal" data-target="#delete_photo-{{row.id}}"><i
+                        class="ti-close"></i></a>
+                {% else %}
+                <i class="ti-close icon-disabled"></i>
+                {% endif %}
+            </td>
+
+            <!-- MODAL DELETE PHOTO -->
+            <div class="modal fade" id="delete_photo-{{row.id}}" tabindex="-1" role="dialog"
+                aria-labelledby="deletePhotoTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deletePhotoTitle">{% trans "Smazat fotografii" %}</h5>
+                            <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <p>{% trans "Opravdu chcete tuto fotografii smazat?" %}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-block"
+                                data-dismiss="modal">{% trans "Ne" %}</button>
+                            <a class="btn btn-secondary btn-block"
+                                href="{% url 'delete_file' row.id %}">{% trans "Ano" %}</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF MODAL DELETE PHOTO-->
+        </tr>
+        <!-- End of modal - delete photo -->
+        {% endfor %}
+    </tbody>
+    <!--Table body-->
+</table>

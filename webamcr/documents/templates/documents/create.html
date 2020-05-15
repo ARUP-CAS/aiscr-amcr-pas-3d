@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block head %}
+<link rel="stylesheet" href="{% static "/css/ion.rangeSlider.min.css" %}">
+<script src="{% static "/js/ion.rangeSlider.min.js" %}"></script>
+<script src="{% static "/js/bootstrap-table-mobile.min.js" %}"></script>
+{% endblock %}
+{% block content %}
+<script>
+    $('.menu_library').addClass('active')
+    $('.menu_create_3d').addClass('active')
+</script>
+<!-- page title area start -->
+<div class="page-title-area title-doc mb-3">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{LIBRARY_3D}}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{{LIBRARY_3D}}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul-doc">{{MAIN_MENU}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/documents" class="main-modul-doc">{{LIBRARY_3D}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li><a href="/documents/create" class="main-modul-doc">{{CREATE_ENTRY}}</a></li>
+                </ul>
+                <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
+                    <li class="main-modul-doc">{% if ident_cely != '0' %} {{ident_cely}} ({{context.stav}}) {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-content-inner mr-2 ml-2">
+    <!-- Navigation tabs -->
+    <nav class="create-tabs">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <span class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" role="tab"
+                aria-controls="nav-home" aria-selected="true">{% trans "3D Model" %}</span>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <!-- 3D Model Tab -->
+        <div class="tab-pane fade show active create-doc-tab" id="nav-home" role="tabpanel"
+            aria-labelledby="nav-home-tab">
+            <form method="post" id="createFormId">
+                {% csrf_token %}
+                <!-- Basic information -->
+                <p class="h2 font-weight-light card-heading">{% trans "Základní údaje" %}</p>
+                <div class="form-row">
+                    {% include "components/create-basic-information.html" %}
+                </div>
+                <!-- Model Description & Authors -->
+                {% if context.showDetails %}
+                <div class="form-row">
+                    <!-- Model Descripiton -->
+                    <div class="col-12 col-md-7 col-lg-9">
+                        <p class="h2 font-weight-light card-heading">{% trans "Popis obsahu" %}</p>
+                        <div class="card create-card">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <!-- First col -->
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                        <!-- full width inputs -->
+                                        <div class="form-group">
+                                            <label for="obdobi">{{ formCreate.obdobi.label }}</label>
+                                            {% render_field formCreate.obdobi name="obdobi" class="form-control form-control-sm selectpicker droplevel" data-size="10" data-live-search="true" data-dropup-auto="false" id="obdobi"  %}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="areal">{{ formCreate.areal.label }}</label>
+                                            {% render_field formCreate.areal name="areal" class="form-control form-control-sm selectpicker" data-size="10" data-live-search="true" data-dropup-auto="false" id="areal"  %}
+                                        </div>
+                                    </div>
+                                    <!-- Second col -->
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label for="datace">{{ formCreate.presna_datace.label }}</label>
+                                            {% render_field formCreate.presna_datace class="form-control form-control-sm" id="presna_datace"  %}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="aktivity">{{ formCreate.aktivity.label }}</label>
+                                            {% render_field formCreate.aktivity class="form-control form-control-sm selectpicker" data-live-search="true" data-dropup-auto="false" id="aktivity"  %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Full-width input - Model link -->
+                                <div class="form-row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="odkaz">{{ formCreate.odkaz.label }}</label>
+                                            {% render_field formCreate.odkaz name="odkaz" class="form-control form-control-sm" id="odkaz"  %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Authors -->
+                    <div class="col-12 col-md-5 col-lg-3">
+                        <p class="h2 font-weight-light card-heading">{% trans "Autoři" %}</p>
+                        <div class="card create-card">
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    {% for autor in context.autori %}
+                                    <li class="list-group-item" id="authors">{{ forloop.counter }}. {{ autor }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <a id="editAuthorAnchor" href="{% url 'documents:edit_author' ident_cely %}"
+                                    data-toggle="tooltip" data-placement="top" title="{% trans "Nové jméno" %}"
+                                    class="btn btn-amcr-3d authors float-right mt-2 checkchanges {% if not context.canEdit %}disabled{% endif %}"><span
+                                        class="ti-plus"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Findings Table -->
+                <p class="h2 font-weight-light card-heading">{% trans "Nálezy" %}</p>
+                <div class="card create-card">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-12">
+                                {% include "components/finding-table.html" %}
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 pl-0 mt-4">
+                            <a id="addFindingAnchor"
+                                class="btn btn-amcr-3d checkchanges {% if not context.canEdit %}disabled{% endif %}"
+                                href="{% url 'documents:create_finding' context.indet_komponenta %}">
+                                {% trans "Přidat nález" %}</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Localization & Map -->
+                <p class="h2 font-weight-light card-heading">{% trans "Lokalizace" %}</p>
+                <div class="card create-card">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <!-- Localization -->
+                            <div class="col-12">
+                                <div class="form-row">
+                                    <div class="col-12 col-md-3">
+                                        <!-- Country -->
+                                        <div class="form-group">
+                                            <label for="zeme">{{ formCreate.zeme.label }}</label>
+                                            {% render_field formCreate.zeme class="form-control form-control-sm selectpicker" id="zeme"  %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <!-- Region -->
+                                        <div class="form-group">
+                                            <label for="region">{{ formCreate.region.label }}</label>
+                                            {% render_field formCreate.region class="form-control form-control-sm" id="region"  %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <!-- Latitude -->
+                                        <div class="form-group">
+                                            <label for="sirka">{{ formCreate.sirka.label }}</label>
+                                            {% render_field formCreate.sirka|append_attr:"readonly:readonly" class="form-control form-control-sm" id="sirka"  %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <!-- Longitude -->
+                                        <div class="form-group">
+                                            <label for="delka">{{ formCreate.delka.label }}</label>
+                                            {% render_field formCreate.delka|append_attr:"readonly:readonly" class="form-control form-control-sm" id="delka"  %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Map -->
+                            <div class="col-12 p-0 map-wrapper">
+                                {% include "components/map_doc.html" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Files -->
+                <p class="h2 font-weight-light card-heading"> {% trans "Soubory" %}</p>
+                <div class="card create-card">
+                    <div class="card-body">
+
+                        {% include "documents/file_table.html" %}
+                        <!--Table-->
+                        <!-- Add new file button -->
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 pl-0 mt-4">
+                            <a class="btn btn-amcr-3d checkchanges {% if not context.canEdit %}disabled{% endif %}"
+                                href="{% url 'documents:upload_file' documentId %}"> {% trans "Přidat fotografii" %}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Documents bottom button group component -->
+                <div class="m-1 mb-3 mb-md-0 mt-3 mt-md-3 pl-md-1 col-12 col-sm-12 col-md-12 col-xl-9">
+
+                    {% include "components/button-group.html" %}
+                </div>
+                {% if context.showDetails %}
+                {% include "components/create-doc-modals.html" %}
+                {% include "components/changed-form-modal.html" %}
+                {% endif %}
+
+            </form>
+        </div>
+    </div>
+    {% endblock%}
+
+    {% block script %}
+    <script>
+        $(document).ready(function () {
+            // Tracking changes in the form
+            var formChanged = false
+            $('textarea, input').on('change', function () {
+                formChanged = true
+                saveButtonEnabled()
+            });
+            // Changes in selectpickers
+            $('.selectpicker').on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+                formChanged = true
+                saveButtonEnabled()
+            });
+            $(".checkchanges").on('click', function (event) {
+                if (formChanged) {
+                    event.preventDefault() // Avoids going to href link for anchors
+                    event.stopPropagation() // Avoids opening original modal
+                    $('#formChangeModal').modal('show')
+                }
+            });
+
+            //Side buttons prop changing
+            function saveButtonEnabled() {
+                {% if context.canEdit %}
+                $("#saveFormButtonId").prop('disabled', false);
+                $("#send_to_confirm_button").prop('disabled', true);
+                {% endif %}
+            }
+
+            {% if context.canEdit and context.showDetails %}
+            addUniquePointToPoiLayer($("#sirka").val(), $("#delka").val())
+            {% endif %}
+
+            //Initializing tooltips
+            $('[data-toggle="tooltip"]').tooltip()
+
+            //Period and Areal are required now
+            $('#obdobi, #areal').prop('required', true)
+
+            //Range slider
+            $(".js-range-slider").ionRangeSlider({
+                skin: "flat",
+                min: 0,
+                max: 100,
+                hide_min_max: "true",
+                postfix: "%",
+                grid: "false",
+                {% if not context.canEdit and context.showDetails %}
+                disable: "true"
+                {% endif %}
+            });
+        //Show only ears in datepicker field
+        $("#rok_vzniku").datepicker({
+            format: " yyyy", // Notice the Extra space at the beginning
+            viewMode: "years",
+            minViewMode: "years",
+            autoclose: true,
+            endDate: new Date(),
+            templates:
+            {
+                leftArrow: '<i class="ti-arrow-left"></i>',
+                rightArrow: '<i class="ti-arrow-right"></i>'
+            }
+        });
+        });
+    </script>
+    {% endblock %}

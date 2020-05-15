@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% block head%}
+<style>
+    @font-face {
+        font-family: museo;
+        src: url('{% static 'fonts/museo.otf' %}');
+    }
+</style>
+{% endblock %}
+{% block content %}
+<!-- page title area start -->
+<div class="page-title-area mb-3">
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title d-block d-sm-block d-md-block d-lg-none">{{ MAIN_MENU }}</h4>
+                <h4 class="page-title pull-left d-none d-lg-block">{{ MAIN_MENU }}</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="/" class="main-modul">{{ MAIN_MENU }}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-content-inner mr-2 ml-2 mb-5">
+    <div class="row mt-4 mb-5">
+        <div class="owl-carousel owl-theme">
+            <!-- Library 3D card-->
+            <div class="amcr-card mb-xs-30 cardhover documents">
+                <a href="/documents/">
+                    <div class="card">
+                        <div class="text-wrapper-card d-flex justify-content-center">
+                            <span class="card-header-text">{{DOC_CARD_HEADER}}</span>
+                        </div>
+                        <img class="card-amcr-logo img-responsive amcr-overlay-home"
+                            src="{% static "loga/hover_logo.svg" %}">
+                        <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-knihovna-3d.png" %}"
+                            alt="amcr_brick">
+                        <div class="card-body">
+                            <h2 class="card-text display-4 font-weight-light text-center">{{LIBRARY_3D}}</h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- Detectors card -->
+            <div class="amcr-card mb-xs-30 cardhover findings">
+                <a href="/pas/">
+                    <div class="card">
+                        <div class="text-wrapper-card d-flex justify-content-center">
+                            <span class="card-header-text">{{DET_CARD_HEADER}}</span>
+                        </div>
+                        <img class="card-amcr-logo img-responsive amcr-overlay-home"
+                            src="{% static "loga/hover_logo.svg" %}">
+                        <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-detektor.png" %}"
+                            alt="amcr_brick">
+                        <div class="card-body">
+                            <h2 class="card-text display-4 font-weight-light text-center">{{MODUL_DETECTOR}}</h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Texts related to cards -->
+    <div class="card-text-wrapper text-justify col-12 col-md-11">
+        <div class="findings d-none">
+            <p><strong>{% trans "AMČR-PAS - Portál amatérských spolupracovníku a evidence samostatných nálezů" %}</strong>
+            </p>
+            <hr>
+            <p>{% trans "AMČR-PAS je modul zaměřený na správu informací o samostatných nálezech učiněných při povrchovém či málo destruktivním průzkumu. Umožňuje efektivní spolupráci mezi odbornou veřejností a amatérskými spolupracovníky, a to v souladu s platnými zákonnými normami. Každý registrovaný uživatel má možnost informovat zde o své spolupráci s konkrétní archeologickou organizací a evidovat nálezy učiněné při souvisejících terénních průzkumech." %}
+            </p>
+        </div>
+        <div class="documents d-none">
+            <p><strong>{% trans "AMČR - Knihovna 3D" %}</strong></p>
+            <hr>
+            <p>{% trans "AMČR - Knihovna 3D slouží jako prostor pro systematickou evidenci archeologicky relevantních trojrozměrných modelů a textur. Jejím cílem není ukládat jednotlivé modely, ale umožnit jejich jednotný odborný popis a zajistit jejich vyhledatelnost v prostředí Digitálního archivu AMČR (https://digiarchiv.aiscr.cz/). Každý model je reprezentován jedním či více náhledy, popisnými metadaty a odkazem na úložiště s originálním modelem. V případě textur je možné nahrávat přímo originální rastry pro další využití. Evidence postihuje všechny typy archeologických 3D modelů bez ohledu na jejich účel (dokumentační, rekonstrukční, prezentační apod.)." %}
+            </p>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block script %}
+    <script>
+        $(".amcr-card").hover(
+            function (e) {
+                var hoveredElement = "." + e.currentTarget.classList[3]
+                $(hoveredElement).toggleClass('open');
+            });
+        //Removing breadcrumbs on homepage
+        $(document).ready(function () {
+            $("#breadcrumbs_index").remove();
+
+            //Card slider
+            $('.owl-carousel').owlCarousel({
+                loop: false,
+                margin: 15,
+                dots: true,
+                navigation: false,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 2,
+                        nav: false,
+                        mergeFit: true
+                    },
+                    600: {
+                        items: 3,
+                        nav: false
+                    },
+                    1000: {
+                        items: 6,
+                        nav: false,
+                        loop: false
+                    }
+                }
+            })
+        });
+    </script>
+    {% endblock %}

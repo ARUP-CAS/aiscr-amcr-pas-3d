@@ -1,0 +1,18 @@
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+        //Table
+        var $table = $('#documents_table')
+        $table.bootstrapTable('refreshOptions',{
+            exportTypes: ['csv', 'xml', 'json'],
+            exportOptions: {
+                fileName: function () {
+                    return getExportDate()
+                },
+                ignoreColumn: ['detail', 'historie']
+            }
+        })
+    })
+</script>
