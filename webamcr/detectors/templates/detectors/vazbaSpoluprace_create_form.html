@@ -24,7 +24,7 @@
                     <li><a href="/pas/cooperate/" class="main-modul-det">{{COOP_DETECTOR}}</a></li>
                 </ul>
                 <ul class="breadcrumbs pull-left" id="breadcrumbs_index">
-                    <li><a class="main-modul-det">Nová žádost o spolupráci</a></li>
+                    <li><a class="main-modul-det">{% trans "Nová žádost o spolupráci" %}</a></li>
                 </ul>
             </div>
         </div>
@@ -34,7 +34,7 @@
     <div class="form-row">
     <div class="col-12 col-sm-12 col-md-11 col-lg-10 col-xl-6">
         <p class="h2 font-weight-light card-heading ml-0">{% trans "Žádost o spolupráci" %}</p>
-        <form method="post">
+        <form method="post" autocomplete="off">
             {% csrf_token %}
             <div class="card create-card m-0">
                 <div class="card-body">
@@ -45,7 +45,7 @@
                             {% endfor %}
                             <div class="form-group">
                                 <label for="archeolog">{{ newCooperationForm.archeolog.label }}</label>
-                                {% render_field newCooperationForm.archeolog class="form-control form-control-sm selectpicker" id="archeolog" data-live-search="true" placeholder="Zadejte email archeologa pro spolupráci" %}
+                                {% render_field newCooperationForm.archeolog class="form-control form-control-sm selectpicker" id="archeolog" data-live-search="true" %}
                             </div>
                         </div>
                     </div>

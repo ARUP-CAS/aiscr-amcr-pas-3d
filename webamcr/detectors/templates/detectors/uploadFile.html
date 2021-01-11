@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 {% block content %}
 <script>
   $('.menu_detectors').addClass('active')
@@ -45,10 +46,10 @@
                       onclick="return Uploadcheck()">{% trans "Nahrát" %}</button>
                   </div>
                   <div class="custom-file">
-                    <input type="file" class="custom-file-input" name="myFile" accept="image/*" id="detector_upload">
+                    <input type="file" class="custom-file-input" lang="{{LANGUAGE_CODE}}" name="myFile" accept="image/*" id="detector_upload">
                     <label class="custom-file-label" for="detector_upload">{% trans "Vyberte soubor" %}</label>
                   </div>
-                  <p class="mt-3 text-secondary">{% trans "Nahráním souboru udělujete souhlas s jeho trvalým využitím a šířením pod licencí" %} <a href="https://creativecommons.org/licenses/by-nc/4.0/">{% trans "Creative Commons Uveďte původ-Neužívejte komerčně 4.0 Mezinárodní (CC BY-NC 4.0)" %}</a>.</p>
+                  <p class="mt-3 text-secondary">{% trans "Nahráním souboru udělujete souhlas s jeho trvalým využitím a šířením pod licencí" %} <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">{% trans "Creative Commons Uveďte původ-Neužívejte komerčně 4.0 Mezinárodní (CC BY-NC 4.0)" %}</a>.</p>
                 </div>
               </div>
             </div>

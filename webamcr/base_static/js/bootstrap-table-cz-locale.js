@@ -1,8 +1,8 @@
-
+/* 
   /*===============================
   Bootstrap-table Locale CZ
   ===============================*/
-  $.fn.bootstrapTable.locales['cs-CZ'] = {
+  $.fn.bootstrapTable.locales['cs'] = {
     formatLoadingMessage() {
       return 'Čekejte, prosím'
     },
@@ -29,7 +29,7 @@
       return `Zobrazeno ${totalRows} výsledků`
     },
     formatClearSearch() {
-      return 'Clear Search'
+      return 'Vymazat vyhledávání'
     },
     formatSearch() {
       return 'Vyhledávání'
@@ -62,10 +62,10 @@
       return 'Sloupce'
     },
     formatColumnsToggleAll() {
-      return 'Toggle all'
+      return 'Přepnout vše'
     },
     formatFullscreen() {
-      return 'Fullscreen'
+      return 'Celá obrazovka'
     },
     formatAllRows() {
       return 'Vše'
@@ -80,11 +80,12 @@
       return 'Přejít'
     },
     formatAdvancedSearch() {
-      return 'Advanced search'
+      return 'Pokročilé vyhledávání'
     },
     formatAdvancedCloseButton() {
       return 'Zavřít'
     }
   }
 
-  $.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['cs-CZ'])
+  $.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['cs'])
+ 

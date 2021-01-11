@@ -3,37 +3,29 @@
     ===================
 
     1. Core Css
-    2. Dashboard One
-        2.1 Sidebar Menu
-            2.1.1 Horizontal Menu
-        2.2 Header Area
-        2.3 Page Title Area
-        2.4 Card Area
-        2.5 Overview
-        2.6 Market value
-        2.7 Live Crypto Price
-        2.8 Trading History
-        2.9 Letest Post
-    3. Dashboard Two
-    4. Dashboard Three
-   11. Button
-   13. Dropdown Button
-   14. List Group
-   15. Modal
-   16. Pagination
-   17. Form
-   18. Icons
-   19. Table Basic
-   20. Datatable
-   23. Login
-   25. 404 Page
-   26. Errors
-   27. Offset Sidebar
-   28. CUSTOM
-   29. Footer
+    2. Sidebar Menu
+    3. Mobile Menu
+    4. Header Area
+    5. Page Title Area
+    6. Card Area
+        6.1 - Cards - Owl carousel
+    7. Button
+        7.1 - Dropdown button
+        7.2 - Pagination
+    8. Icons
+    9. Login
+    10. 404 Page
+    11. Offset Sidebar
+    12. Footer
+    13. Forms
+    14. Tables
+    15. Accordions
+    16. Modals, Toasts, Alerts
+    17. Users
+    18. Validation and errors
+    19. Other
 
 -----------------------------------------------------------------------------------*/
-
 
 /*------------------------- 1. Core Css -------------------*/
 
@@ -51,11 +43,6 @@
 
 .bs-tooltip-left{
     margin-right: 10px;
-}
-
-.form-control:disabled{
-    background: #cacaca4f !important;
-    border-color: #cacaca4f !important;
 }
 
 .page-container {
@@ -92,7 +79,7 @@
 /*------------------------- END Core Css -------------------*/
 
 
-/*-------------------- Sidebar Menu -------------------*/
+/*-------------------- 2. Sidebar Menu -------------------*/
 /*----------------------------------------------------*/
 
 .sidebar-menu {
@@ -222,7 +209,8 @@
 }
 /*-------------------- END Sidebar Menu -------------------*/
 
-/* mobile menu */
+/*------------------- 3. Mobile Menu ------------------*/
+/*----------------------------------------------------*/
 
 .slicknav_menu {
     background: #8255f7;
@@ -270,10 +258,10 @@
     float: right;
 }
 
-/*-------------------- END Horizontal Menu -------------------*/
+/*-------------------- END Mobile Menu -------------------*/
 
 
-/*-------------------- 2.2 Header Area -------------------*/
+/*-------------------- 4. Header Area --------------------*/
 /*-------------------------------------------------------*/
 
 .header-area {
@@ -352,9 +340,6 @@
     color: #b1a7a7;
 }
 
-
-/* notification-area */
-
 .notification-area {
     -webkit-user-select: none;
        -moz-user-select: none;
@@ -366,12 +351,13 @@
 
 .notification-area li {
     display: inline-block;
-    margin-left: 20px;
+    margin-left: 15px;
     cursor: pointer;
     -webkit-user-select: none;
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
+    vertical-align: middle;
 }
 
 .notification-area li.settings-btn.active i {
@@ -486,10 +472,40 @@
     font-weight: 300;
 }
 
+.flag {
+    margin: auto;
+    display: block;
+    width: 27px;
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    opacity: 50%;
+    border: 1px solid #949494;
+    border-radius: 5px;
+}
+
+.flag:hover {
+    filter:none;
+    -webkit-filter: none;
+    transition: ease 0.2s;
+    opacity: 100%;
+}
+.flag-active {
+    filter:none !important;
+    -webkit-filter: none !important;
+    opacity: 100% !important;
+}
+.vertical-sep-top {
+    border-left: 2px solid #cecece;
+    height: 27px;
+    margin-left: -3px;
+    top: 0;
+    position: absolute;
+}
+
 /*-------------------- END Header Area -------------------*/
 
-/*-------------------- Page Title Area -------------------*/
-/*-------------------------------------------------------*/
+/*-------------------- 5. Page Title Area -------------------*/
+/*----------------------------------------------------------*/
 
 .page-title-area {
     padding: 10px 30px;
@@ -679,10 +695,10 @@ ul.breadcrumbs {
     background: #f8f9fa;
     color: #2942fa;
 }
-/*-------------------- END Page Title Area -------------------*/
+/*------------------- END Page Title Area ------------------*/
 
 
-/*------------------------Cards -------------------------*/
+/*---------------------- 6. Cards -----------------------*/
 /*------------------------------------------------------*/
 
 .card {
@@ -780,7 +796,7 @@ ul.breadcrumbs {
     margin-bottom: 5px !important;
 }
 
-/*Cards overaly - MENU */
+/*Cards overlay - MENU */
 .card:hover>.amcr-overlay-home{
     visibility: visible;
     opacity: 0.9;
@@ -842,7 +858,7 @@ ul.breadcrumbs {
 }
 /*----------------------END CARDS---------------------*/
 
-/*-------------Owl Carousel - Main menu Cards---------*/
+/*------------------ 6.1 Owl Carousel ----------------*/
 /*---------------------------------------------------*/
 
 .owl-carousel{
@@ -864,7 +880,7 @@ ul.breadcrumbs {
 /*--------------- END of Owl Carousel ------------------*/
 
 
-/*--------------------  Button -------------------- */
+/*------------------ 7. Button -------------------- */
 /*-------------------------------------------------*/
 .btn {
     padding: 11px 17px;
@@ -915,110 +931,111 @@ ul.breadcrumbs {
     color: #FFFFFF;
     background-color: #85140E;
     border-color: #85140E;
-  }
+}
 
-  .btn-amcr:hover,
-  .btn-amcr:active,
-  .btn-amcr.active,
-  .open .dropdown-toggle.btn-amcr {
+.btn-amcr:hover,
+.btn-amcr:active,
+.btn-amcr.active,
+.open .dropdown-toggle.btn-amcr {
     color: #FFFFFF;
     background-color: #9C1E17;
     border-color: #85140E;
-  }
-  .btn-amcr:focus{
+}
+.btn-amcr:focus{
     box-shadow: 0 0 0 0.2rem #85140e70;
-  }
+}
 
-  .btn-amcr:active,
-  .btn-amcr.active,
-  .open .dropdown-toggle.btn-amcr {
+.btn-amcr:active,
+.btn-amcr.active,
+.open .dropdown-toggle.btn-amcr {
     background-image: none;
-  }
+}
 
-  .btn-amcr.disabled,
-  .btn-amcr[disabled],
-  fieldset[disabled] .btn-amcr,
-  .btn-amcr.disabled:hover,
-  .btn-amcr[disabled]:hover,
-  fieldset[disabled] .btn-amcr:hover,
-  .btn-amcr.disabled:focus,
-  .btn-amcr[disabled]:focus,
-  fieldset[disabled] .btn-amcr:focus,
-  .btn-amcr.disabled:active,
-  .btn-amcr[disabled]:active,
-  fieldset[disabled] .btn-amcr:active,
-  .btn-amcr.disabled.active,
-  .btn-amcr[disabled].active,
-  fieldset[disabled] .btn-amcr.active {
+.btn-amcr.disabled,
+.btn-amcr[disabled],
+fieldset[disabled] .btn-amcr,
+.btn-amcr.disabled:hover,
+.btn-amcr[disabled]:hover,
+fieldset[disabled] .btn-amcr:hover,
+.btn-amcr.disabled:focus,
+.btn-amcr[disabled]:focus,
+fieldset[disabled] .btn-amcr:focus,
+.btn-amcr.disabled:active,
+.btn-amcr[disabled]:active,
+fieldset[disabled] .btn-amcr:active,
+.btn-amcr.disabled.active,
+.btn-amcr[disabled].active,
+fieldset[disabled] .btn-amcr.active {
     background-color: #85140E ;
     border-color: #85140E ;
     cursor: not-allowed;
-  }
+}
 
-  .btn-amcr .badge {
+.btn-amcr .badge {
     color: #85140E;
     background-color: #FFFFFF;
-  }
+}
 
-  /* BTN FOR 3D MODULES*/
-  .btn-amcr-3d {
+/* BTN FOR 3D MODULES*/
+.btn-amcr-3d {
     color: #ffffff !important;
     background-color: #778E98;
     border-color: #778E98;
-  }
+}
 
-  .btn-amcr-3d:hover,
-  .btn-amcr-3d:focus,
-  .btn-amcr-3d:active,
-  .btn-amcr-3d.active,
-  .open .dropdown-toggle.btn-amcr-3d {
+.btn-amcr-3d:hover,
+.btn-amcr-3d:focus,
+.btn-amcr-3d:active,
+.btn-amcr-3d.active,
+.open .dropdown-toggle.btn-amcr-3d {
     color: #ffffff;
     background-color: #63737A;
     border-color: #63737A;
 
-  }
+}
 
-  .btn-amcr-3d:focus {
+.btn-amcr-3d:focus {
     box-shadow: 0 0 0 0.2rem rgba(119, 142, 152, 0.5);
-  }
+}
 
-  .btn-amcr-3d:active,
-  .btn-amcr-3d.active,
-  .open .dropdown-toggle.btn-amcr-3d {
+.btn-amcr-3d:active,
+.btn-amcr-3d.active,
+.open .dropdown-toggle.btn-amcr-3d {
     background-image: none;
-  }
+}
 
-  .btn-amcr-3d.disabled,
-  .btn-amcr-3d[disabled],
-  fieldset[disabled] .btn-amcr-3d,
-  .btn-amcr-3d.disabled:hover,
-  .btn-amcr-3d[disabled]:hover,
-  fieldset[disabled] .btn-amcr-3d:hover,
-  .btn-amcr-3d.disabled:focus,
-  .btn-amcr-3d[disabled]:focus,
-  fieldset[disabled] .btn-amcr-3d:focus,
-  .btn-amcr-3d.disabled:active,
-  .btn-amcr-3d[disabled]:active,
-  fieldset[disabled] .btn-amcr-3d:active,
-  .btn-amcr-3d.disabled.active,
-  .btn-amcr-3d[disabled].active,
-  fieldset[disabled] .btn-amcr-3d.active {
+.btn-amcr-3d.disabled,
+.btn-amcr-3d[disabled],
+fieldset[disabled] .btn-amcr-3d,
+.btn-amcr-3d.disabled:hover,
+.btn-amcr-3d[disabled]:hover,
+fieldset[disabled] .btn-amcr-3d:hover,
+.btn-amcr-3d.disabled:focus,
+.btn-amcr-3d[disabled]:focus,
+fieldset[disabled] .btn-amcr-3d:focus,
+.btn-amcr-3d.disabled:active,
+.btn-amcr-3d[disabled]:active,
+fieldset[disabled] .btn-amcr-3d:active,
+.btn-amcr-3d.disabled.active,
+.btn-amcr-3d[disabled].active,
+fieldset[disabled] .btn-amcr-3d.active {
     background-color: #778E98;
     border-color: #778E98;
     cursor: not-allowed;
-  }
+}
 
-  .btn-amcr-3d .badge {
+.btn-amcr-3d .badge {
     color: #778E98;
     background-color: #ffffff;
-  }
+}
 
-  .btn-amcr-disabled{
-      color: #fff !important;
-  }
+.btn-amcr-disabled{
+    color: #fff !important;
+}
 /*-------------------- END Button ------------------- */
 
-/*-------------------- 13. Dropdown Button ------------------- */
+/*-------------- 7.1 Dropdown Button -------------- */
+/*-------------------------------------------------*/
 
 .drop-buttons .btn {
     margin-bottom: 1.3em;
@@ -1027,22 +1044,21 @@ ul.breadcrumbs {
 .dropdown-item {
     font-size: 14px;
 }
+/*---------------- END Dropdown Button -------------- */
 
-/*-------------------- END Dropdown Button ------------------- */
 
-
-/*-------------------- 16. Pagination ------------------- */
+/*----------------- 7.2 Pagination ---------------- */
+/*-------------------------------------------------*/
 
 .pagination li a {
     font-family: 'lato', sans-serif;
 }
-
-/*-------------------- END Pagination ------------------- */
-
+/*------------------ END Pagination ---------------- */
 
 
-/*-------------------- Icons ------------------- */
 
+/*--------------------- 8. Icons ------------------ */
+/*-------------------------------------------------*/
 /* icon-container */
 
 .icon-section {
@@ -1096,7 +1112,7 @@ ul.breadcrumbs {
 
 
 
-/*------------------------- Login ------------------------*/
+/*------------------------ 9. Login ----------------------*/
 /*-------------------------------------------------------*/
 
 .login-screen {
@@ -1173,7 +1189,11 @@ ul.breadcrumbs {
 }
 
 .login-form-body {
-    padding: 25px 50px 50px 50px;
+    padding: 25px 50px 20px 50px;
+}
+
+.login-form-body .vertical-sep-top{
+    border-left: 1px solid rgba(0,0,0,.1);
 }
 
 .login-other a i {
@@ -1328,7 +1348,7 @@ ul.breadcrumbs {
 /*---------------------- END Login ----------------------- */
 
 
-/*---------------------- 404 Page ----------------------*/
+/*---------------------- 10. 404 Page ----------------------*/
 /*-----------------------------------------------------*/
 
 .container-error {
@@ -1365,7 +1385,7 @@ ul.breadcrumbs {
 /*-------------------- END 404 Page ------------------- */
 
 
-/*-------------------- 27. Offset Sidebar ------------------- */
+/*-------------------- 11. Offset Sidebar ------------------- */
 /*-----------------------------------------------------------*/
 
 .offset-area {
@@ -1548,7 +1568,7 @@ ul.breadcrumbs {
 /*-------------------- END Offset Sidebar ------------------- */
 
 
-/*------------------------- Footer ------------------------- */
+/*------------------------ 12. Footer ---------------------- */
 /*----------------------------------------------------------*/
 .footer-area {
     text-align: justify;
@@ -1584,9 +1604,9 @@ ul.breadcrumbs {
     padding: 5px;
     max-height: 60px;
 }
-/*-------------------- End of Footer* ----------------/
+/*------------------- End of Footer -----------------*/
 
-*----------------------- Forms ---------------------*/
+/*--------------------- 13. Forms ------------------*/
 /*-------------------------------------------------*/
 .form-control,
 .form-control:focus {
@@ -1603,6 +1623,21 @@ ul.breadcrumbs {
     border: 1px solid rgba(170, 170, 170, .3);
     padding: 10.72px 12.8px;
     padding: .67rem .8rem;
+}
+
+.form-control:disabled{
+    background: #cacaca4f !important;
+    border-color: #cacaca4f !important;
+}
+
+.bootstrap-select.form-control-sm .dropdown-toggle{
+    border-color: #e5e5e5;
+    background-color: #fff;
+    color: #495057
+}
+
+.bootstrap-select .dropdown-menu .show {
+    max-height: 400px !important;
 }
 
 .form-control-sm, .input-group-sm>.form-control, .input-group-sm>.input-group-append>.btn, .input-group-sm>.input-group-append>.input-group-text, .input-group-sm>.input-group-prepend>.btn,
@@ -1668,7 +1703,7 @@ label {
 }
 
 
-.custom-file-input:lang(en)~.custom-file-label::after {
+.custom-file-input:lang(cs)~.custom-file-label::after {
     content: "Procházet";
 }
 
@@ -1729,14 +1764,6 @@ label {
     border-bottom: none;
 }
 
-.location-icon{
-    margin-left: auto;
-    margin-right: auto;
-    border: none;
-    font-size: 25px;
-    text-align: center;
-}
-
 .tab-content{
     border: 1px solid #d7d7d7 !important;
     border-radius: 5px;
@@ -1757,9 +1784,6 @@ label {
     color: #fff;
 }
 
-#icon-3D{
-    cursor: pointer !important;
-}
 .input-group-3d i{
     color: #fff;
 }
@@ -1821,9 +1845,9 @@ textarea[name="document_description_details"]{
     font-size: 20px;
 }
 
-/*------------ END of Forms ------------------*/
+/*------------------- END of Forms -------------------*/
 
-/*------------------- TABLES -----------------------*/
+/*------------------ 14. TABLES --------------------*/
 /*-------------------------------------------------*/
 .single-table .table {
     margin-bottom: 0;
@@ -2124,7 +2148,6 @@ pre {
     padding: 0.20rem !important;
 }
 
-
 .users-table .bootstrap-table .fixed-table-pagination>.pagination-detail,
 .users-table .bootstrap-table .fixed-table-pagination>.pagination {
     margin-top: 30px !important;
@@ -2139,18 +2162,18 @@ pre {
 .users-table .bootstrap-table .fixed-table-toolbar .search-input{
     font-size: 11px;
 }
+
 .users-table .bootstrap-table .fixed-table-toolbar .search-input:focus{
     box-shadow: 0 0 0 0.2rem rgba(130,138,145,.5);
     border-color: var(--secondary)
 }
-
-
 
 /* Sort icons changing across all tables */
 .bootstrap-table .fixed-table-container .table thead th .desc{
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNWRHWFIAAACaSURBVDhP1cwhDsJAEIXhrYGEpKfAcQYMx0Ciq7kHPQD3QHER1uERGELN9id5dTOZtoKkf/KZ9u2kZVRKmczNGkfcrHHEzRpH3KxxxM0aR9ysceS/5ZyP+OJj+H0/aRrHeI0biuGOWtNx8WCPtw4MXjhoMj4eVWh1ZHBFpcm0eLjFQ4ee2OnXvDjQoMNZn+bHkRUu2OjT4kqpBxaJm+oNjoaPAAAAAElFTkSuQmCC') !important;
 
 }
+
 .bootstrap-table .fixed-table-container .table thead th .asc{
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNWRHWFIAAAChSURBVDhP1cyxCQJREEXR3URBsAozazCxDENjY/twC7APIxvxZ+YGJqLJeIW3wciAf1YQvHCS3fen+d9KKRPsMNKn4XFkiwc2+jQsDsxxhuGEmX7l4mGLvQ71OrSa1MejJS460rtioUldPJjiqAPvDhhr+jnGa9xxC7y+rzT9UWb2FVc0yHBFgwxXNMhwRYMMVzTIcEWDDFc0yHBFg3rWPAElQzpazUbvywAAAABJRU5ErkJggg==') !important;
 
@@ -2169,10 +2192,10 @@ pre {
     float: left
 }
 
-/*---------------------- END OF TABLES -----------------------*/
+/*-------------------- END OF TABLES ------------------*/
 
 
-/*-------------------- Accordions -------------------*/
+/*------------------ 15. Accordions -----------------*/
 /*--------------------------------------------------*/
 
 .according .card {
@@ -2225,9 +2248,9 @@ pre {
     color: #fff;
     font-size: 15px;
 }
-/*-------------------End of Accirdion -------------------*/
+/*-------------------- End of Accirdion -------------------*/
 
-/*-----------------Modals, Alerts, Toasts ---------------*/
+/*------------- 16. Modals, Alerts, Toasts --------------*/
 /*------------------------------------------------------*/
 .modal{
     padding-right: 0px !important;
@@ -2273,7 +2296,7 @@ pre {
 }
 /*------------- END of Modals, Alerts, Toasts -------------*/
 
-/*---------------------- Users -------------------------*/
+/*---------------------- 17. Users ---------------------*/
 /*-----------------------------------------------------*/
 
 .profile-image-round {
@@ -2312,32 +2335,29 @@ pre {
 /*--------------------- END of Users ---------------------*/
 
 
-/*---------------- Validation and Errors ---------------/
+/*-------------- 18. Validation and Errors -------------/
 /*----------------------------------------------------*/
 
 input:invalid{
     border-color: #cc8787 !important;
+    padding-right: calc(1.5em + .75rem);
+    background-repeat: no-repeat;
+    background-position: right calc(.375em + .1875rem) center;
+    background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e") !important;
 }
 
-input:invalid:focus{
-    border-color: #dc3545;
-    box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
-}
 
-.select-invalid{
+textarea:invalid, .select-invalid{
     border-color: #cc8787 !important;
+    background-repeat: no-repeat;
+    background-position: right calc(1.3em + .1875rem) center;
+    background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e") !important;
+
 }
 
-.select-invalid:focus{
-    border-color: #dc3545;
-    box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
-}
-
-textarea:invalid{
-    border-color: #cc8787;
-}
-
-textarea:invalid:focus{
+input:invalid:focus, .select-invalid:focus,textarea:invalid:focus {
     border-color: #dc3545;
     box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
 }
@@ -2361,9 +2381,9 @@ button .select-invalid:focus{
     -webkit-transition: 0.5s;
 }
 
-
 .login-form-body input:invalid{
     border-color: #e6e6e6 !important;
+    background-image: none !important;
 }
 
 .login-form-body input:invalid:focus{
@@ -2371,9 +2391,13 @@ button .select-invalid:focus{
     box-shadow: none !important;
 }
 
-/******************END of VALIDATION*****************/
+.form-control.is-invalid {
+    border-color: #cc8787 !important;
+}
 
-/*--------------------- Other ---------------------*/
+/*---------------- END of VALIDATION ---------------*/
+
+/*------------------- 19. Other -------------------*/
 /*------------------------------------------------*/
 
 .pt-3-half {

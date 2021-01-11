@@ -42,7 +42,7 @@
 			{% else %}
 			<p class="h2 font-weight-light card-heading">{% trans "Detail nálezu 3D modelu" %} {{ context.ident_cely }}</p>
 			{% endif %}
-			<form method="post">
+			<form method="post" autocomplete="off">
 				{% csrf_token %}
 				<!-- Header -->
 				<div class="card create-card">
@@ -56,11 +56,11 @@
 								</div>
 								<div class="form-group object">
 									<label for="druh_objektu">{{ form.druh_objektu.label }}</label>
-									{% render_field form.druh_objektu class="form-control form-control-sm selectpicker druh-objektu objekt" data-size="10" data-live-search="true" data-dropup-auto="false" id="druh_objektu"  %}
+									{% render_field form.druh_objektu class="form-control form-control-sm selectpicker druh-objektu objekt" data-live-search="true" id="druh_objektu"  %}
 								</div>
 								<div class="form-group object">
 									<label for="druh_predmetu">{{ form.druh_predmetu.label }}</label>
-									{% render_field form.druh_predmetu class="form-control form-control-sm selectpicker druh-predmetu predmet" data-size="10" data-live-search="true" data-dropup-auto="false" id="druh_predmetu" %}
+									{% render_field form.druh_predmetu class="form-control form-control-sm selectpicker druh-predmetu predmet" data-live-search="true" id="druh_predmetu" %}
 								</div>
 							</div>
 							<!-- Second col -->
@@ -71,11 +71,11 @@
 								</div>
 								<div class="form-group">
 									<label for="specifikace_objektu">{{ form.specifikace_objektu.label }}</label>
-									{% render_field form.specifikace_objektu class="form-control form-control-sm selectpicker objekt" data-size="10" data-live-search="true" data-dropup-auto="false" id="specifikace_objektu" %}
+									{% render_field form.specifikace_objektu class="form-control form-control-sm selectpicker objekt" data-live-search="true" id="specifikace_objektu" %}
 								</div>
 								<div class="form-group">
 									<label for="specifikace_predmetu">{{ form.specifikace_predmetu.label }}</label>
-									{% render_field form.specifikace_predmetu class="form-control form-control-sm selectpicker predmet" data-size="10" data-live-search="true" data-dropup-auto="false" id="specifikace_predmetu" %}
+									{% render_field form.specifikace_predmetu class="form-control form-control-sm selectpicker predmet" data-live-search="true" id="specifikace_predmetu" %}
 								</div>
 							</div>
 							<!-- Full width col -->
@@ -92,7 +92,7 @@
 				<div class="row mt-3 pl-2 pr-2">
 					<div class="col-6 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0">
 						<a class="btn btn-amcr-3d btn-block" href="{% url 'documents:detail' context.ident_cely %}"
-							return false;>Zpět</a>
+							return false;>{% trans "Zpět" %}</a>
 					</div>
 					<div class="col-6 col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0 ">
 						{% if context.detail %}

@@ -1,17 +1,18 @@
 import hashlib
 
 from django.shortcuts import get_object_or_404, render, redirect
-from django.db.models import Q
 from django.views.generic.list import ListView
 from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
+from django.forms.models import model_to_dict
 
 from .forms import UserForm, CreateUserForm, EditUserForm
 from documents import xmlrpc
-from documents.decorators import login_required, min_user_group
-from django.forms.models import model_to_dict
+from documents.decorators import login_required, min_user_group, permissions_required
 from detectors.models import UserStorage
 from webamcr import helper_general as helper
 from detectors import models as m
+from detectors.amcemails import email_send_3D3, email_send_3D4
 from documents import helper as doc_helper
 from documents.constants import AmcrConstants as c
 from . import user_helper
@@ -24,13 +25,12 @@ logger = logging.getLogger(__name__)
 @min_user_group(c.ADMIN)
 def users_list(request, **kwargs):
 
-    #start = time.time()
-
+    curr_user = kwargs['user']
     context = user_helper.get_all_users()
+    hasRight = doc_helper.check_user_group_and_permission(curr_user, c.ADMIN, c.USERS_ADMIN)
+    context['canCreate'] = hasRight
+    context['canEdit'] = hasRight
     response = render(request, 'amcrusers/users.html', {'context': context})
-
-    #end = time.time()
-    #print(end - start)
 
     return response
 
@@ -42,7 +42,7 @@ class UsersList(ListView):
     template_name = "amcrusers/userstorage_list.html"
 
 
-@min_user_group(c.ADMIN)
+@permissions_required(c.ADMIN, c.USERS_ADMIN)
 def user_create(request, **kwargs):
 
     sid = request.COOKIES.get('sessionId')
@@ -98,18 +98,6 @@ def user_create(request, **kwargs):
                     message['type'] = c.ERROR
                     message['text'] = resp[1]
 
-                # newUser = UserStorage(
-                #   jmeno=manage_username,
-                #   email=manage_email,
-                #   pasw =passHash,
-                #   auth_level=0, # auth level is actually stored into anotherTable: user_group_auth_storage,
-                #   telefon=manage_phone_number,
-                #   organizace=manage_organization, # also stored in atree table
-                #   news='',
-                #   prijmeni=manage_surname,
-                #   confirmation=False
-                #   )
-
         else:
             logger.debug("Form is not valid: " + str(form.errors))
 
@@ -121,13 +109,13 @@ def user_create(request, **kwargs):
     return render(request, 'amcrusers/user_create.html', {
         'form': form,
         'context': {
-            'title': 'Nový uživatel',
+            'title': _('Nový uživatel'),
             'message': message
         }
     })
 
 
-@min_user_group(c.ADMIN)
+@permissions_required(c.ADMIN, c.USERS_ADMIN)
 def user_edit(request, pk, **kwargs):
 
     message = {}
@@ -165,7 +153,7 @@ def user_edit(request, pk, **kwargs):
             # Check that the passwords are the same
             if manage_password != manage_password_control:
                 logger.debug("Hesla se neshodují")
-                form.add_error('manage_password_control', 'Hesla se neshodují')
+                form.add_error('manage_password_control', _('Hesla se neshodují'))
             else:
 
                 # Getting auth level based on roles and permissions
@@ -184,6 +172,17 @@ def user_edit(request, pk, **kwargs):
                     params['email'] = manage_email
                 if (int(manage_role_id) != c.USER_ROLES_DICT[rolesAndPerm['role']]) or (manage_permissions != permissions):
                     params['auth'] = authLevel
+
+                    # Now if 'Spravce 3D' vas removed or added send notifiaction
+                    # was_added = str(c.ADMIN3D_ID) in manage_permissions and str(c.ADMIN3D_ID) not in permissions
+                    # was_removed = str(c.ADMIN3D_ID) in permissions and str(c.ADMIN3D_ID) not in manage_permissions
+                    # if was_added:
+                    #     # Added
+                    #     email_send_3D3.delay(user.email)
+                    # elif was_removed:
+                    #     # Removed
+                    #     email_send_3D4.delay(user.email)
+
                 if (len(manage_password) > 0) and (manage_password != user.pasw):
                     params['pasw'] = hashlib.sha1(manage_password.encode('utf8')).hexdigest()
 
@@ -201,6 +200,8 @@ def user_edit(request, pk, **kwargs):
 
                 context = user_helper.get_all_users()
                 context['message'] = message
+                context['canCreate'] = True
+                context['canEdit'] = True
                 return render(request, 'amcrusers/users.html', {'context': context})
 
         else:
@@ -224,7 +225,7 @@ def user_edit(request, pk, **kwargs):
     return render(request, 'amcrusers/user_create.html', {
         'form': form,
         'context': {
-            'title': 'Editace uživatele',
+            'title': _('Editace uživatele'),
         }
     })
 
@@ -255,14 +256,22 @@ def userDetail(request, **kwargs):
                 user.jazyk = user_language
                 messages.add_message(request, messages.SUCCESS, c.LANGUAGE_CHANGED_MSG)
 
-            if (user_password == user_password_check) and user_password:
-                user.pasw = hashlib.sha1(user_password.encode('utf8')).hexdigest()
+            if (user_password or user_password_check):
+                if (user_password == user_password_check):
+                    user.pasw = hashlib.sha1(user_password.encode('utf8')).hexdigest()
+                    user.save()
+                    logger.debug("User with id updated: " + str(user.id))
+                    message['type'] = c.SUCCESS
+                    message['text'] = c.OBJECT_UPDATED_SUCCESSFULLY
+                else:
+                    message['type'] = c.ERROR
+                    message['text'] = _('Hesla se neshodují')
+            else:
+                user.save()
+                logger.debug("User with id updated: " + str(user.id))
+                message['type'] = c.SUCCESS
+                message['text'] = c.OBJECT_UPDATED_SUCCESSFULLY
 
-            user.save()
-
-            logger.debug("User with id updated: " + str(user.id))
-            message['type'] = c.SUCCESS
-            message['text'] = c.OBJECT_UPDATED_SUCCESSFULLY
         else:
             print("Form is not valid")
             print(formUser.non_field_errors)
@@ -292,7 +301,7 @@ def userDetail(request, **kwargs):
     return response
 
 
-@min_user_group(c.ADMIN)
+@permissions_required(c.ADMIN, c.USERS_ADMIN)
 def user_delete(request, pk, **kwargs):
 
     message = {}
@@ -311,6 +320,8 @@ def user_delete(request, pk, **kwargs):
 
     context = user_helper.get_all_users()
     context['message'] = message
+    context['canCreate'] = True
+    context['canEdit'] = True
 
     return render(request, 'amcrusers/users.html', {
         'context': context})

@@ -49,7 +49,7 @@
                         <img class="card-img-top img-responsive" src="{% static "loga/AMCR-brick-knihovna-3d.png" %}"
                             alt="amcr_brick">
                         <div class="card-body">
-                            <h2 class="card-text display-4 font-weight-light text-center">{{MY_ENTRY}}</h2>
+                            <h2 class="card-text display-4 font-weight-light text-center">{{MY_MODELS}}</h2>
                         </div>
                     </div>
                 </a>
@@ -120,38 +120,11 @@
     {% endblock %}
     {% block script %}
     <script>
-        //Texts on amcr-card hover
-        $(".amcr-card").hover(
-            function (e) {
-                //Toggle both classes of hovered element (refine)
-                var hoveredElement = "." + e.currentTarget.classList[2]
-                $(hoveredElement).toggleClass('open'); e
-            });
-        //Cards slider
         $(document).ready(function () {
-            $('.owl-carousel').owlCarousel({
-                loop: false,
-                margin: 15,
-                dots: true,
-                navigation: false,
-                responsiveClass: true,
-                responsive: {
-                    0: {
-                        items: 2,
-                        nav: false,
-                        mergeFit: true
-                    },
-                    600: {
-                        items: 3,
-                        nav: false
-                    },
-                    1000: {
-                        items: 6,
-                        nav: false,
-                        loop: false
-                    }
-                }
-            })
+            //cards - text on hover
+            card_text();
+            //slider init
+            create_slider();
         })
     </script>
     {% endblock %}

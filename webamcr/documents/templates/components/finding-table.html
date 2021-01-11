@@ -1,9 +1,10 @@
 {% load i18n %}
 {% load static %}
+{% get_current_language as LANGUAGE_CODE %}
 {% block head %}
 <script src="{% static "/js/bootstrap-table-mobile.min.js" %}"></script>
 {% endblock %}
-<table id="finding_table" data-toggle="table" data-mobile-responsive="true"
+<table id="finding_table" data-locale="{{LANGUAGE_CODE}}" data-toggle="table" data-mobile-responsive="true"
     class="table table-hover table-borderless table-amcr file-table">
     <!--Table head-->
     <thead scope="col" id="finding_table_header" class="col-documents-head">
@@ -11,6 +12,7 @@
             <th data-field="detail" data-halign="center" data-align="center">{% trans "Detail" %}</th>
             <th data-field="typ" class="table-short" data-sortable="true">{% trans "Typ nálezu" %}</th>
             <th data-field="druh" class="table-short" data-sortable="true">{% trans "Druh nálezu" %}</th>
+            <th data-field="specifikace" class="table-short" data-sortable="true">{% trans "Specifikace" %}</th>
             <th data-field="pocet" class="table-short" data-sortable="true">{% trans "Počet" %}</th>
             <th data-field="poznamka" class="table-long" data-sortable="true">{% trans "Poznámka" %}</th>
             <th data-field="smazat" data-halign="left" data-align="center">{% trans "Smazat" %}</th>
@@ -34,6 +36,7 @@
             </td>
             <td>{{row.typ_nalezu}}</td>
             <td>{{row.druh_nalezu}}</td>
+            <td>{{row.specifikace|default_if_none:""}}</td>
             <td>{{row.pocet}}</td>
             <td>{{row.poznamka}}</td>
             <td>

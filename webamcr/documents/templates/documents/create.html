@@ -48,7 +48,7 @@
         <!-- 3D Model Tab -->
         <div class="tab-pane fade show active create-doc-tab" id="nav-home" role="tabpanel"
             aria-labelledby="nav-home-tab">
-            <form method="post" id="createFormId">
+            <form method="post" autocomplete="off" id="createFormId">
                 {% csrf_token %}
                 <!-- Basic information -->
                 <p class="h2 font-weight-light card-heading">{% trans "Základní údaje" %}</p>
@@ -69,11 +69,11 @@
                                         <!-- full width inputs -->
                                         <div class="form-group">
                                             <label for="obdobi">{{ formCreate.obdobi.label }}</label>
-                                            {% render_field formCreate.obdobi name="obdobi" class="form-control form-control-sm selectpicker droplevel" data-size="10" data-live-search="true" data-dropup-auto="false" id="obdobi"  %}
+                                            {% render_field formCreate.obdobi name="obdobi" class="form-control form-control-sm selectpicker droplevel" data-live-search="true" id="obdobi"  %}
                                         </div>
                                         <div class="form-group">
                                             <label for="areal">{{ formCreate.areal.label }}</label>
-                                            {% render_field formCreate.areal name="areal" class="form-control form-control-sm selectpicker" data-size="10" data-live-search="true" data-dropup-auto="false" id="areal"  %}
+                                            {% render_field formCreate.areal name="areal" class="form-control form-control-sm selectpicker" data-live-search="true" id="areal"  %}
                                         </div>
                                     </div>
                                     <!-- Second col -->
@@ -84,7 +84,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="aktivity">{{ formCreate.aktivity.label }}</label>
-                                            {% render_field formCreate.aktivity class="form-control form-control-sm selectpicker" data-live-search="true" data-dropup-auto="false" id="aktivity"  %}
+                                            {% render_field formCreate.aktivity class="form-control form-control-sm selectpicker" data-live-search="true" id="aktivity"  %}
                                         </div>
                                     </div>
                                 </div>
@@ -190,7 +190,7 @@
                         <!-- Add new file button -->
                         <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 pl-0 mt-4">
                             <a class="btn btn-amcr-3d checkchanges {% if not context.canEdit %}disabled{% endif %}"
-                                href="{% url 'documents:upload_file' documentId %}"> {% trans "Přidat fotografii" %}</a>
+                                href="{% url 'documents:upload_file' documentId %}"> {% trans "Přidat obrázek" %}</a>
                         </div>
                     </div>
                 </div>
@@ -225,11 +225,28 @@
                 formChanged = true
                 saveButtonEnabled()
             });
+            //Map reset position
+            $('.leaflet-reset').on('click', function(){
+                formChanged = true
+                saveButtonEnabled()
+            });
+
             $(".checkchanges").on('click', function (event) {
                 if (formChanged) {
                     event.preventDefault() // Avoids going to href link for anchors
                     event.stopPropagation() // Avoids opening original modal
                     $('#formChangeModal').modal('show')
+                }
+            });
+
+            $(".closeTab").on('click', function (event) {
+                if (formChanged) {
+                    event.preventDefault() // Avoids going to href link for anchors
+                    event.stopPropagation() // Avoids opening original modal
+                    $('#formChangeModal').modal('show')
+                }
+                else {
+                    window.close();
                 }
             });
 
@@ -241,15 +258,12 @@
                 {% endif %}
             }
 
-            {% if context.canEdit and context.showDetails %}
-            addUniquePointToPoiLayer($("#sirka").val(), $("#delka").val())
+            {% if context.canEdit and context.showDetails or context.stav_int >= 2 %}
+                addUniquePointToPoiLayer($("#sirka").val(), $("#delka").val())
             {% endif %}
 
             //Initializing tooltips
             $('[data-toggle="tooltip"]').tooltip()
-
-            //Period and Areal are required now
-            $('#obdobi, #areal').prop('required', true)
 
             //Range slider
             $(".js-range-slider").ionRangeSlider({
@@ -264,18 +278,18 @@
                 {% endif %}
             });
         //Show only ears in datepicker field
-        $("#rok_vzniku").datepicker({
-            format: " yyyy", // Notice the Extra space at the beginning
-            viewMode: "years",
-            minViewMode: "years",
-            autoclose: true,
-            endDate: new Date(),
-            templates:
-            {
-                leftArrow: '<i class="ti-arrow-left"></i>',
-                rightArrow: '<i class="ti-arrow-right"></i>'
-            }
-        });
-        });
+            $("#rok_vzniku").datepicker({
+                format: " yyyy", // Notice the Extra space at the beginning
+                viewMode: "years",
+                minViewMode: "years",
+                autoclose: true,
+                endDate: new Date(),
+                templates:
+                {
+                    leftArrow: '<i class="ti-arrow-left"></i>',
+                    rightArrow: '<i class="ti-arrow-right"></i>'
+                }
+            });
+            });
     </script>
     {% endblock %}

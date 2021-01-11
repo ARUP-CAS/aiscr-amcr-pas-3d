@@ -4,7 +4,6 @@
   /*================================
   Preloader
   ==================================*/
-
   var preloader = $('#preloader');
   $(window).on('load', function () {
     preloader.fadeOut('slow', function () { $(this).remove(); });
@@ -122,40 +121,6 @@
   });
 
   /*================================
-  Owl Carousel
-  ==================================*/
-  function slider_area() {
-    var owl = $('.testimonial-carousel').owlCarousel({
-      margin: 50,
-      loop: true,
-      autoplay: false,
-      nav: false,
-      dots: true,
-      responsive: {
-        0: {
-          items: 1
-        },
-        450: {
-          items: 1
-        },
-        768: {
-          items: 2
-        },
-        1000: {
-          items: 2
-        },
-        1360: {
-          items: 1
-        },
-        1600: {
-          items: 2
-        }
-      }
-    });
-  }
-  slider_area();
-
-  /*================================
   Choose form DATE
   ==================================*/
 
@@ -172,33 +137,6 @@
     titleFormat: "MM yyyy",
   };
 
-  //Declaring Variables for elements(ids)
-  const fromDateInput = $('#datepicker_from')
-  const toDateInput = $('#datepicker_to')
-  const fromDate = fromDateInput.val();
-  const toDate = fromDateInput.val();
-
-  //Function that sets the options for both datepickers
-  $('#datepicker_from, #datepicker_to').datepicker({
-    format: 'dd/mm/yyyy',
-    todayBtn: true,
-    todayBtn: "linked",
-    weekStart: 1,
-    language: 'cs',
-    autoclose: true,
-    todayHighlight: true,
-    endDate: toDate,
-    startDate: fromDate
-  })
-
-  //Two functions that helps with validation
-  fromDateInput.on("changeDate", function (e) {
-    toDateInput.datepicker('setStartDate', e.date);
-
-    toDateInput.on("changeDate", function (e) {
-      fromDateInput.datepicker('setEndDate', e.date);
-    })
-  })
 })(jQuery);
 
 /* //Removing and Adding classes on specific viewport
@@ -233,6 +171,7 @@ function getExportDate() {
   var file = 'export' + '-' + exportDate;
   return file
 }
+
 /*================================
 Selectpicker validation
 ==================================*/
@@ -250,7 +189,6 @@ function selectpickerValidation(e) {
 $('.selectpicker').on('loaded.bs.select', selectpickerValidation)
 //Selectpicker validation styling - ON CHANGE
 $('.selectpicker').on('changed.bs.select', selectpickerValidation)
-
 
 /*================================
 Alerts

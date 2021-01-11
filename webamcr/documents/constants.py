@@ -5,9 +5,13 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class AmcrConstants:
-    AMCR_VERSION = '1.0.0'
+    AMCR_VERSION = '1.1.3'
 
     BOOL_CHOICES = ((True, _('Ano')), (False, _('Ne')))
+    BOOL_DICT = {
+        True: _('Ano'),
+        False: _('Ne')
+    }
     BOOL_WITH_BOTH_CHOICES = ((-1, ''), (True, _('Ano')), (False, _('Ne')))
 
     # Metis menu item identifiers
@@ -30,6 +34,7 @@ class AmcrConstants:
     MENU_ADMIN_USERS = "menu_users"
 
     # USER GROUPS/ROLES
+    # Shell not be translated (used in code logic)
     ADMIN = "Admin"
     ARCHEOLOG = "Archeolog"
     ARCHIVAR = "Archivář"
@@ -129,14 +134,9 @@ class AmcrConstants:
     COUNTRY = 'zeme'
     DOCUMENT_STATE = 'stav_dokumentu'
     DOCUMENT_TYPE = "typ_dokumentu"
-    EVENT_TYPE = 'typ_udalosti'
     FORMAT = 'format_dokumentu'
-    REGION = 'kraj'
-    REGIONS = "kraje"
     DISTRICTS = "okresy"
     ORGANIZATIONS = "organizace"
-    PRESERVATION = "zachovalost"
-    SERIES = "rada"
     STATE = 'stav'
     USERS = 'uzivatele'
     PREDMET_KIND2 = 'predmet_druh'
@@ -177,11 +177,6 @@ class AmcrConstants:
     DOC_CREDIBILITY = 'duveryhodnost'
     DOC_DESCRIPTION_DETAILS = 'popis_udalosti'
 
-    # Heslaze obsah
-    ACCESSIBILITY_CACHE = []
-    DISTRICTS_CACHE = []
-    DOCUMENT_TYPE_CACHE = []
-
     # States 3D documents
     DRAFT_STATE_ID = 1
     SENT_STATE_ID = 2
@@ -215,8 +210,8 @@ class AmcrConstants:
         (ZAPSANI, _('Zápis')),  # 0 -> 1
         (ODESLANI, _('Odeslání')),  # 1 -> 2
         (ARCHIVACE, _('Archivace')),  # 2 -> 3
-        (ZPET_K_ODESLANI, _('Vrácení k odeslání')),  # 3 -> 2
-        (ZPET_K_ZAPSANI, _('Vrácení k zápisu')),  # 2 -> 1
+        (ZPET_K_ODESLANI, _('Vrácení k archivaci')),  # 3 -> 2
+        (ZPET_K_ZAPSANI, _('Vrácení k odeslání')),  # 2 -> 1
         (AKTUALIZACE, _('Aktualizace')),
         (ZMENA_AUTORA, _('Změna autora'))
     ]
@@ -225,36 +220,14 @@ class AmcrConstants:
     CADASTRE_2_CACHE = []
     CADASTRE_12_CACHE = []
     COORDINATE_SYSTEM_CACHE = [(1, 'WGS-84'), (2, 'S-JTSK')]
-    EVENT_TYPE_CACHE = []
-    ORGANIZATIONS_CACHE = []
-    PRESERVATION_CACHE = []
-    PERIOD_2_CACHE = []
-    SERIES_CACHE = []
-    REGIONS_CACHE = []
-    USERS_CACHE = []
     NAMES_CACHE = []
-    PROJECTS_CACHE = []
-    PREDMET_KIND2_CACHE = []
     IDENTIFICATOR_CACHE = [
         ('', '----'),
         ('1', 'C'),
         ('2', 'M'),
     ]
-    COUNTRIES_CACHE = []
-    FORMAT_CACHE = []
-    OBJECT_SPECIFICATION_CACHE = []
-    OBJECT_TYPE_CACHE = []
-    CIRCUMSTANCE_CACHE = []
-
-    # Vicurovnove heslare
-    PERIOD_12_CACHE = []  # obdobi_prvni + obdobi_druha
-    AREAL_12_CACHE = []  # areal_prvni + areal_druha
-    OBJEKT_KIND_12_CACHE = []  # objekt_druh + objekt_kategorie
-    PREDMET_KIND_CACHE = []  # predmet_druh + predmet_kategorie
-    SPECIFICATION_12_CACHE = []  # specifikace_objektu_prvni + specifikace_objektu_druha
 
     # Component activities
-
     AKTIVITA_SIDLISTNI = _('Sídlištní')
     AKTIVITA_POHREBNI = _('Pohřební')
     AKTIVITA_VYROBNI = _('Výrobní')
@@ -302,16 +275,13 @@ class AmcrConstants:
     ]
 
     # Heslare dictionaries
-    ORGANIZATIONS_CACHE_DICT = {}
-    AREAL_12_CACHE_DICT = {}
-    PERIOD_12_CACHE_DICT = {}
     CADASTRY_DICT = {}
 
     # HTML constants GENERAL
     MAIN_MENU = _('Hlavní menu')
     HOME = _('Domů')
     CREATE = _('Zapsat')
-    MY = _('Moje')
+
     CHOOSE = _('Vybrat')
     UPLOAD = _('Nahrát')
 
@@ -319,6 +289,7 @@ class AmcrConstants:
     LIBRARY_3D = _('Knihovna 3D')
     MODULE_3D = _('AMČR-PAS')
     MANAGE_DOC = _('Spravovat')
+    MY_MODELS = _('Moje modely')
 
     #DETECTORS#
     MODUL_DETECTORS = _('Samostatné nálezy')
@@ -326,6 +297,7 @@ class AmcrConstants:
     CONFIRM_DETECTOR = _('Potvrdit')
     ARCHIVE_DETECTOR = _('Archivovat')
     SELECTED_FINDINGS = _('Vybrané nálezy')
+    MY_FINDS = _('Moje nálezy')
 
     # USER
     USER_SETTINGS = _('Uživatelský účet')

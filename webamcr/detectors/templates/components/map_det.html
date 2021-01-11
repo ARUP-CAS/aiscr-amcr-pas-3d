@@ -1,3 +1,4 @@
+{% load i18n %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
     integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
     crossorigin="" />
@@ -170,7 +171,8 @@
 
 <script>
     var poi = L.layerGroup();
-    var point_global_WGS84 = [0, 0]
+    var point_global_WGS84 = [0, 0];
+    var point_global_JTSK = [0, 0];
     var lock = false;
 
     //var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -195,16 +197,16 @@
     });
 
     var baseLayers = {
-        "Mapa ČR": osmColor,
-        "Mapa ČR šedá": osmGrey,
-        "Katastrální mapa": cuzkWMS,
-        "Základní mapa": cuzkZM,
-        "Ortofotomapa": cuzkOrt,
-        "Stínovaný reliéf 5G": cuzkEL,
+        "{% trans "Mapa ČR" %}": osmColor,
+        "{% trans "Mapa ČR šedá" %}": osmGrey,
+        "{% trans "Katastrální mapa" %}": cuzkWMS,
+        "{% trans "Základní mapa" %}": cuzkZM,
+        "{% trans "Ortofotomapa" %}": cuzkOrt,
+        "{% trans "Stínovaný reliéf 5G" %}": cuzkEL,
     };
 
     var overlays = {
-        "AMČR Zájmové body": poi
+        "{% trans "AMČR Zájmové body" %}": poi
     };
 
     map.on('click', function (e) {
@@ -227,6 +229,8 @@
                         document.getElementById('detector_coordinates_x').value = point_global_JTSK[0]
                         document.getElementById('detector_coordinates_y').value = point_global_JTSK[1]
                     }
+                    $("#detector_coordinates_x").change();
+                    $("#detector_coordinates_y").change();
                     addUniquePointToPoiLayer(corX, corY, '', false)
                 } else {
                         map.setView(e.latlng, map.getZoom() + 2)
@@ -249,14 +253,18 @@
                 return false
             }
         } else {
-            console.log("Edit JTSK is not supported");
+            if(corX>=-889110.16  && corX<=-448599.79 && corY>=-1231915.96 && corY<=-892235.44){
+                return true
+            } else {
+                console.log("Coordinates not inside CR");
             point_global_WGS84 = [0, 0];
             poi.clearLayers();
             return false;
         }
     }
+    }
 
-    var set_numeric_coordinates = () => {
+    let set_numeric_coordinates = async () => {
         corX = document.getElementById('detector_coordinates_x').value;
         corY = document.getElementById('detector_coordinates_y').value;
         if(is_in_czech_republic(corX,corY)){
@@ -265,6 +273,15 @@
                 point_global_WGS84 = [Math.round(corX * 1000000) / 1000000, Math.round(corY * 1000000) / 1000000]
                 point_global_JTSK = [-Math.round(jtsk_coor[0] * 100) / 100, -Math.round(jtsk_coor[1] * 100) / 100]
                 return true;
+            } else if(document.getElementById('detector_system_coordinates').value ==2){
+                $.getJSON( "http://epsg.io/trans?x="+Math.round(corX * 100) / 100+"&y="+Math.round(corY * 100) / 100+"&s_srs=5514&t_srs=4326", function(data){
+                            point_global_WGS84 = [Math.round(data.y * 1000000) / 1000000, Math.round(data.x * 1000000) / 1000000]
+                            point_global_JTSK = [Math.round(corX * 100) / 100, Math.round(corY * 100) / 100]
+                            return true;
+                            
+                        });
+                
+
             }
         }
         return false;
@@ -285,8 +302,8 @@
         } else if (new_system == 2 && point_global_JTSK[0] != 0) {
             document.getElementById('detector_coordinates_x').value = point_global_JTSK[0]
             document.getElementById('detector_coordinates_y').value = point_global_JTSK[1]
-            document.getElementById('detector_coordinates_x').readOnly = true;
-            document.getElementById('detector_coordinates_y').readOnly = true;
+            document.getElementById('detector_coordinates_x').readOnly = false;
+            document.getElementById('detector_coordinates_y').readOnly = false;
         }
     }
 
@@ -295,7 +312,7 @@
     }
     var addUniquePointToPoiLayer = (lat, long, text, zoom = true) => {
         poi.clearLayers()
-        L.marker([lat, long]).bindPopup(text).addTo(poi);
+        L.marker([lat, long]).bindPopup('{% trans "Vámi vyznačená poloha" %}').addTo(poi);
         if (long && lat && zoom) {
             map.setView([lat, long], 15);
         }
@@ -314,9 +331,7 @@
 
     L.control.layers(baseLayers, overlays).addTo(map);
     L.control.scale(metric = "true").addTo(map);
-</script>
 
-<script>
     //addPointToPoiLayer(49.96885475762718,16.090292930603033,'Ukázka POI1')
     //addPointToPoiLayer(49.880477638742555,15.347900390625002,'Ukázka POI2')
 
@@ -343,7 +358,7 @@
         document.getElementById('detector_coordinates_y').value = point_global_WGS84[1]
 
         L.marker(latlng).addTo(poi)
-            .bindPopup('Vaše současná poloha')
+            .bindPopup('{% trans "Vaše současná poloha" %}')
             .openPopup();
     };
 </script>

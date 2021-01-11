@@ -44,7 +44,7 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active create-det-tab" id="nav-home" role="tabpanel"
             aria-labelledby="nav-home-tab">
-            <form method="post">
+            <form method="post" autocomplete="off">
                 {% csrf_token %}
                 <!-- Photography Table + buttons -->
                 <p class="h2 font-weight-light card-heading ml-0">{% trans "Fotografie" %}</p>
@@ -59,7 +59,7 @@
                                     <div class="col-12 col-md-3 col-xl-3 pl-0 mt-4">
                                         {% if canEdit or canConfirm or canArchive %}
                                         {% if context.showFiles == "True" %}
-                                        <a class="btn btn-amcr btn-sm "
+                                        <a class="btn btn-amcr btn-sm checkchanges"
                                             href="{% url 'pas:upload' projectId ident_cely %}">{% trans "Přidat fotografii" %}</a>
                                         {% else %}
                                         <button class="btn btn-amcr btn-sm disabled" readonly="true"
@@ -79,13 +79,8 @@
                         <div class="card create-card">
                             <div class="card-body">
                                 <!-- Save button -->
-                                {% if canEdit or canConfirm or canArchive %}
-                                <button class="btn btn-amcr btn-block"
-                                    name="button_save">{% trans "Uložit změny" %}</button>
-                                {% else %}
-                                <button class="btn btn-amcr btn-block"
-                                    readonly="true">{% trans "Uložit změny" %}</button>
-                                {% endif %}
+                                <button id="saveFormButtonId" class="btn btn-amcr btn-block"
+                                    disabled="true" name="button_save">{% trans "Uložit změny" %}</button>
                                 <!-- To confirm button -->
                                 <div class="mt-2">
                                     {% if canEdit and smStav == 1 %}
@@ -130,9 +125,9 @@
                                             <label
                                                 for="detector_project">{{ formDetCreate.detector_project.label }}</label>
                                             {% if canProject  %}
-                                            {% render_field formDetCreate.detector_project class="form-control form-control-sm selectpicker" id="detector_project" data-size='10' data-live-search="true"%}
+                                            {% render_field formDetCreate.detector_project class="form-control form-control-sm selectpicker" id="detector_project" data-live-search="true"%}
                                             {% else %}
-                                            {% render_field formDetCreate.detector_project|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_project" data-size='10' data-live-search="true" %}
+                                            {% render_field formDetCreate.detector_project|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_project" data-live-search="true" %}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -150,7 +145,7 @@
                                             <label
                                                 for="detector_localization">{{ formDetCreate.detector_localization.label }}</label>
                                             {% if canEdit or canConfirm or canArchive  %}
-                                            {% render_field formDetCreate.detector_localization class="form-control form-control-sm" id="detector_localization"  %}
+                                            {% render_field formDetCreate.detector_localization|append_attr:"required" class="form-control form-control-sm req-on-submit"  id="detector_localization"  %}
                                             {% else %}
                                             {% render_field formDetCreate.detector_localization|append_attr:"readonly:readonly" class="form-control form-control-sm" id="detector_localization"  %}
                                             {% endif %}
@@ -165,15 +160,15 @@
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <a data-toggle="modal" {% if canEdit or canConfirm or canArchive %}href="#new_name"{% endif %} title="{% trans "Nové jméno" %}">
-                                                        <span class="input-group-text input-group-detector">
+                                                        <span class="input-group-text input-group-detector checkchanges">
                                                             <span class="fa fa-plus"></span>
                                                         </span>
                                                     </a>
                                                 </div>
                                                 {% if canEdit or canConfirm or canArchive  %}
-                                                {% render_field formDetCreate.detector_finder class="form-control form-control-sm selectpicker" id="detector_finder" data-size='10' data-live-search="true"  %}
+                                                {% render_field formDetCreate.detector_finder class="form-control form-control-sm selectpicker" id="detector_finder" data-live-search="true"  %}
                                                 {% else %}
-                                                {% render_field formDetCreate.detector_finder|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_finder" data-size='10' data-live-search="true"  %}
+                                                {% render_field formDetCreate.detector_finder|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_finder" data-live-search="true"  %}
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -182,9 +177,9 @@
                                             <label
                                                 for="detector_circumstances">{{ formDetCreate.detector_circumstances.label }}</label>
                                             {% if canEdit or canConfirm or canArchive  %}
-                                            {% render_field formDetCreate.detector_circumstances class="form-control form-control-sm selectpicker" id="detector_circumstances" data-size='10'%}
+                                            {% render_field formDetCreate.detector_circumstances|append_attr:"required" class="form-control form-control-sm selectpicker req-on-submit" id="detector_circumstances" %}
                                             {% else %}
-                                            {% render_field formDetCreate.detector_circumstances|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_circumstances" data-size='10' %}
+                                            {% render_field formDetCreate.detector_circumstances|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_circumstances" %}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -201,7 +196,7 @@
                                                         <i class="fa fa-calendar"></i></span>
                                                 </div>
                                                 {% if canEdit or canConfirm or canArchive  %}
-                                                {% render_field formDetCreate.detector_find_date class="form-control form-control-sm" data-provide="datepicker" id="detector_find_date"  %}
+                                                {% render_field formDetCreate.detector_find_date|append_attr:"required" class="form-control form-control-sm req-on-submit" data-provide="datepicker" id="detector_find_date"  %}
                                                 {% else %}
                                                 {% render_field formDetCreate.detector_find_date|append_attr:"readonly:readonly" class="form-control form-control-sm" data-provide="datepicker" id="detector_find_date"  %}
                                                 {% endif %}
@@ -231,9 +226,9 @@
                                             <label
                                                 for="detector_dating">{{ formDetCreate.detector_dating.label }}</label>
                                             {% if canEdit or canConfirm or canArchive  %}
-                                            {% render_field formDetCreate.detector_dating name="detector_dating" class="form-control form-control-sm selectpicker droplevel" id="detector_dating" data-size='10' data-live-search="true" data-dropup-auto="false" %}
+                                            {% render_field formDetCreate.detector_dating|append_attr:"required" name="detector_dating" class="form-control form-control-sm selectpicker droplevel req-on-submit" id="detector_dating" data-live-search="true" %}
                                             {% else %}
-                                            {% render_field formDetCreate.detector_dating|append_attr:"readonly:readonly" name="detector_dating" class="form-control form-control-sm selectpicker" id="detector_dating" data-size='10' data-live-search="true" data-dropup-auto="false"%}
+                                            {% render_field formDetCreate.detector_dating|append_attr:"readonly:readonly" name="detector_dating" class="form-control form-control-sm selectpicker" id="detector_dating" data-live-search="true" %}
                                             {% endif %}
                                         </div>
                                         <!-- Počet -->
@@ -251,9 +246,9 @@
                                             <label
                                                 for="detector_material">{{ formDetCreate.detector_material.label }}</label>
                                             {% if canEdit or canConfirm or canArchive  %}
-                                            {% render_field formDetCreate.detector_material name="detector_material" class="form-control form-control-sm selectpicker" id="detector_material" data-size='10' data-live-search="true" data-dropup-auto="false" %}
+                                            {% render_field formDetCreate.detector_material|append_attr:"required" name="detector_material" class="form-control form-control-sm selectpicker req-on-submit" id="detector_material" data-live-search="true" %}
                                             {% else %}
-                                            {% render_field formDetCreate.detector_material|append_attr:"readonly:readonly" name="detector_material" class="form-control form-control-sm selectpicker" id="detector_material" data-size='10' data-live-search="true" data-dropup-auto="false" %}
+                                            {% render_field formDetCreate.detector_material|append_attr:"readonly:readonly" name="detector_material" class="form-control form-control-sm selectpicker" id="detector_material" data-live-search="true" %}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -262,9 +257,9 @@
                                         <div class="form-group">
                                             <label for="detector_kind">{{ formDetCreate.detector_kind.label }}</label>
                                             {% if canEdit or canConfirm or canArchive  %}
-                                            {% render_field formDetCreate.detector_kind name="detector_kind" class="form-control form-control-sm selectpicker droplevel"  id="detector_kind" data-size='10' data-dropup-auto="false" data-live-search="true" %}
+                                            {% render_field formDetCreate.detector_kind|append_attr:"required" name="detector_kind" class="form-control form-control-sm selectpicker droplevel req-on-submit"  id="detector_kind" data-live-search="true" %}
                                             {% else %}
-                                            {% render_field formDetCreate.detector_kind|append_attr:"readonly:readonly" name="detector_kind" class="form-control form-control-sm selectpicker"  id="detector_kind"  data-size='10' data-dropup-auto="false" data-live-search="true" %}
+                                            {% render_field formDetCreate.detector_kind|append_attr:"readonly:readonly" name="detector_kind" class="form-control form-control-sm selectpicker"  id="detector_kind" data-live-search="true" %}
                                             {% endif %}
                                         </div>
                                         <!-- Přesná datace -->
@@ -305,23 +300,29 @@
                                                 class="d-none d-sm-none d-md-block">{{ formDetCreate.detector_system_coordinates.label }}</label>
                                             <label for="detector_system_cordinates"
                                                 class="d-block d-md-none d-lg-none">{% trans "Souř. S." %}</label>
-                                            {% render_field formDetCreate.detector_system_coordinates class="form-control form-control-sm sysCord" id="detector_system_coordinates"   onchange="switch_coordinate_system()" %}
+                                            {% render_field formDetCreate.detector_system_coordinates class="form-control form-control-sm sysCord" id="detector_system_coordinates" onchange="switch_coordinate_system()" %}
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <!-- Koordinaty X -->
                                         <div class="form-group">
-                                            <label
-                                                for="detector_coordinates_x">{{ formDetCreate.detector_coordinates_x.label }}</label>
-                                            {% render_field formDetCreate.detector_coordinates_x class="form-control form-control-sm float"  id="detector_coordinates_x"%}
+                                            <label for="detector_coordinates_x">{{ formDetCreate.detector_coordinates_x.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive %}
+                                            {% render_field formDetCreate.detector_coordinates_x class="form-control form-control-sm float" id="detector_coordinates_x"%}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_coordinates_x|append_attr:"readonly:readonly" class="form-control form-control-sm float" id="detector_coordinates_x"%}
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <!-- Koordinaty Y -->
                                         <div class="form-group">
-                                            <label
-                                                for="detector_coordinates_y">{{ formDetCreate.detector_coordinates_y.label }}</label>
+                                            <label for="detector_coordinates_y">{{ formDetCreate.detector_coordinates_y.label }}</label>
+                                            {% if canEdit or canConfirm or canArchive %}
                                             {% render_field formDetCreate.detector_coordinates_y class="form-control form-control-sm float"  id="detector_coordinates_y"%}
+                                            {% else %}
+                                            {% render_field formDetCreate.detector_coordinates_y|append_attr:"readonly:readonly" class="form-control form-control-sm float"  id="detector_coordinates_y"%}
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="col-3 col-md-2 col-lg-3">
@@ -329,7 +330,7 @@
                                         <div class="form-group map">
                                             <label for="detector_coordinates_y">{% trans "Poloha" %}</label>
                                             {% if canEdit or canConfirm or canArchive  %}
-                                            <button type="button" data-toggle="tooltip" data-placement="top" title="{% trans "Současná poloha" %}" class="btn btn-amcr btn-sm form-control form-control-sm" onclick="getLocation()">
+                                            <button type="button" data-toggle="tooltip" data-placement="top" title="{% trans "Současná poloha" %}" class="btn btn-amcr btn-sm form-control form-control-sm" onclick="getLocation()" id="currentLocation">
                                                 <i class="ti-location-pin" style="font-size: 1rem;"></i>
                                             </button>
                                             {% else%}
@@ -361,14 +362,14 @@
                                         <div class="form-group">
                                             <label
                                                 for="detector_organisation_passed">{{ formDetCreate.detector_organisation_passed.label }}</label>
-                                            {% render_field formDetCreate.detector_organisation_passed|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker selectpicker" data-size='10' id="detector_organisation_passed"  data-dropup-auto="false" %}
+                                            {% render_field formDetCreate.detector_organisation_passed|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker selectpicker" id="detector_organisation_passed" %}
                                         </div>
                                         <!-- Nález předán -->
                                         <div class="form-group">
                                             <label
                                                 for="detector_find_passed">{{ formDetCreate.detector_find_passed.label }}</label>
                                             {% if canConfirm or canArchive %}
-                                            {% render_field formDetCreate.detector_find_passed class="form-control form-control-sm " id="detector_find_passed"   %}
+                                            {% render_field formDetCreate.detector_find_passed class="form-control form-control-sm selectpicker" id="detector_find_passed" %}
                                             {% else %}
                                             {% render_field formDetCreate.detector_find_passed|append_attr:"readonly:readonly" class="form-control form-control-sm " id="detector_find_passed" value="false" %}
                                             {% endif %}
@@ -405,6 +406,11 @@
                     {% include "components/button-group-det.html" %}
                 <!-- Modals component -->
                 {% include "components/create-modals.html" %}
+
+                {% if ident_cely != '0' %}
+                    {% include "components/changed-form-pas-modal.html" %}
+                {% endif %}
+
             </form>
 
             <!-- Add new name MODAL must be outside of the original form -->
@@ -418,7 +424,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form method="post" action="{% url 'documents:create_name' %}">
+                        <form method="post" autocomplete="off" action="{% url 'documents:create_name' %}">
                             {% csrf_token %}
                             <div class="modal-body">
                                 <div class="form-row">
@@ -439,6 +445,7 @@
                                     data-dismiss="modal">{% trans "Zrušit" %}</button>
                                 <button type="submit" class="btn btn-block btn-amcr ">{% trans "Přidat jméno" %}</button>
                             </div>
+
                         </form>
                     </div>
                 </div>
@@ -448,6 +455,7 @@
 {% endblock %}
 
 {% block script %}
+{% get_current_language as LANGUAGE_CODE %}
     <script>
         //Tooltip initialization
         $(function () {
@@ -460,7 +468,6 @@
             var $coord_x = $('#detector_coordinates_x')
             var $coord_y = $('#detector_coordinates_y')
             var data_length = $table.bootstrapTable('getData').length
-
 
             if (data_length == 0 || !$coord_x.val() || !$coord_y.val()) {
                 conf_button.attr('data-target', '#add_photo_first')
@@ -480,18 +487,78 @@
             }
         }
 
-        // datepicker
         $(document).ready(function () {
-/*             //dropdowns will change on mobile to software native scroll dropdown
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
-                $('.selectpicker').selectpicker('mobile');
-            } */
+            // Tracking changes in the form
+            var formChanged = false
+            $('textarea, input').on('change', function (e) {
+                formChanged = true
+                saveButtonEnabled(e)
+            });
+            //Track changes on click
+            $("#currentLocation").on('click', function(e){
+                formChanged = true
+                saveButtonEnabled(e)
+            })
+
+            // Changes in selectpickers
+            $('.selectpicker').on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+                formChanged = true
+                saveButtonEnabled(e)
+            });
+            $(".checkchanges").on('click', function (event) {
+                if (formChanged) {
+                    event.preventDefault() // Avoids going to href link for anchors
+                    event.stopPropagation() // Avoids opening original modal
+                    $('#formChangeModal').modal('show')
+                }
+            });
+            $(".closeTab").on('click', function (event) {
+                if (formChanged) {
+                    event.preventDefault() // Avoids going to href link for anchors
+                    event.stopPropagation() // Avoids opening original modal
+                    $('#formChangeModal').modal('show')
+                }
+                else {
+                    window.close();
+                }
+            });
+
+            function removeRequired(e){
+                var allSelectpickers = $('.selectpicker:required');
+                for (i = 1; i < allSelectpickers.length; i++){
+                    allSelectpickers[i].removeAttribute("required")
+                    var output = allSelectpickers[i].nextElementSibling
+                    output.classList.remove("select-invalid")
+                }
+                var allinputs = $('input').removeAttr("required");
+            };
+
+            function saveButtonEnabled(e) {
+                {% if canEdit or canConfirm or canArchive %}
+                $("#saveFormButtonId").prop('disabled', false);
+                $("#send_to_confirm_button").prop('disabled', true);
+                $("#send_to_approve_button").prop('disabled', true);
+                $("#send_to_archive_button").prop('disabled', true);
+                removeRequired(e)
+                {% endif %}
+            }
 
             $('input.float').on('input', function () {
-                this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-                if (set_numeric_coordinates()) {
-                    addUniquePointToPoiLayer($("#detector_coordinates_x").val(), $("#detector_coordinates_y").val())
+                if(document.getElementById('detector_system_coordinates').value == 1){
+                    this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+                    if (set_numeric_coordinates()) {
+                        addUniquePointToPoiLayer($("#detector_coordinates_x").val(), $("#detector_coordinates_y").val())
+                    }
+                } else if(document.getElementById('detector_system_coordinates').value == 2){
+                    this.value = this.value.replace(/-[^0-9.]/g, '').replace(/-(\..*)\./g, '$1');
+                    if ( set_numeric_coordinates()) {
+                        addUniquePointToPoiLayer(point_global_WGS84[0],point_global_WGS84[1])
+                    }
                 }
+            });
+
+            $("#deleteButton").on('click', function (event) {
+                removeRequired(event)
             });
 
             $('[readonly]').prop("disabled", true);
@@ -499,12 +566,12 @@
             //Show only ears in datepicker field
             $("#detector_find_date").datepicker({
                 format: "dd/mm/yyyy",
-                language: 'cs',
+                language: '{{LANGUAGE_CODE}}',
                 weekStart: 1,
                 autoclose: true,
                 todayBtn: true,
                 todayHighlight: true,
-            });+
+            });
 
             //Targeting second index of coordinates system - as default
             $('.sysCord option[value="3"]').prop('selected', true)
@@ -514,11 +581,9 @@
             addReadOnlyUniquePointToPoiLayer($("#detector_coordinates_x").val(), $("#detector_coordinates_y").val())
             {% endif %}
 
-            //Margin for group-buttons component after MERGE
-            //$(".button-group").addClass("ml-md-4");
-
             //Changing CSS classes on upload table
             $('#uploads_table').removeClass('col-documents col-documents-head').addClass('col-detectors col-detectors-head');
+
 
         });
 

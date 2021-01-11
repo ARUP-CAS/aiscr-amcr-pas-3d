@@ -1,7 +1,9 @@
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 from .constants import AmcrConstants as constants
 from . import helper, xmlrpc
+from detectors.models import Organizace
 
 
 def constants_import(request):
@@ -12,7 +14,8 @@ def constants_import(request):
 		'LIBRARY_3D': constants.LIBRARY_3D,
 		'MODULE_3D': constants.MODULE_3D,
 		'CREATE_ENTRY': constants.CREATE,
-		'MY_ENTRY': constants.MY,
+		'MY_FINDS': constants.MY_FINDS,
+		'MY_MODELS': constants.MY_MODELS,
 		'CHOOSE_ENTRY': constants.CHOOSE,
 		'UPLOAD': constants.UPLOAD,
 		'MANAGE_DOC': constants.MANAGE_DOC,
@@ -48,13 +51,11 @@ def user_import(request):
 			user_id = int(userInfo['id'])
 			role_opravneni = helper.get_roles_and_permissions(int(userInfo['auth']))
 			id_organizace = int(userInfo['organizace'])
-			index_in_cache = 0
-			index_in_cache = [x[0] for x in constants.ORGANIZATIONS_CACHE].index(id_organizace)
-			organization = constants.ORGANIZATIONS_CACHE[index_in_cache][1]
+			organizace = get_object_or_404(Organizace, id=id_organizace)
 			email = userInfo['email']
 			userDetail = {
 				'fullName': fullName,
-				'organization': organization,
+				'organization': organizace.nazev_zkraceny,
 				'role_opravneni': role_opravneni,
 				'id': user_id,
 				'email': email

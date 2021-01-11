@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load widget_tweaks %}
+{% get_current_language as LANGUAGE_CODE %}
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -35,9 +36,13 @@
     <div class="login-screen">
         <div class="container login-wrapper">
             <div class="login-container">
+                {% if LANGUAGE_CODE == 'cs' %}
                 <img class="login-logo" src="{% static "/loga/AMCR_w-01.svg" %}">
+                {% elif LANGUAGE_CODE == 'en' %}
+                <img class="login-logo" src="{% static "/loga/AMCR_w-01-ENG.svg" %}">
+                {% endif %}
                 <div class="login-box pb--100 pt--20">
-                    <form style="margin-top: 20px !important;" method="POST">
+                    <form class="mt-3" method="POST">
                         {% csrf_token %}
                         <div>
                             <p class="login-title text-center display-4 font-weight-light mt-4">{% trans "Přihlášení" %}
@@ -57,7 +62,7 @@
                                 <i class="login-icon ti-user"></i>
                             </div>
                             <div class="form-gp login-pswd">
-                                <label for="password">Heslo</label>
+                                <label for="password">{{ formLogin.login_password.label}}</label>
                                 {% render_field formLogin.login_password id="password" name="password" autocomplete="on" %}
                                 <i class="login-icon ti-lock"></i>
                             </div>
@@ -77,6 +82,18 @@
                                 <p class="text-muted">{% trans "Nemáte účet?" %} <a
                                         href="http://{{AMCR_API}}/registrace/0/"
                                         target="_blank">{% trans "Zaregistrovat se" %}</a></p>
+                                        <hr class="separator">
+                                        <ul class="notification-area pull-center">
+                                            <li>
+                                                <img class="flag" src="{% static "flags/cz.svg" %}" id="czechLang"></img>
+                                            </li>
+                                            <li>
+                                                <span class="vertical-sep-top"></span>
+                                            </li>
+                                        <li>
+                                            <img class="flag" src="{% static "flags/en.svg" %}" id="engLang"></img>
+                                        </li>
+                                    </ul>
                             </div>
                         </div>
                     </form>
@@ -105,10 +122,6 @@
     <!-- Scripts start-->
     <script src="{% static "/js/vendor/jquery-2.2.4.min.js" %}"></script>
     <script src="{% static "/js/bootstrap-validate.js" %}"></script>
-    <script>
-        bootstrapValidate('#username', 'email: Zadejte platnou emailovou adresu!');
-        bootstrapValidate(['#username', '#password'], 'required: Pole nesmí být prázdné')
-    </script>
     <script src="{% static "/js/popper.min.js" %}"></script>
     <script src="{% static "/js/bootstrap.min.js" %}"></script>
     <script src="{% static "/js/metisMenu.min.js" %}"></script>
@@ -118,68 +131,84 @@
     <script src="{% static "/js/plugins.js" %}"></script>
     <script src="{% static "/js/scripts.js" %}"></script>
     <script>
+        (function () {
+            bootstrapValidate('#username', 'email: Zadejte platnou emailovou adresu!');
+            bootstrapValidate(['#username', '#password'], 'required: Pole nesmí být prázdné')
 
-            (function () {
-                "use strict";
+            function setCookie(name, value, path){
+            var cookieString = name + '=' + value + ';path=' + path
+            document.cookie = cookieString
+            }
 
-                var cookieName = 'cookieConsent'; // The cookie name
-                var cookieLifetime = 30; // Cookie expiry in days
+            //Temporary language switch
+            $('#czechLang').on('click', function(){
+                setCookie('django_language', 'cs', '/');
+                location.reload();
+            })
+            $('#engLang').on('click', function(){
+                setCookie('django_language', 'en', '/');
+                location.reload();
+            })
 
-                /**
-                 * Set a cookie
-                 * @param cName - cookie name
-                 * @param cValue - cookie value
-                 * @param exDays - expiry in days
-                 */
-                var _setCookie = function (cName, cValue, exDays) {
-                    var d = new Date();
-                    d.setTime(d.getTime() + (exDays * 24 * 60 * 60 * 1000));
-                    var expires = "expires=" + d.toUTCString();
-                    document.cookie = cName + "=" + cValue + ";" + expires + ";path=/";
-                };
+            //Cookie consent functonality
+            "use strict";
 
-                /**
-                 * Get a cookie
-                 * @param cName - cookie name
-                 * @returns string
-                 */
-                var _getCookie = function (cName) {
-                    var name = cName + "=";
-                    var ca = document.cookie.split(';');
-                    for (var i = 0; i < ca.length; i++) {
-                        var c = ca[i];
-                        while (c.charAt(0) == ' ') {
-                            c = c.substring(1);
-                        }
-                        if (c.indexOf(name) == 0) {
-                            return c.substring(name.length, c.length);
-                        }
+            var cookieName = 'cookieConsent'; // The cookie name
+            var cookieLifetime = 30; // Cookie expiry in days
+
+            /**
+            * Set a cookie
+            * @param cName - cookie name
+            * @param cValue - cookie value
+            * @param exDays - expiry in days
+            */
+            var _setCookie = function (cName, cValue, exDays) {
+                var d = new Date();
+                d.setTime(d.getTime() + (exDays * 24 * 60 * 60 * 1000));
+                var expires = "expires=" + d.toUTCString();
+                document.cookie = cName + "=" + cValue + ";" + expires + ";path=/";
+            };
+
+            /**
+             * Get a cookie
+             * @param cName - cookie name
+             * @returns string
+             */
+            var _getCookie = function (cName) {
+                var name = cName + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
                     }
-                    return "";
-                };
-
-                /**
-                 * Should the cookie popup be shown?
-                 */
-                var _shouldShowPopup = function () {
-                    if (_getCookie(cookieName)) {
-                        return false;
-                    } else {
-                        return true;
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
                     }
-                };
-
-                // Show the cookie popup on load if not previously accepted
-                if (_shouldShowPopup()) {
-                    $('#cookieModal').modal('show');
                 }
+                return "";
+            };
 
-                // Modal dismiss btn - consent
-                $('#cookieModalConsent').on('click', function () {
-                    _setCookie(cookieName, 1, cookieLifetime);
-                });
+            /**
+             * Should the cookie popup be shown?
+             */
+            var _shouldShowPopup = function () {
+                if (_getCookie(cookieName)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            };
 
+            // Show the cookie popup on load if not previously accepted
+            if (_shouldShowPopup()) {
+                $('#cookieModal').modal('show');
+            }
 
+            // Modal dismiss btn - consent
+            $('#cookieModalConsent').on('click', function () {
+                 _setCookie(cookieName, 1, cookieLifetime);
+            });
             })();
     </script>
     <!-- Scripts end -->

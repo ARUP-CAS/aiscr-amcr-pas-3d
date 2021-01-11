@@ -25,6 +25,7 @@ class DetectorConstants:
     ZPET_K_ARCHIVACI = 5
     ZPET_K_POTVRZENI = 6
     ZPET_K_ODESLANI = 7
+    AKTUALIZACE = 8
 
     TYPY_ZMENY_SAM_NALEZU = [
         (ZAPSANI, _('Zápis')),  # 0 -> 1
@@ -33,7 +34,8 @@ class DetectorConstants:
         (ARCHIVACE, _('Archivace')),  # 3 -> 4
         (ZPET_K_ARCHIVACI, _('Vrácení k archivaci')),  # 4 -> 3
         (ZPET_K_POTVRZENI, _('Vrácení k potvrzení')),  # 3 -> 2
-        (ZPET_K_ODESLANI, _('Vrácení k odeslání'))  # 2 -> 1
+        (ZPET_K_ODESLANI, _('Vrácení k odeslání')),  # 2 -> 1
+        (AKTUALIZACE, _('Aktualizace')),
     ]
 
     # Stavy samostatnych nalezu
@@ -43,7 +45,6 @@ class DetectorConstants:
     ARCHIVOVANY = 4
 
     DETECTOR_STATE_CACHE = [
-        ('', '----'),
         (ZAPSANY, _('zapsaný')),
         (ODESLANY, _('odeslaný')),  # Odeslaný
         (POTVRZENY, _('potvrzený')),  # Potvrzeny
@@ -63,4 +64,15 @@ class DetectorConstants:
         (EDITACE, _('Editace uživatele')),
         (ZMENA_ROLE, _('Změna role')),
     ]
+
+    # Stavy projektu
+    PROJEKT_STAV_OZNAMENY = 0
+    PROJEKT_STAV_REGISTROVANY = 1
+    PROJEKT_STAV_PRIHLASENY = 2
+    PROJEKT_STAV_ZAHAJENY = 3
+    PROJEKT_STAV_UKONCENY = 4
+    PROJEKT_STAV_NAVRZEN_K_ARCHIVACI = 5
+    PROJEKT_STAV_ARCHIVOVANY = 6
+    PROJEKT_STAV_NAVRZEN_KE_ZRUSENI = 7
+    PROJEKT_STAV_ZRUSENY = 8
 

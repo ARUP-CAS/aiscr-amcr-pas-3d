@@ -34,10 +34,12 @@
         <div class="card-body">
             <div class="users-table">
                 <!-- Toolbar - top controls -->
+                {% if context.canCreate %}
                 <div id="toolbar" class="pagewrap">
                     <a class="btn btn-secondary btn-xs" href="{% url 'amcrusers:user_create' %}"><i
                             class="pr-2 ti-user"></i>{% trans "Přidat uživatele" %}</a>
                 </div>
+                {% endif %}
                 <!-- Users Table -->
                 {% include "amcrusers/tables/users_table.html" %}
             </div>

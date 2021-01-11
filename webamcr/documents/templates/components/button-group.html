@@ -1,9 +1,15 @@
 {% load i18n %}
 <div class="button-group mb-md-3 mr-1 ml-1">
     <div class="row mt-2 pr-0 pr-md-2">
+        {% if not context.showDetails %}
         <div class="col col-md-2">
-            <button type="button" class="btn btn-amcr-3d btn-block checkchanges" onclick="goBack()">{% trans "Zpět" %}</button>
+            <button name="button_return" type="button" class="btn btn-amcr-3d btn-block checkchanges" onclick="goBack()">{% trans "Zpět" %}</button>
         </div>
+        {% else %}
+        <div class="col col-md-2">
+            <button name="button_close" type="button" class="btn btn-amcr-3d btn-block closeTab">{% trans "Zavřít" %}</button>
+        </div>
+        {% endif %}
         {% if context.canEdit and context.showDetails %}
         <div class="col-6 col-md-2">
             <a class="btn btn-amcr-3d btn-block" data-toggle="modal"

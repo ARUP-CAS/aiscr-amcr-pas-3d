@@ -29,7 +29,7 @@
 </div>
 <!-- Choose main content -->
 <div class="main-content-inner ml-2 mr-2 mb-4">
-    <form method="post" id="chooseForm">
+    <form method="post" autocomplete="off" id="chooseForm">
         {% csrf_token %}
         <div class="form-row">
             <!-- Form column -->
@@ -42,12 +42,12 @@
                                 <!--Project ID input-->
                                 <div class="form-group">
                                     <label for="detector_project_id">{{ formChoose.detector_project_id.label }}</label>
-                                    {% render_field formChoose.detector_project_id class="form-control form-control-sm selectpicker" min="1" id="detector_project_id"  %}
+                                    {% render_field formChoose.detector_project_id class="form-control form-control-sm" id="detector_project_id"  %}
                                 </div>
                                 <!--Finding ID input-->
                                 <div class="form-group">
                                     <label for="detector_finding_id">{{ formChoose.detector_finding_id.label }}</label>
-                                    {% render_field formChoose.detector_finding_id class="form-control form-control-sm selectpicker" id="detector_finding_id"%}
+                                    {% render_field formChoose.detector_finding_id class="form-control form-control-sm" id="detector_finding_id"%}
                                 </div>
                                 <!--Process state input-->
                                 <div class="form-group">
@@ -58,23 +58,23 @@
                                 <!--District input-->
                                 <div class="form-group">
                                     <label for="detector_district"> {{ formChoose.detector_district.label }}</label>
-                                    {% render_field formChoose.detector_district class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_district" %}
+                                    {% render_field formChoose.detector_district class="form-control form-control-sm selectpicker" data-live-search="true" id="detector_district" %}
                                 </div>
                                 <!-- Cadastry -->
                                 <div class="form-group">
                                     <label for="detector_cadastry">{{ formChoose.detector_cadastry.label }}</label>
-                                    {% render_field formChoose.detector_cadastry class="form-control form-control-sm selectpicker selectpicker" id="detector_cadastry" data-size='10' data-live-search="true" %}
+                                    {% render_field formChoose.detector_cadastry class="form-control form-control-sm selectpicker selectpicker" id="detector_cadastry" data-live-search="true" %}
                                 </div>
                                 <!--Region input-->
                                 <!--<div class="form-group">
                                     <label for="detector_region"> {{ formChoose.detector_region.label }}</label>
-                                    {% render_field formChoose.detector_region class="form-control form-control-sm selectpicker" disabled="true" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_region"%}
+                                    {% render_field formChoose.detector_region class="form-control form-control-sm selectpicker" disabled="true" data-live-search="true" id="detector_region"%}
                                 </div> -->
                                 <!--Finder input-->
                                 <div class="form-group">
                                     <label for="detector_finder">
                                         {{ formChoose.detector_finder.label }}</label>
-                                    {% render_field formChoose.detector_finder class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_finder" %}
+                                    {% render_field formChoose.detector_finder class="form-control form-control-sm selectpicker" data-live-search="true" id="detector_finder" %}
                                 </div>
                                 <!--Date input - DATE OF CHANGE-->
                                 <!--<div class="row forms_year_row">
@@ -138,7 +138,7 @@
                                 <div class="form-group">
                                     <label for="detector_accessibility">
                                         {{ formChoose.detector_accessibility.label }}</label>
-                                    {% render_field formChoose.detector_accessibility class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" id="detector_accessibility" %}
+                                    {% render_field formChoose.detector_accessibility class="form-control form-control-sm selectpicker" id="detector_accessibility" %}
                                 </div>
                             </div>
                             <!-- Second inner col -->
@@ -147,7 +147,7 @@
                                 <!--<div class="form-group">
                                     <label for="detector_user">
                                         {{ formChoose.detector_user.label }}</label>
-                                    {% render_field formChoose.detector_user class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" disable="true" id="detector_user" %}
+                                    {% render_field formChoose.detector_user class="form-control form-control-sm selectpicker" data-live-search="true" disable="true" id="detector_user" %}
                                 </div> -->
                                 <!--Description details input-->
                                 <!--<div class="form-group">
@@ -159,31 +159,31 @@
                                 <div class="form-group">
                                     <label for="detector_dating">
                                         {{ formChoose.detector_dating.label }}</label>
-                                    {% render_field formChoose.detector_dating class="form-control form-control-sm selectpicker droplevel" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_dating" %}
+                                    {% render_field formChoose.detector_dating class="form-control form-control-sm selectpicker droplevel" data-live-search="true" id="detector_dating" %}
                                 </div>
                                 <!--Detector kind input-->
                                 <div class="form-group">
                                     <label for="detector_kind">
                                         {{ formChoose.detector_kind.label }}</label>
-                                    {% render_field formChoose.detector_kind class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true"  id="detector_kind" %}
+                                    {% render_field formChoose.detector_kind class="form-control form-control-sm selectpicker" data-live-search="true"  id="detector_kind" %}
                                 </div>
                                 <!--Detector material input-->
                                 <div class="form-group">
                                     <label for="detector_material">
                                         {{ formChoose.detector_material.label }}</label>
-                                    {% render_field formChoose.detector_material class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_material" %}
+                                    {% render_field formChoose.detector_material class="form-control form-control-sm selectpicker" data-live-search="true" id="detector_material" %}
                                 </div>
                                 <!--Detector organisation input-->
                                 <div class="form-group">
                                     <label for="detector_organisation">
                                         {{ formChoose.detector_organisation.label }}</label>
-                                    {% render_field formChoose.detector_organisation class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_organisation" %}
+                                    {% render_field formChoose.detector_organisation class="form-control form-control-sm selectpicker" data-live-search="true" id="detector_organisation" %}
                                 </div>
                                 <!-- Detector project leader input-->
                                 <div class="form-group">
                                     <label for="detector_project_leader">
                                         {{ formChoose.detector_project_leader.label }}</label>
-                                    {% render_field formChoose.detector_project_leader class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="detector_project_leader" %}
+                                    {% render_field formChoose.detector_project_leader class="form-control form-control-sm selectpicker" data-live-search="true" id="detector_project_leader" %}
                                 </div>
                                 <!-- Detector evidence number input-->
                                 <div class="form-group">
@@ -228,6 +228,7 @@
     {% endblock %}
 
     {% block script %}
+    {% get_current_language as LANGUAGE_CODE %}
     <script>
         $(document).ready(function () {
             /* DATE PICKER FOR FIND DATE*/
@@ -242,7 +243,7 @@
                     format: 'dd/mm/yyyy',
                     todayBtn: true,
                     todayBtn: "linked",
-                    language: 'cs',
+                    language: '{{LANGUAGE_CODE}}',
                     autoclose: true,
                     todayHighlight: true,
                     endDate: toFindDate,
@@ -270,7 +271,7 @@
                     format: 'dd/mm/yyyy',
                     todayBtn: true,
                     todayBtn: "linked",
-                    language: 'cs',
+                    language: '{{LANGUAGE_CODE}}',
                     autoclose: true,
                     todayHighlight: true,
                     endDate: toChangeDate,
@@ -289,7 +290,6 @@
             //If statement for both dropdowns
             //Disabling Cadastry if district is selected
             $('#detector_district').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-                $('#detector_cadastry').selectpicker('refresh');
                 if (clickedIndex > 0) {
                     $('#detector_cadastry').prop('disabled', true);
                     $('#detector_cadastry').selectpicker('refresh');
@@ -302,7 +302,6 @@
 
             //Disabling district if cadastry is selected
             $('#detector_cadastry').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-                $('#detector_district').selectpicker('refresh');
                 if (clickedIndex > 0) {
                     $('#detector_district').prop('disabled', true);
                     $('#detector_district').selectpicker('refresh');

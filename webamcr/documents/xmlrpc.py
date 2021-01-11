@@ -472,28 +472,6 @@ def create_update_3D_model(sessionId, keyword, params):
 ###########################################################################
 def create_update_detektor(sessionId, keyword, params):
 
-    resp = get_current_user(sessionId)
-
-    intParam = {
-        'projekt',
-        'katastr',  # constants.CADASTRE_1
-        'okolnosti',  # constants.CIRCUMSTANCE
-        'pristupnost',  # constants.ACCESSIBILITY
-        'obdobi',  # constants.PERIOD_SECOND
-        'typ_nalezu',  # constants.TYP_NALEZU
-        'druh_nalezu',  # constants.OBJECT_KIND
-        'specifikace',  # constants.OBJECT_SPECIFICATION	(material)
-        'pocet',
-        'nalezce',
-        'odpovedny_pracovnik_vlozeni',  # constants.USER  (chybi v HTML)
-        'datum_vlozeni',  # constants.SPECIFIKACE_DATA  (chybi v HTML)
-        'odpovedny_pracovnik_archivace',  # constants.USER  (chybi v HTML)
-        'datum_archivace',  # constants.SPECIFIKACE_DATA  (chybi v HTML)
-        'stav',  # (chybi v HTML)
-        'predano_organizace',  # constants.ORGANIZATIONS
-        'poradi',  # (chybi v HTML)
-    }
-#id, stav, poradi, ident_cely
     allParams = {
         'inv_cislo': '-1',
         'projekt': '',
@@ -511,11 +489,9 @@ def create_update_detektor(sessionId, keyword, params):
         'poznamka': '',
         'nalezce': '',
         'datum_nalezu': '',
-        'odpovedny_pracovnik_vlozeni': str(resp['id']),
         'datum_vlozeni': '-1',
         'odpovedny_pracovnik_archivace': '-1',
         'datum_archivace': '-1',
-        'stav': '1',
         'predano': '0',
         'predano_organizace': '1',
         'poradi': '-1',

@@ -34,7 +34,7 @@
   <div class="form-row">
     <div class="col-12 col-sm-12 col-md-11 col-lg-10 col-xl-6">
       <p class="h2 font-weight-light card-heading ml-0">{% trans "Vrácení nálezu" %}</p>
-      <form method="post">
+      <form method="post" autocomplete="off">
         {% csrf_token %}
         <div class="card create-card m-0">
           <div class="card-body">

@@ -11,11 +11,14 @@ logger = logging.getLogger(__name__)
 
 # Transactions of the samostatne nalezy
 
+
 def zapsani(params, user, sid):
 
 	logger.debug("Zapsani nalezu")
 
 	params['datum_vlozeni'] = str(int(time.mktime(time.localtime())))
+	params['odpovedny_pracovnik_vlozeni'] = user.id.id
+	params['stav'] = '1'
 	# Create through xmlrpc
 	resp = xmlrpc.create_update_detektor(sid, 'create', params)
 
@@ -35,11 +38,23 @@ def zapsani(params, user, sid):
 		return nalez
 	return None
 
+
 def update(params, nalez, user, sid):
 
 	logger.debug("Aktualizace nalezu : " + str(nalez.id))
 
-	return xmlrpc.create_update_detektor(sid, 'update', params)
+	resp = xmlrpc.create_update_detektor(sid, 'update', params)
+
+	if resp[0]:
+		zmena = models.HistorieSamNalezu(
+				typ_zmeny=c.AKTUALIZACE,
+				samostatny_nalez = nalez,
+				uzivatel = user
+			)
+		zmena.save()
+
+	return resp
+
 
 def odeslani(params, nalez, user, sid):
 
@@ -54,7 +69,7 @@ def odeslani(params, nalez, user, sid):
 			typ_zmeny=c.ODESLANI,
 			samostatny_nalez = nalez,
 			uzivatel = user
-			)
+		)
 		zmena.save()
 		project_id = nalez.projekt
 		project = models.Projekt.objects.get(pk=project_id)
@@ -63,8 +78,8 @@ def odeslani(params, nalez, user, sid):
 		else:
 			logger.error("Neexistuje odpovědný pracovník přihlášení projektu " + str(project_id))
 
-
 	return resp
+
 
 def potvrzeni(params, nalez, user, sid):
 
@@ -165,5 +180,21 @@ def vraceni_k_potvrzeni(user, finding, reason):
 
 	# Send email to the badatel that some corrections are required
 	emails.email_send_SN3andSN4.delay(finding, uzivatel_email, c.ODESLANY, reason)
+
+	return ret
+
+
+def vraceni_k_archivaci(user, finding, reason):
+
+	finding.stav = c.POTVRZENY
+	ret = finding.save(update_fields=["stav"]) # Must do like this because of the geom field which is not text
+
+	zmena = models.HistorieSamNalezu(
+			typ_zmeny=c.ZPET_K_ARCHIVACI,
+			samostatny_nalez = finding,
+			uzivatel = user,
+			duvod = reason
+			)
+	hist_ret = zmena.save()
 
 	return ret

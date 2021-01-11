@@ -35,29 +35,53 @@
 </div>
 <div class="main-content-inner mb-5">
     <div class="form-row">
-        <div class="col-12 col-sm-12 col-md-11 col-lg-10 col-xl-6">
+        <div class="col-12 col-md-11 col-xl-6">
             <p class="h2 font-weight-light card-heading ml-0">{% trans "Autoři dokumentu" %} {{ident_cely}}</p>
-            <form method="post">
+            <form method="post" autocomplete="off">
                 {% csrf_token %}
                 <div class="card create-card m-0">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="col-12">
                                 <div class="form-group" id="autor1div">
                                     <label for="author1">{{ editAuthorForm.author1.label }}</label>
-                                    {% render_field editAuthorForm.author1 id="author1" class="form-control form-control-sm selectpicker prvni" data-dropup-auto="false" data-live-search="true"%}
+                                    {% render_field editAuthorForm.author1 id="author1" class="form-control form-control-sm selectpicker prvni" data-live-search="true"%}
                                 </div>
                                 <div class="form-group" id="autor2div">
                                     <label for="author2">{{ editAuthorForm.author2.label }}</label>
-                                    {% render_field editAuthorForm.author2 id="author2" class="form-control form-control-sm selectpicker druhy" data-dropup-auto="false" data-live-search="true"%}
+                                    {% render_field editAuthorForm.author2 id="author2" class="form-control form-control-sm selectpicker druhy" data-live-search="true"%}
                                 </div>
                                 <div class="form-group" id="autor3div">
                                     <label for="author3">{{ editAuthorForm.author3.label }}</label>
-                                    {% render_field editAuthorForm.author3 id="author3" class="form-control form-control-sm selectpicker treti" data-dropup-auto="false" data-live-search="true"%}
+                                    {% render_field editAuthorForm.author3 id="author3" class="form-control form-control-sm selectpicker treti" data-live-search="true"%}
                                 </div>
                                 <div class="form-group" id="autor4div">
                                     <label for="author4">{{ editAuthorForm.author4.label }}</label>
-                                    {% render_field editAuthorForm.author4 id="author4" class="form-control form-control-sm selectpicker ctvrty" data-dropup-auto="false" data-live-search="true"%}
+                                    {% render_field editAuthorForm.author4 id="author4" class="form-control form-control-sm selectpicker ctvrty" data-live-search="true"%}
+                                </div>
+                                <div class="form-group" id="autor5div">
+                                    <label for="author5">{{ editAuthorForm.author5.label }}</label>
+                                    {% render_field editAuthorForm.author5 id="author5" class="form-control form-control-sm selectpicker paty" data-live-search="true"%}
+                                </div>
+                                <div class="form-group" id="autor6div">
+                                    <label for="author6">{{ editAuthorForm.author6.label }}</label>
+                                    {% render_field editAuthorForm.author6 id="author6" class="form-control form-control-sm selectpicker sesty" data-live-search="true"%}
+                                </div>
+                                <div class="form-group" id="autor7div">
+                                    <label for="author7">{{ editAuthorForm.author7.label }}</label>
+                                    {% render_field editAuthorForm.author7 id="author7" class="form-control form-control-sm selectpicker sedmy" data-live-search="true"%}
+                                </div>
+                                <div class="form-group" id="autor8div">
+                                    <label for="author8">{{ editAuthorForm.author8.label }}</label>
+                                    {% render_field editAuthorForm.author8 id="author8" class="form-control form-control-sm selectpicker osmy" data-live-search="true"%}
+                                </div>
+                                <div class="form-group" id="autor9div">
+                                    <label for="author9">{{ editAuthorForm.author9.label }}</label>
+                                    {% render_field editAuthorForm.author9 id="author9" class="form-control form-control-sm selectpicker devaty" data-live-search="true"%}
+                                </div>
+                                <div class="form-group" id="autor10div">
+                                    <label for="author10">{{ editAuthorForm.author10.label }}</label>
+                                    {% render_field editAuthorForm.author10 id="author10" class="form-control form-control-sm selectpicker desaty" data-live-search="true"%}
                                 </div>
                             </div>
                         </div>
@@ -89,7 +113,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="post" action="{% url 'documents:create_name' %}">
+                <form method="post" autocomplete="off" action="{% url 'documents:create_name' %}">
                     {% csrf_token %}
                     <div class="modal-body">
                         <div class="form-row">
@@ -115,57 +139,3 @@
         </div>
     </div>
     {% endblock %}
-
-{% block script %}
-
-<script>
-    $(document).ready(function () {
-        $('.druhy').on('loaded.bs.select', function (e) {
-            if(this.value == ''){
-                $('#autor2div').hide()
-            }
-        });
-        $('.treti').on('loaded.bs.select', function (e) {
-            if(this.value == ''){
-                $('#autor3div').hide()
-            }
-        });
-        $('.ctvrty').on('loaded.bs.select', function (e) {
-            if(this.value == ''){
-                $('#autor4div').hide()
-            }
-        });
-
-        // Changes in selectpickers
-        $('.selectpicker').on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
-            if(this.id=='author1'){
-                if(clickedIndex == 0){
-                    $('#autor2div, #autor3div, #autor4div').hide();
-                    $('.druhy, .treti, .ctvrty').val('default');
-                } else {
-                    $('#autor2div').show()
-                }
-            } else if(this.id=='author2'){
-                if(clickedIndex == 0){
-                    $('#autor3div, #autor4div').hide();
-                    $('.treti, .ctvrty').val('default');
-                } else {
-                    $('#autor3div').show()
-                }
-            } else if(this.id=='author3'){
-                if(clickedIndex == 0){
-                    $('#autor4div').hide();
-                    $('.ctvrty').val('default');
-                } else {
-                    $('#autor4div').show()
-                }
-            } else {
-                console.log("Unknown field id.")
-            }
-            $('.selectpicker').selectpicker('render');
-            $('.selectpicker').selectpicker('refresh');
-        });
-    });
-</script>
-
-{% endblock %}

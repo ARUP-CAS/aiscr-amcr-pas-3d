@@ -2,13 +2,13 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
-
 {% block head %}
 <link rel="stylesheet" href="{% static "/css/ion.rangeSlider.min.css" %}">
 <script src="{% static "/js/ion.rangeSlider.min.js" %}"></script>
 {% endblock %}
 
 {% block content %}
+
 <script>
     $('.menu_library').addClass('active')
     $('.menu_choose_3d').addClass('active')
@@ -33,7 +33,7 @@
     </div>
 </div>
 <div class="main-content-inner mr-2 ml-2">
-    <form method="post" id="chooseForm">
+    <form method="post" autocomplete="off" id="chooseForm">
         {% csrf_token %}
         <div class="form-row">
             <div class="col-12 col-md-10">
@@ -41,16 +41,16 @@
                     <div class="card-body">
                         <div class="row">
                             <!-- First col -->
-                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="col-12 col-md-6">
                                 <!--ID Model-->
                                 <div class="form-group">
                                     <label for="ident_cely">{{ formChoose.ident_cely.label }}</label>
-                                    {% render_field formChoose.ident_cely class="form-control form-control-sm" min="1" id="ident_cely" %}
+                                    {% render_field formChoose.ident_cely class="form-control form-control-sm" id="ident_cely" %}
                                 </div>
                                 <!--Author input-->
                                 <div class="form-group">
                                     <label for="autori">{{ formChoose.autori.label }}</label>
-                                    {% render_field formChoose.autori class="form-control form-control-sm selectpicker" id="autori"  data-dropup-auto="false" data-live-search="true" %}
+                                    {% render_field formChoose.autori class="form-control form-control-sm selectpicker" id="autori" data-live-search="true" %}
                                 </div>
                                 <!--Date created input-->
                                 <div class="form-group">
@@ -60,22 +60,22 @@
                                 <!--Organization input-->
                                 <div class="form-group">
                                     <label for="organizace">{{ formChoose.organizace.label }}</label>
-                                    {% render_field formChoose.organizace class="form-control form-control-sm selectpicker" data-dropup-auto="false" data-live-search="true" id="organizace"%}
+                                    {% render_field formChoose.organizace class="form-control form-control-sm selectpicker" data-live-search="true" id="organizace"%}
                                 </div>
                                 <!-- Model Type input -->
                                 <div class="form-group">
                                     <label for="typ_dokumentu">
                                         {{ formChoose.typ_dokumentu.label }}</label>
-                                    {% render_field formChoose.typ_dokumentu class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" id="typ_dokumentu"  data-live-search="true" %}
+                                    {% render_field formChoose.typ_dokumentu class="form-control form-control-sm selectpicker" id="typ_dokumentu"  data-live-search="true" %}
                                 </div>
                                 <!-- Description input -->
                                 <div class="form-group">
                                     <label for="popis"> {{ formChoose.popis.label }}</label>
-                                    {% render_field formChoose.popis class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="popis" %}
+                                    {% render_field formChoose.popis class="form-control form-control-sm selectpicker" data-live-search="true" id="popis" %}
                                 </div>
                             </div>
                             <!-- Second col -->
-                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="col-12 col-md-6">
                                 <!--Credibility type input-->
                                 <div class="form-group" style="margin-bottom: 0px;">
                                     <label for="duveryhodnost" class="range-label"
@@ -89,7 +89,7 @@
                                 <!--process states input-->
                                 <div class="form-group">
                                     <label for="procesni_stavy">{{ formChoose.procesni_stavy.label }}</label>
-                                    {% render_field formChoose.procesni_stavy class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" id="procesni_stavy" %}
+                                    {% render_field formChoose.procesni_stavy class="form-control form-control-sm selectpicker" id="procesni_stavy" %}
                                 </div>
                                 <!-- Changes input-->
                                 <div class="form-group">
@@ -126,7 +126,7 @@
                                 <!-- user input-->
                                 <div class="form-group">
                                     <label for="zmena_uzivatel">{{ formChoose.zmena_uzivatel.label }}</label>
-                                    {% render_field formChoose.zmena_uzivatel class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true" id="zmena_uzivatel" %}
+                                    {% render_field formChoose.zmena_uzivatel class="form-control form-control-sm selectpicker" data-live-search="true" id="zmena_uzivatel" %}
                                 </div>
                             </div>
                         </div>
@@ -136,19 +136,19 @@
                                 <!--Period input-->
                                 <div class="form-group">
                                     <label for="obdobi">{{ formChoose.obdobi.label }}</label>
-                                    {% render_field formChoose.obdobi class="form-control form-control-sm selectpicker" data-live-search="true" min="1" data-size="10" data-dropup-auto="false" id="obdobi" %}
+                                    {% render_field formChoose.obdobi class="form-control form-control-sm selectpicker" data-live-search="true" id="obdobi" %}
                                 </div>
                                 <!--Activity input-->
                                 <div class="form-group">
                                     <label for="aktivity">{{ formChoose.aktivity.label }}</label>
-                                    {% render_field formChoose.aktivity class="form-control form-control-sm selectpicker" data-dropup-auto="false" id="aktivity" %}
+                                    {% render_field formChoose.aktivity class="form-control form-control-sm selectpicker" id="aktivity" %}
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <!--Areal input-->
                                 <div class="form-group">
                                     <label for="areal">{{ formChoose.areal.label }}</label>
-                                    {% render_field formChoose.areal class="form-control form-control-sm selectpicker" min="1" data-size="10" data-dropup-auto="false" id="areal" %}
+                                    {% render_field formChoose.areal class="form-control form-control-sm selectpicker" id="areal" %}
                                 </div>
                             </div>
                         </div>
@@ -158,25 +158,25 @@
                                 <!--Type of subject input-->
                                 <div class="form-group">
                                     <label for="druh_predmetu">{{ formChoose.druh_predmetu.label }}</label>
-                                    {% render_field formChoose.druh_predmetu class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" id="druh_predmetu" %}
+                                    {% render_field formChoose.druh_predmetu class="form-control form-control-sm selectpicker" id="druh_predmetu" %}
                                 </div>
                                 <!--Specification of subject input-->
                                 <div class="form-group">
                                     <label
                                         for="specifikace_predmetu">{{ formChoose.specifikace_predmetu.label }}</label>
-                                    {% render_field formChoose.specifikace_predmetu id="specifikace_predmetu" class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true"%}
+                                    {% render_field formChoose.specifikace_predmetu id="specifikace_predmetu" class="form-control form-control-sm selectpicker" data-live-search="true"%}
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <!--Type of object input-->
                                 <div class="form-group">
                                     <label for="druh_objektu">{{ formChoose.druh_objektu.label }}</label>
-                                    {% render_field formChoose.druh_objektu class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" id="druh_objektu" %}
+                                    {% render_field formChoose.druh_objektu class="form-control form-control-sm selectpicker" id="druh_objektu" %}
                                 </div>
                                 <!--Specification of object input-->
                                 <div class="form-group">
                                     <label for="specifikace_objektu">{{ formChoose.specifikace_objektu.label }}</label>
-                                    {% render_field formChoose.specifikace_objektu id="specifikace_objektu" class="form-control form-control-sm selectpicker" data-size="10" data-dropup-auto="false" data-live-search="true"%}
+                                    {% render_field formChoose.specifikace_objektu id="specifikace_objektu" class="form-control form-control-sm selectpicker" data-live-search="true"%}
                                 </div>
                             </div>
                         </div>
@@ -206,7 +206,10 @@
     </form>
 {% endblock %}
 {% block script %}
+{% get_current_language as LANGUAGE_CODE %}
 <script>
+
+
         function formClear() {
             document.getElementById("chooseForm").reset();
             $(".selectpicker").val('----').selectpicker("refresh");
@@ -242,10 +245,10 @@
         //Function that sets the options for both datepickers
         $(function () {
             $('#zmena_od, #zmena_do').datepicker({
-                format: 'dd/mm/yyyy',
+                format: "dd/mm/yyyy",
                 todayBtn: true,
                 todayBtn: "linked",
-                language: 'cs',
+                language: "{{LANGUAGE_CODE}}",
                 autoclose: true,
                 todayHighlight: true,
                 endDate: toDate,

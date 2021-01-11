@@ -98,13 +98,17 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.environ['WEBAMCR_LOGGING_FILE_PATH'],
+            'backupCount': 100,
+            'maxBytes': 5242880,
             'formatter': 'timestamp',
             'encoding': 'utf8',
         },
         'file_rq_worker': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/tmp/rqworker.log',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/var/log/webamcr/rqworker.log',
+            'backupCount': 10,
+            'maxBytes': 5242880,
             'formatter': 'timestamp'
         },
     },
@@ -126,6 +130,10 @@ LOGGING = {
             'level': 'DEBUG',
         },
         'documents.helper': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+        },
+        'documents.decorators': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
         },
@@ -207,7 +215,8 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
+DATE_FORMAT = 'Y-m-d'
 
 USE_TZ = True
 

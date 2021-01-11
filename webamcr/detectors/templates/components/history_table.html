@@ -1,8 +1,9 @@
 {% load i18n %}
 {% load tz %}
+{% get_current_language as LANGUAGE_CODE %}
 <!--Table-->
-<table id="history_table" data-locale="cs-CZ" data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-pagination-pre-text="Předchozí" data-show-pagination-switch="true" data-search="true"
-    data-pagination-next-text="Další" data-show-jump-to="true" data-show-columns="true" data-show-toggle="true" data-show-export="true" data-mobile-responsive="true" data-buttons-class="amcr btn-xs"
+<table id="history_table" data-locale="{{ LANGUAGE_CODE }}" data-toggle="table" data-toolbar="#toolbar" data-pagination="true" data-pagination-pre-text="{% trans "Předchozí" %}" data-show-pagination-switch="true" data-search="true"
+    data-pagination-next-text="{% trans "Další" %}" data-show-jump-to="true" data-show-columns="true" data-show-toggle="true" data-show-export="true" data-mobile-responsive="true" data-buttons-class="amcr btn-xs"
     class="table table-hover table-borderless">
     <!--Table head-->
     <thead scope="col" class="col-documents col-detectors-head">
