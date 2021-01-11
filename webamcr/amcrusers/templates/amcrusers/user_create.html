@@ -31,7 +31,7 @@
 <div class="main-content-inner mb-5">
     <p class="h2 font-weight-light card-heading ml-0">{{ context.title }}</p>
     <!-- User create form -->
-    <form method="post">
+    <form method="post" autocomplete="off">
         <!-- Form row - Image + user details -->
         <div class="form-row">
             <!-- First column - User image -->
@@ -57,7 +57,7 @@
                         <!-- Form row -->
                         <div class="form-row">
                             <!-- First column - user details -->
-                            <div class="col-12 col-md-6 col-lg-6">
+                            <div class="col-12 col-md-6">
                                 <!-- Form error validation -->
                                 {% csrf_token %}
                                 {% if form.errors %}
@@ -70,7 +70,7 @@
                                 <!-- Username input -->
                                 <div class="form-group">
                                     <label for="manage_username">{{ form.manage_username.label }}</label>
-                                    {% render_field form.manage_username class="form-control form-control-sm" id="manage_username"%}
+                                    {% render_field form.manage_username class="form-control form-control-sm"  id="manage_username"%}
                                     <!-- Validation -->
                                     <div class="invalid-feedback">
                                         {{ form.manage_username.errors.0 }}
@@ -88,7 +88,7 @@
                                 <!-- User Email input -->
                                 <div class="form-group">
                                     <label for="manage_email">{{ form.manage_email.label }}</label>
-                                    {% render_field form.manage_email class="form-control form-control-sm" id="manage_email" %}
+                                    {% render_field form.manage_email class="form-control form-control-sm" autocomplete="new-email" id="manage_email" %}
                                     <!-- Validation -->
                                     <div class="invalid-feedback">
                                         {{ form.manage_email.errors.0 }}
@@ -97,7 +97,7 @@
                                 <!-- User Phone number input -->
                                 <div class="form-group">
                                     <label for="manage_phone_number">{{ form.manage_phone_number.label }}</label>
-                                    {% render_field form.manage_phone_number class="form-control form-control-sm" id="manage_phone_number"%}
+                                    {% render_field form.manage_phone_number class="form-control form-control-sm" autocomplete="nope" id="manage_phone_number"%}
                                     <!-- Validation -->
                                     <div class="invalid-feedback d-block">
                                         {{ form.manage_phone_number.errors.0 }}
@@ -106,7 +106,7 @@
                                 <!-- User organization input -->
                                 <div class="form-group">
                                     <label for="manage_organization">{{ form.manage_organization.label }}</label>
-                                    {% render_field form.manage_organization class="form-control form-control-sm selectpicker" data-size='10' data-dropup-auto="false" id="manage_organization" data-live-search="true" %}
+                                    {% render_field form.manage_organization class="form-control form-control-sm selectpicker" id="manage_organization" data-live-search="true" %}
                                     <!-- Validation -->
                                     <div class="invalid-feedback d-block">
                                         {{ form.manage_organization.errors.0 }}
@@ -114,11 +114,11 @@
                                 </div>
                             </div>
                             <!-- Second column - user details -->
-                            <div class="col-12 col-md-6 col-lg-6">
+                            <div class="col-12 col-md-6">
                                 <!-- User role input -->
                                 <div class="form-group">
                                     <label for="manage_role">{{ form.manage_role.label }}</label>
-                                    {% render_field form.manage_role class="form-control form-control-sm selectpicker" data-dropup-auto="false" id="manage_role" %}
+                                    {% render_field form.manage_role class="form-control form-control-sm selectpicker" id="manage_role" %}
                                     <div class="invalid-feedback d-block">
                                         {{ form.manage_role.errors.0 }}
                                     </div>
@@ -126,7 +126,7 @@
                                 <!-- User permissions input - Multiple -->
                                 <div class="form-group">
                                     <label for="manage_permissions">{{ form.manage_permissions.label }}</label>
-                                    {% render_field form.manage_permissions class="form-control form-control-sm selectpicker" data-dropup-auto="false" multiple="true" id="manage_permissions" data-live-search="true" %}
+                                    {% render_field form.manage_permissions class="form-control form-control-sm selectpicker" multiple="true" id="manage_permissions" data-live-search="true" %}
                                     <div class="invalid-feedback d-block">
                                         {{ form.manage_permissions.errors.0 }}
                                     </div>
@@ -134,7 +134,7 @@
                                 <!-- User password input -->
                                 <div class="form-group">
                                     <label for="manage_password">{{ form.manage_password.label }}</label>
-                                    {% render_field form.manage_password class="form-control form-control-sm" id="manage_password" %}
+                                    {% render_field form.manage_password class="form-control form-control-sm" minlength="7" autocomplete="new-password" id="manage_password" %}
                                     <div class="invalid-feedback d-block">
                                         {{ form.manage_password.errors.0 }}
                                     </div>
@@ -143,7 +143,7 @@
                                 <div class="form-group">
                                     <label
                                         for="manage_password_control">{{ form.manage_password_control.label }}</label>
-                                    {% render_field form.manage_password_control class="form-control form-control-sm" id="manage_password_control" %}
+                                    {% render_field form.manage_password_control class="form-control form-control-sm" autocomplete="new-password-control" id="manage_password_control" %}
                                     <div class="invalid-feedback d-block">
                                         {{ form.manage_password_control.errors.0 }}
                                     </div>

@@ -9,17 +9,17 @@
                     <!-- Type -->
                     <div class="form-group">
                         <label for="typ_dokumentu">{{ formCreate.typ_dokumentu.label }}</label>
-                        {% render_field formCreate.typ_dokumentu class="form-control form-control-sm selectpicker" data-size="10" data-live-search="true" data-dropup-auto="false" id="typ_dokumentu" %}
+                        {% render_field formCreate.typ_dokumentu class="form-control form-control-sm selectpicker" data-live-search="true" id="typ_dokumentu" %}
                     </div>
                     <!-- Organisation -->
                     <div class="form-group">
                         <label for="organizace_autora">{{ formCreate.organizace_autora.label }}</label>
-                        {% render_field formCreate.organizace_autora class="form-control form-control-sm selectpicker" data-size="10" data-live-search="true" data-dropup-auto="false" id="organizace_autora"%}
+                        {% render_field formCreate.organizace_autora class="form-control form-control-sm selectpicker" data-live-search="true" id="organizace_autora"%}
                     </div>
                     <!-- Marking of original -->
                     <div class="form-group">
                         <label for="oznaceni_originalu">{{ formCreate.oznaceni_originalu.label }}</label>
-                        {% render_field formCreate.oznaceni_originalu class="form-control form-control-sm selectpicker" data-size="10" data-live-search="true" data-dropup-auto="false" id="oznaceni_originalu"  %}
+                        {% render_field formCreate.oznaceni_originalu class="form-control form-control-sm" id="oznaceni_originalu"%}
                     </div>
                 </div>
                 <!-- Second Col -->
@@ -27,7 +27,7 @@
                     <!-- Format -->
                     <div class="form-group">
                         <label for="format">{{ formCreate.format.label }}</label>
-                        {% render_field formCreate.format class="form-control form-control-sm selectpicker" data-size="10" data-live-search="true" data-dropup-auto="false" id="format"  %}
+                        {% render_field formCreate.format class="form-control form-control-sm selectpicker" data-live-search="true" id="format"  %}
                     </div>
                     <!-- sub-row -->
                     <div class="form-row">
@@ -99,14 +99,21 @@
 </div>
 {% block script %}
 <script>
+    //Custom tooltips for specific elements
+    customSelectpickerTooltip('#organizace_autora', 'right', '{% trans "Pokud vaše organizace není v seznamu, použijte relevantní obecnější označení (např. heslo [jiná organizace] a celé jméno vaší organizace uveďte do poznámky) k záznamu."%}')
+    customTooltip('#oznaceni_originalu', 'right', '{% trans "Můžete uvést vaše interní označení dat." %}')
+    customTooltip('.slider-wrapper', 'right', '{% trans "Vyjádřete, nakolik je 3D model důvěryhodný / historicky validní, tzn. u 3D skenů bude hodnota dosahovat 100%, u virtuálních rekonstrukcí bude výsledná hodnota záviset na míře jejich kontextové a prostorové nejistoty." %}')
+
     // -------- Checks --------
     function checkPhotoAndAuthor() {
         var conf_button = $('#send_to_confirm_button')
         var $table = $("#file_table")
         var data_length = $table.bootstrapTable('getData').length
         var authors_length = $("#authors").length
+        var obdobi = $('#obdobi').val()
+        var areal = $('#areal').val()
 
-        if (data_length == 0 || authors_length == 0 ) {
+        if (data_length == 0 || authors_length == 0 || obdobi.length == 0 || areal.length == 0) {
             conf_button.attr('data-target', '#check_required_fields')
         } else {
             conf_button.attr('data-target', '#send_model_to_confirm')

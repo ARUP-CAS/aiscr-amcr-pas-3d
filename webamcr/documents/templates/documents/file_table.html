@@ -1,5 +1,6 @@
 {% load i18n %}
-<table id="file_table" data-toggle="table" data-mobile-responsive="true" class="table table-hover table-borderless table-amcr file-table">
+{% get_current_language as LANGUAGE_CODE %}
+<table id="file_table" data-locale="{{ LANGUAGE_CODE }}" data-toggle="table" data-mobile-responsive="true" class="table table-hover table-borderless table-amcr file-table">
     <!--Table head-->
     <thead scope="col" id="uploads_table" class="col-documents-head">
         <tr>
@@ -24,7 +25,7 @@
             </td>
 
             <td>
-                {% if context.canEdit %}
+                {% if context.canEdit or canEdit or canArchive or canConfirm %}
                 <a class="icon-container checkchanges" data-toggle="modal" data-target="#delete_photo-{{row.id}}"><i
                         class="ti-close"></i></a>
                 {% else %}

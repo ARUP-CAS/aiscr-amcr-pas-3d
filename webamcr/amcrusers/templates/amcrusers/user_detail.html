@@ -23,7 +23,7 @@
 </div>
 <!-- Main content - users detail -->
 <div class="main-content-inner mb-5">
-    <form method="post">
+    <form method="post" autocomplete="off">
         <!-- Form error validation -->
         {% csrf_token %}
         {% if formUser.errors %}
@@ -65,7 +65,7 @@
                                 <!--User name  input-->
                                 <div class="form-group">
                                     <label for="jmeno">{{ formUser.jmeno.label }}</label>
-                                    {% render_field formUser.jmeno class="form-control form-control-sm" min="1" id="jmeno" disabled="true" %}
+                                    {% render_field formUser.jmeno class="form-control form-control-sm" id="jmeno" disabled="true" %}
                                 </div>
                                 <!--user surname  input-->
                                 <div class="form-group">
@@ -79,7 +79,7 @@
                                 <!-- User email input-->
                                 <div class="form-group">
                                     <label for="email">{{ formUser.email.label }}</label>
-                                    {% render_field formUser.email class="form-control form-control-sm" id="email" disabled="true" %}
+                                    {% render_field formUser.email class="form-control form-control-sm" autocomplete="new-email" id="email" disabled="true" %}
                                 </div>
                                 <!--user number input-->
                                 <div class="form-group">
@@ -100,13 +100,13 @@
                                 <div class="form-group">
                                     <label for="heslo">
                                         {{ formUser.heslo.label }}</label>
-                                    {% render_field formUser.heslo class="form-control form-control-sm" id="heslo" %}
+                                    {% render_field formUser.heslo class="form-control form-control-sm" minlength="7" autocomplete="new-password" id="heslo" %}
                                 </div>
                                 <!-- user password check input -->
                                 <div class="form-group">
                                     <label for="heslo_kontrola">
                                         {{ formUser.heslo_kontrola.label }}</label>
-                                    {% render_field formUser.heslo_kontrola class="form-control form-control-sm" id="heslo_kontrola" %}
+                                    {% render_field formUser.heslo_kontrola class="form-control form-control-sm" autocomplete="new-password" id="heslo_kontrola" %}
                                 </div>
                                 <div class="form-group">
                                     <label for="jazyk">
@@ -138,7 +138,7 @@
                 <button class="btn btn-secondary btn-block" onclick="goBack()">{% trans "Zpět" %}</button>
             </div>
             <div class="col-6 col-md-2 col-lg-1 mt-2 mt-sm-0 ">
-                <button class="btn btn-secondary btn-block">{% trans "Uložit" %}</button>
+                <button type="submit" class="btn btn-secondary btn-block">{% trans "Uložit" %}</button>
             </div>
         </div>
     </form>
@@ -148,7 +148,5 @@
     <script>
         //Password match validation
         bootstrapValidate('#heslo_kontrola', 'matches:#heslo: {% trans "Vámi zadaná hesla se neshodují" %}')
-        //Checking for password length
-        bootstrapValidate(['#heslo_kontrola', '#heslo'], 'min:7:{% trans "Heslo musí mít minimálně 7 znaků" %}')
     </script>
     {% endblock %}

@@ -45,24 +45,70 @@ def min_user_group(min_group):
                 return redirect('login')
             else:
                 # Otherwise check that you are logged in
+                user = []
                 try:
                     user = xmlrpc.get_current_user(sid)
-                    if(len(user) == 0):
-                        print("Sid " + str(sid) + " no longer valid on the php server.")
-                        return redirect('login')
-                    else:
-                        # Checks that user is in the user group set that is required
-                        inMinGroup = helper.min_user_group(user, min_group)
-                        # If its not, throw 403
-                        if not inMinGroup:
-                            raise PermissionDenied("Not sufficient user group privileges.")
-
-                        kwargs['user'] = user
-
                 except Exception as ex:
                     logger.warning("Could not verify current user (php session expired?). Redirecting to login.")
                     logger.error(str(ex))
                     return redirect('login')
+
+                if(len(user) == 0):
+                    print("Sid " + str(sid) + " no longer valid on the php server.")
+                    return redirect('login')
+                else:
+                    # Checks that user is in the user group set that is required
+                    inMinGroup = helper.min_user_group(user, min_group)
+                    # If its not, throw 403
+                    if not inMinGroup:
+                        raise PermissionDenied("Not sufficient user group privileges.")
+
+                    kwargs['user'] = user
+
+                return func(request, *args, **kwargs)
+        return _arguments_wrapper
+    return _method_wrapper
+
+
+def permissions_required(group, permission):
+
+    @wraps(group, permission)
+    def _method_wrapper(func):
+
+        @wraps(func)
+        def _arguments_wrapper(request, *args, **kwargs):
+            """
+            Wrapper with arguments to invoke the method
+            """
+            sid = request.COOKIES.get('sessionId')
+
+            # Check sid
+            if(sid is None):
+                # If there is no sid you are not in the group
+                logger.debug("sid not found, retrieving new one from the php server")
+                return redirect('login')
+            else:
+                # Otherwise check that you are logged in
+                user = []
+                try:
+                    user = xmlrpc.get_current_user(sid)
+                except Exception as ex:
+                    logger.warning("Could not verify current user (php session expired?). Redirecting to login.")
+                    logger.error(str(ex))
+                    return redirect('login')
+
+                if(len(user) == 0):
+                    logger.info("Sid " + str(sid) + " no longer valid on the php server.")
+                    return redirect('login')
+                else:
+                    logger.info("Checking permissions")
+                    # Checks that user is in the user group and has required permissions
+                    canAccess = helper.check_user_group_and_permission(user, group, permission)
+                    # If its not, throw 403
+                    if not canAccess:
+                        raise PermissionDenied("Not sufficient user privileges.")
+
+                    kwargs['user'] = user
 
                 return func(request, *args, **kwargs)
         return _arguments_wrapper

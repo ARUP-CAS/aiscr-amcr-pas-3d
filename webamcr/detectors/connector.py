@@ -5,8 +5,12 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from documents.constants import AmcrConstants as c
+from detectors.constants import DetectorConstants as dc
 from documents import helper, xmlrpc
 from . import models
+from detectors.models import Projekt
+from django.db.models.functions import Concat
+from django.db.models import CharField, Value
 
 
 logger = logging.getLogger(__name__)
@@ -54,21 +58,22 @@ def load_my_projects(badatel_id, projects):
         try:
             if curr_role == c.BADATEL:  # Badatel can see projects if he has active coorporation with archeolog, organization of this archeolog created this project
                 my_links = load_my_active_links(badatel_id)
+                # Removing duplicate links (when two cooperations are with archeologists from the same organization)
+                my_organizations = set()
+                for link in my_links:
+                    my_organizations.add(link[2])
                 for one_project in projects:
-                    project_organizace = models.UserStorage.objects.get(id=one_project[2]).organizace.id
-
-                    for one_link in my_links:
-                        #print("compare: "+str(one_link[2])+" "+str(project_organizace))
-                        if one_link[2] == project_organizace:
-                            #print("Pripojuji si tento projekt: "+str(one_project))
-                            my_projects.append((one_project[0], one_project[1]))
+                    project_organizace = models.UserStorage.objects.get(id=one_project['odpovedny_pracovnik_prihlaseni']).organizace.id
+                    for organization in my_organizations:
+                        if organization == project_organizace:
+                            my_projects.append(one_project)
                 return my_projects
             elif curr_role == c.ARCHEOLOG:  # Archeolog can see all projects his organization
                 for one_project in projects:
-                    project_organizace = models.UserStorage.objects.get(id=one_project[2]).organizace.id
+                    project_organizace = models.UserStorage.objects.get(id=one_project['odpovedny_pracovnik_prihlaseni']).organizace.id
                     organizace_archeolog = models.UserStorage.objects.get(id=badatel_id).organizace.id
                     if project_organizace == organizace_archeolog:
-                        my_projects.append((one_project[0], one_project[1]))
+                        my_projects.append(one_project)
                 return my_projects
             else:
                 return my_projects
@@ -92,3 +97,24 @@ def get_id_name_by_user_id(user_id):
     except:
         logger.error("Could not map user with id " + str(user_id) + " to name record.")
         return -1
+
+def get_vypis_cely_by_id_name(name_id):
+    name = ''
+    try:
+        name = models.HeslarJmena.objects.get(id=name_id).vypis_cely
+    except:
+        logger.error("Could not find name")
+
+    return name
+
+def projekty_vyzkumne():
+    RESEARCH_PROJECT_ID = 3
+    projekty = Projekt.objects.filter(typ_projektu=RESEARCH_PROJECT_ID).values('id', 'ident_cely', 'odpovedny_pracovnik_prihlaseni', 'vedouci_projektu')
+    return projekty
+
+def projekty_zahajene_ukoncene_v_terenu(projekty):
+    return projekty.filter(Q(stav=dc.PROJEKT_STAV_UKONCENY) | Q(stav=dc.PROJEKT_STAV_ZAHAJENY))
+
+def prijmeni_jmeno():
+    qs = models.HeslarJmena.objects.annotate(prijmeni_jmeno=Concat('prijmeni', Value(', '), 'jmeno')).all()
+    return qs.values_list('id', 'prijmeni_jmeno')

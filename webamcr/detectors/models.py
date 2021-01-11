@@ -7,6 +7,7 @@ class HeslarPristupnost(models.Model):
     nazev = models.CharField(max_length=1)
     vyznam = models.TextField()
     validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -45,6 +46,7 @@ class Organizace(models.Model):
     oao = models.BooleanField(blank=True, null=True)
     published_accessibility = models.ForeignKey(HeslarPristupnost, models.DO_NOTHING, db_column='published_accessibility')
     months_to_publication = models.IntegerField()
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -261,6 +263,8 @@ class HeslarNalezoveOkolnosti(models.Model):
     poradi = models.IntegerField()
     vysvetlivka = models.TextField(blank=True, null=True)
     validated = models.SmallIntegerField(blank=True, null=True)
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
+        db_table = 'heslar_nalezove_okolnosti'

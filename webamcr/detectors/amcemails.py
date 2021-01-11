@@ -188,3 +188,88 @@ def email_send_SN7(user, target_email):
     else:
         logger.debug("Notification SN7 to user " + target_email + " not sent. User notification setting off.")
     return 0
+
+
+@job
+def email_send_3D1(target_email, model):
+    logger.debug("Preparing email 3D1.")
+
+    subject = 'AMČR - Knihovna 3D: dokument ' + model.ident_cely + ' byl archivován'
+    content = 'Dobrý den,<br><br>v AMČR byl archivován Vámi vložený 3D dokument <strong>' + model.ident_cely + '</strong>.'
+    content += '<br><br>Detaily zjistíte po přihlášení do Knihovny 3D v AMČR. Nejpozději během následujícího dne bude dokument zveřejněn v Digitálním archivu AMČR.<br><br>'
+    content += notice_footer
+
+    logger.debug("Sending email to user " + target_email)
+    ret = send_mail(
+        subject,  # Subject
+        "",  # Content
+        _from,  # From
+        [target_email],  # To,
+        html_message=content
+    )
+
+    return ret
+
+
+@job
+def email_send_3D2(target_email, model, duvod):
+    logger.debug("Preparing email 3D2.")
+
+    subject = 'AMČR - Knihovna 3D: dokument ' + model.ident_cely + ' byl vrácen k doplnění'
+    content = 'Dobrý den,<br><br>Vámi odeslaný dokument <strong>' + model.ident_cely + '</strong> byl vrácen do stavu <strong>nerevidovaný</strong>.<br><br>'
+    content += '<strong>Důvod:</strong> ' + duvod
+    content += '<br><br>Detaily zjistíte po přihlášení do Knihovny 3D v AMČR.<br><br>'
+    content += notice_footer
+
+    logger.debug("Sending email to user " + target_email)
+    ret = send_mail(
+        subject,  # Subject
+        "",  # Content
+        _from,  # From
+        [target_email],  # To,
+        html_message=content
+    )
+
+    return ret
+
+
+@job
+def email_send_3D3(target_email):
+    logger.debug("Preparing email 3D3.")
+
+    subject = 'AMČR - Knihovna 3D: přiděleno oprávnění'
+    content = 'Dobrý den,<br><br>vašemu účtu bylo přiděleno nové oprávnění “Správce 3D”.'
+    content += '<br><br>Nyní máte oprávnění archivovat dokumenty v Knihovně 3D AMČR.<br><br>'
+    content += notice_footer
+
+    logger.debug("Sending email to user " + target_email)
+    ret = send_mail(
+        subject,  # Subject
+        "",  # Content
+        _from,  # From
+        [target_email],  # To,
+        html_message=content
+    )
+
+    return ret
+
+
+@job
+def email_send_3D4(target_email):
+    logger.debug("Preparing email 3D4.")
+
+    subject = 'AMČR - Knihovna 3D: odebráno oprávnění'
+    content = 'Dobrý den,<br><br>vašemu účtu bylo odebráno oprávnění “Správce 3D”.'
+    content += '<br><br>Pro detailní informace kontaktujte administrátora AMČR.<br><br>'
+    content += notice_footer
+
+    logger.debug("Sending email to user " + target_email)
+    ret = send_mail(
+        subject,  # Subject
+        "",  # Content
+        _from,  # From
+        [target_email],  # To,
+        html_message=content
+    )
+
+    return ret

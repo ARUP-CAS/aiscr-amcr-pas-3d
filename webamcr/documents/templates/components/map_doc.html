@@ -1,3 +1,4 @@
+{% load i18n %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
     integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
     crossorigin="" />
@@ -84,9 +85,22 @@
     .leaflet-dragging .leaflet-grab {
         cursor: move;
     }
+    .map-reset-icon{
+        margin-top: 1rem;
+    }
+    div.leaflet-control-resetzoom a{
+        padding-top: 2px;
+        cursor: pointer;
+    }
+
+    a.leaflet-touch i{
+        font-size: 17px;
+        color: #404040;
+    }
 </style>
 
-<div id='map'></div>
+<div id='map'>
+</div>
 
 <script>
     var poi = L.layerGroup();
@@ -119,26 +133,27 @@
         "AMČR Zájmové body": poi
     };
 
-
-    map.on('click', function (e) {
-        corX = e.latlng.lat;
-        corY = e.latlng.lng;
-        //console.log(document.getElementById('detector_system_coordinates').value)
-        //console.log("Position click: "+e.latlng.lat+" "+e.latlng.lng+" zoom:"+map.getZoom())
-        //alert("Vase pozice je: "+corX+" "+corY+" zoom:"+map.getZoom());
-        if (!lock) {
-            //if (map.getZoom() > 15) {
-                point_global_WGS84 = [Math.round(corX * 1000000) / 1000000, Math.round(corY * 1000000) / 1000000]
-                document.getElementById('sirka').value = point_global_WGS84[0]
-                document.getElementById('delka').value = point_global_WGS84[1]
-                $("#sirka").change();
-                $("#delka").change();
-                addUniquePointToPoiLayer(corX, corY, '', false)
-           // } else {
-           //         map.setView(e.latlng, map.getZoom() + 2)
-           // }
-        }
-    });
+    {% if context.canEdit %}
+            map.on('click', function (e) {
+                corX = e.latlng.lat;
+                corY = e.latlng.lng;
+                //console.log(document.getElementById('detector_system_coordinates').value)
+                //console.log("Position click: "+e.latlng.lat+" "+e.latlng.lng+" zoom:"+map.getZoom())
+                //alert("Vase pozice je: "+corX+" "+corY+" zoom:"+map.getZoom());
+                if (!lock) {
+                    //if (map.getZoom() > 15) {
+                        point_global_WGS84 = [Math.round(corX * 1000000) / 1000000, Math.round(corY * 1000000) / 1000000]
+                        document.getElementById('sirka').value = point_global_WGS84[0]
+                        document.getElementById('delka').value = point_global_WGS84[1]
+                        $("#sirka").change();
+                        $("#delka").change();
+                        addUniquePointToPoiLayer(corX, corY, '', false)
+                // } else {
+                //         map.setView(e.latlng, map.getZoom() + 2)
+                // }
+                }
+            });
+    {% endif %}
 
     var is_in_europe = (corX,corY) => {
         //console.log("Test coordinates for bounding box");
@@ -170,9 +185,9 @@
     }
     var addUniquePointToPoiLayer = (lat, long, text, zoom = true) => {
         poi.clearLayers()
-        L.marker([lat, long]).bindPopup(text).addTo(poi);
+        L.marker([lat, long]).bindPopup('{% trans "Vámi vyznačená poloha" %}').addTo(poi);
         if (long && lat && zoom) {
-            map.setView([lat, long], 15);
+            map.setView([lat, long], 5);
         }
 
         if (point_global_WGS84[0] == 0) {
@@ -187,6 +202,27 @@
 
     L.control.layers(baseLayers,overlays).addTo(map);
     L.control.scale(metric = "true").addTo(map);
+
+    {% if context.canEdit %}
+        //Reset control
+        (function() {
+        var control = new L.Control({position:'topleft'});
+        control.onAdd = function() {
+                var azoom = L.DomUtil.create('div','leaflet-control-resetzoom leaflet-control leaflet-bar');
+                azoom.innerHTML = "<a class='leaflet-touch leaflet-reset' title='Smazat bod'><i class='fa fa-close'></i></a>";
+                L.DomEvent
+                .disableClickPropagation(azoom)
+                    .addListener(azoom, 'click', function() {
+                        poi.clearLayers();
+                        document.getElementById('sirka').value = "";
+                        document.getElementById('delka').value = "";
+                    },azoom);
+                return azoom;
+            };
+        return control;
+        }())
+        .addTo(map);
+    {% endif %}
 </script>
 
 <script>

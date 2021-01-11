@@ -1,7 +1,8 @@
 {% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!--Table-->
-<table id="coop_table" data-locale="cs-CZ" data-min-width="560" data-toggle="table" data-toolbar="#toolbar" data-pagination="true"
-    data-pagination-pre-text="Předchozí" data-pagination-next-text="Další" data-show-columns="true" data-search="true"
+<table id="coop_table" data-locale="{{ LANGUAGE_CODE }}" data-min-width="560" data-toggle="table" data-toolbar="#toolbar" data-pagination="true"
+    data-pagination-pre-text="{% trans "Předchozí" %}" data-pagination-next-text="{% trans "Další" %}" data-show-columns="true" data-search="true"
     data-show-toggle="true" data-mobile-responsive="true"  data-buttons-class="amcr btn-xs"
     class="table table-hover table-borderless">
     <!--Table head-->
@@ -13,7 +14,7 @@
             </th>
             <th data-field="historie" data-width="50" data-halign="center" data-align="center">
                 <i class="ti-timer d-none d-sm-inline"></i>
-                <span class="d-inline d-sm-none">{% trans "Historie nálezu" %}</span>
+                <span class="d-inline d-sm-none">{% trans "Historie spolupráce" %}</span>
             </th>
             <th data-field="badatel" data-sortable="true" class="table-long">{% trans "Badatel" %}</th>
             <th data-field="badatelOrganizace" data-sortable="true" data-visible="true" class="table-long">{% trans "Organizace (badatel)" %}</th>

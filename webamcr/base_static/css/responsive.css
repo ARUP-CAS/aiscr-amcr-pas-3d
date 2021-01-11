@@ -474,6 +474,9 @@
     .header-bottom .search-box input {
         max-width: 100%;
     }
+    #ToastAlerts {
+        width: 50%;
+    }
 }
 
 /* small mobile :320px. */
@@ -615,6 +618,9 @@
     .card-body {
         padding: 0.8rem;
     }
+    #ToastAlerts {
+        width: 70%;
+    }
 }
 
 /* small mobile :320px. */
@@ -675,9 +681,13 @@
         margin: 3px 0 3px ;
         float: none;
     }
-    .notification-area li {
-        margin: 0 15px;
+    .login-form-body .notification-area {
+        text-align: center;
     }
+    .notification-area li {
+        margin-left: 15px;
+    }
+
     .user-profile {
         margin: 16px 0 10px 0;
     }
@@ -948,11 +958,26 @@
     table{
         margin-top: 0px !important;
     }
+    #ToastAlerts {
+        top: 8rem;
+        width: 90%;
+    }
 }
 
 /* Large Screens */
 @media (min-width: 2000px){
     .owl-item {
         max-width: 250px !important;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .tooltip {
+        display: none !important;
+    }
+    .icon-container:hover [class^="ti-"],
+    .icon-container .fa {
+    -webkit-transform: none;
+            transform: none;
     }
 }

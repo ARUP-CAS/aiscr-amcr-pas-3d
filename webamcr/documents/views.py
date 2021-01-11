@@ -4,17 +4,20 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.db.models import Q
 from django.db import IntegrityError
+from django.utils import translation
 
 from . import xmlrpc
 from . import helper
 from .constants import AmcrConstants as c
-from .decorators import login_required, min_user_group
+from .decorators import login_required, min_user_group, permissions_required
 from .forms import (FindingDocumentForm, AddNameForm, ChooseForm, CreateForm, LoginForm, EditAuthorForm)
 from .models import (HeslarObjektDruh, HeslarPredmetDruh, HeslarTypNalezu, Dokument, HistorieDokumentu,
                      KomponentaDokument, HeslarObdobiDruha, HeslarArealDruha, NalezDokument, UserStorage,
-                     ExtraData, JednotkaDokument, HeslarZeme)
+                     ExtraData, JednotkaDokument, HeslarZeme, HeslarSpecifikaceObjektuDruha, HeslarSpecifikacePredmetu)
 from detectors.models import HeslarJmena
 from detectors.forms import ReturnFindingForm
+from webamcr.views import heslar_organizace
+from detectors.amcemails import email_send_3D1, email_send_3D2
 
 import logging
 import ftplib
@@ -224,16 +227,20 @@ def name_create(request, **kwargs):
         form = AddNameForm(request.POST)
         if form.is_valid():
 
-            j = form.cleaned_data['jmeno']
+            jmena = form.cleaned_data['jmeno']
             prijmeni = form.cleaned_data['prijmeni']
+
+            vypis = prijmeni + ','
+            for j in jmena.split():
+                vypis += ' ' + j.strip()[0].upper() + '.'
 
             try:
                 jmeno = HeslarJmena(
-                    jmeno=j,
+                    jmeno=' '.join(jmena.split()),
                     prijmeni=prijmeni,
                     validated=True,
-                    vypis=prijmeni + ', ' + j[0].upper() + '.',
-                    vypis_cely=prijmeni + ', ' + j
+                    vypis=vypis,
+                    vypis_cely=prijmeni + ', ' + jmena
                 )
                 jmeno.save()
 
@@ -259,7 +266,7 @@ def name_create(request, **kwargs):
 @login_required
 def author_edit(request, ident_cely, **kwargs):
 
-    MAX_AUTHOR_COUNT = 4
+    MAX_AUTHOR_COUNT = 10
     sid = request.COOKIES.get('sessionId')
     addNameForm = AddNameForm()
     names = xmlrpc.get_list(sid, 'jmena', 'prijmeni', 'jmeno')
@@ -274,7 +281,6 @@ def author_edit(request, ident_cely, **kwargs):
         if editAuthorForm.is_valid():
             data = editAuthorForm.cleaned_data
             autori_ids = []
-            print(str(data))
             for i in range(MAX_AUTHOR_COUNT):
                 author = data['author' + str(i + 1)]
                 if author:
@@ -456,6 +462,7 @@ def create(request, ident_cely='0', **kwargs):
                 elif 'button_archive' in request.POST:
                     resp = archivace(request, params, model, user, sid)
                 if 'button_delete' in request.POST:
+
                     resp = model.delete()
                     if resp[0] > 0:
                         logger.debug("Objekt " + str(resp) + ' smazán')
@@ -475,12 +482,16 @@ def create(request, ident_cely='0', **kwargs):
             messages.add_message(request, messages.WARNING, c.FORM_IS_NOT_VALID)
 
     if request.method == 'GET':
+
+        language = translation.get_language()
+
         if ident_cely == '0':
             # Empty form
             context['showDetails'] = False
             context['canEdit'] = True
             context['canArchive'] = False
             formCreate = CreateForm()
+            canSeeDetail = True
         else:
             # Detail of the 3D model
             context['showDetails'] = True
@@ -562,47 +573,70 @@ def create(request, ident_cely='0', **kwargs):
             for n in nalezy_list:
                 typ_n = n['typ_nalezu_id']
                 druh_n = n['druh_nalezu']
-                n['typ_nalezu'] = HeslarTypNalezu.objects.get(pk=typ_n).nazev
+                specifikace_n = n['specifikace']
+                if language == 'en':
+                    n['typ_nalezu'] = HeslarTypNalezu.objects.get(pk=typ_n).en
+                else:
+                    n['typ_nalezu'] = HeslarTypNalezu.objects.get(pk=typ_n).nazev
                 if typ_n == PREDMET_OPTION and druh_n:
-                    n['druh_nalezu'] = HeslarPredmetDruh.objects.get(pk=druh_n).nazev
+                    if language == 'en':
+                        n['druh_nalezu'] = HeslarPredmetDruh.objects.get(pk=druh_n).en
+                        if n['specifikace']:
+                            n['specifikace'] = HeslarSpecifikacePredmetu.objects.get(pk=specifikace_n).en
+                    else:
+                        n['druh_nalezu'] = HeslarPredmetDruh.objects.get(pk=druh_n).nazev
+                        if n['specifikace']:
+                            n['specifikace'] = HeslarSpecifikacePredmetu.objects.get(pk=specifikace_n).nazev
                 elif typ_n == OBJEKT_OPTION and druh_n:
-                    n['druh_nalezu'] = HeslarObjektDruh.objects.get(pk=druh_n).nazev
+                    if language == 'en':
+                        n['druh_nalezu'] = HeslarObjektDruh.objects.get(pk=druh_n).en
+                        if n['specifikace']:
+                            n['specifikace'] = HeslarSpecifikaceObjektuDruha.objects.get(pk=specifikace_n).en
+                    else:
+                        n['druh_nalezu'] = HeslarObjektDruh.objects.get(pk=druh_n).nazev
+                        if n['specifikace']:
+                            n['specifikace'] = HeslarSpecifikaceObjektuDruha.objects.get(pk=specifikace_n).nazev
                 else:
                     n['druh_nalezu'] = ''
-
-            # print(data)
 
             curr_role_opr = helper.get_roles_and_permissions(current_user['auth'])
             soubory = xmlrpc.nacti_vazby(sid, 'dokument_soubor', model.id_id)
             curr_opravneni = curr_role_opr['opravneni']
             stav_int = model.stav
-            isDraft = True if (stav_int == c.DRAFT_STATE_ID) and (
-                (current_user['id'] == model.odpovedny_pracovnik_vlozeni.id.id) or (c.ADMIN3D in curr_opravneni)) else False
-            isArchivinig = True if (stav_int == c.SENT_STATE_ID) and (c.ADMIN3D in curr_opravneni) else False
-            #isDearchiving = True if (stav_int == c.ARCHIVED_STATE_ID) and (c.ADMIN3D in curr_opravneni) else False
+            isOwner = current_user['id'] == model.odpovedny_pracovnik_vlozeni.id.id
+            isAdmin3D = c.ADMIN3D in curr_opravneni
+
+            isDraft = True if (stav_int == c.DRAFT_STATE_ID) and (isOwner or isAdmin3D) else False
+            isArchivinig = True if (stav_int == c.SENT_STATE_ID) and isAdmin3D else False
+            isDearchiving = True if (stav_int == c.ARCHIVED_STATE_ID) and isAdmin3D else False
+            canSeeDetail = isOwner or isAdmin3D
+
             context['soubory'] = soubory
             context['stav'] = c.DOCUMENT_STATE_CACHE[stav_int][1]
+            context['stav_int'] = stav_int
             context['canArchive'] = isArchivinig
             context['canEdit'] = isDraft or isArchivinig
             context['canSend'] = isDraft
-            context['canReturn'] = isArchivinig
+            context['canReturn'] = isArchivinig or isDearchiving
             context['autori'] = autori
             context['nalezy'] = nalezy_list
 
             formCreate = CreateForm(initial=form_data, readonly=not context['canEdit'])
             # print('Moje opravneni: ' + str(curr_opravneni))
-            print('Can edit: ' + str(context['canEdit']))
+            # print('Can edit: ' + str(context['canEdit']))
             # print('Can send: ' + str(context['canSend']))
             # print('Can return: ' + str(context['canReturn']))
             # print('Can archive: ' + str(context['canArchive']))
 
-    return render(request, 'documents/create.html', {
-        'formCreate': formCreate,
-        'documentId': id_modelu,
-        'ident_cely': ident_cely,
-        'context': context,
-    })
-
+    if canSeeDetail:
+        return render(request, 'documents/create.html', {
+            'formCreate': formCreate,
+            'documentId': id_modelu,
+            'ident_cely': ident_cely,
+            'context': context,
+        })
+    else:
+        return render(request, '403.html')
 
 @login_required
 def choose(request, *args, **kwargs):
@@ -610,7 +644,7 @@ def choose(request, *args, **kwargs):
     sid = request.COOKIES.get('sessionId')
     context = {}
     names = xmlrpc.get_list(sid, 'jmena', 'prijmeni', 'jmeno')
-    users = UserStorage.objects.all().values('id', 'prijmeni', 'jmeno', 'ident_cely')
+    users = UserStorage.objects.all().order_by('prijmeni').values('id', 'prijmeni', 'jmeno', 'ident_cely')
     usersList = []
     for user in users:
         if user['id'] != -1:
@@ -626,7 +660,7 @@ def choose(request, *args, **kwargs):
 
             context['table'] = o
             context['doc_states'] = c.DOCUMENT_STATE_DICT
-            context['org_dict'] = c.ORGANIZATIONS_CACHE_DICT
+            context['org_dict'] = dict(heslar_organizace())
             context['active_items'] = [c.MENU_LIBRARY, c.MENU_CHOOSE_3D]
 
             return render(request, 'documents/list.html', {'context': context})
@@ -756,7 +790,7 @@ def my_models(request, **kwargs):
 
     context['table'] = o
     context['doc_states'] = c.DOCUMENT_STATE_DICT
-    context['org_dict'] = c.ORGANIZATIONS_CACHE_DICT
+    context['org_dict'] = dict(heslar_organizace())
     context['active_items'] = [c.MENU_LIBRARY, c.MENU_LIST_3D]
 
     return render(request, 'documents/list.html', {'context': context})
@@ -775,15 +809,15 @@ def manage_models(request, **kwargs):
         context['table'] = o
 
     context['doc_states'] = c.DOCUMENT_STATE_DICT
-    context['org_dict'] = c.ORGANIZATIONS_CACHE_DICT
+    context['org_dict'] = dict(heslar_organizace())
     context['active_items'] = [c.MENU_LIBRARY, c.MENU_MANAGE_3D]
 
     return render(request, 'documents/list.html', {'context': context})
 
 
-@min_user_group(c.ARCHEOLOG)
+@permissions_required('', c.ADMIN3D)
 def return_model(request, ident_cely, **kwargs):
-    logger.debug("Vraceni nalezu: " + ident_cely)
+    logger.debug("Vraceni modelu: " + ident_cely)
 
     current_user = kwargs['user']
     model = get_object_or_404(Dokument, ident_cely=ident_cely)
@@ -880,6 +914,12 @@ def archivace(request, params, model, user, sid):
         )
         zmena.save()
         messages.add_message(request, messages.SUCCESS, c.OBJECT_ARCHIVED_SUCCESSFULLY)
+
+        # Notification of the owner of the model
+        vlozil_email = model.odpovedny_pracovnik_vlozeni.email
+        model.refresh_from_db() # must update because of new ident_ cely
+        email_send_3D1.delay(vlozil_email, model)
+
     else:
         messages.add_message(request, messages.WARNING, c.OBEJCT_COULD_NOT_BE_UPDATED)
 
@@ -897,6 +937,12 @@ def vraceni_modelu(request, user, model, reason, state_id, transition_id):
         duvod=reason
     )
     zmena.save()
+
+    # Notify in case the model was returned to state ZAPSAN
+    if transition_id == c.ZPET_K_ZAPSANI:
+        vlozil_email = model.odpovedny_pracovnik_vlozeni.email
+        email_send_3D2.delay(vlozil_email, model, reason)
+
     messages.add_message(request, messages.SUCCESS, c.OBJECT_RETURNED_TO_PREVIOUS_STATE)
 
 
@@ -928,6 +974,20 @@ def update(request, params, other_data, model, user, sid):
             extra_data.duveryhodnost = other_data['duveryhodnost']
         else:
             model.extradata.duveryhodnost = None
+
+        # Set all activities to false
+        komponenta.aktivita_sidlistni = False
+        komponenta.aktivita_pohrebni = False
+        komponenta.aktivita_vyrobni = False
+        komponenta.aktivita_tezebni = False
+        komponenta.aktivita_kultovni = False
+        komponenta.aktivita_komunikace = False
+        komponenta.aktivita_deponovani = False
+        komponenta.aktivita_boj = False
+        komponenta.aktivita_jina = False
+        komponenta.aktivita_intruze = False
+
+        # Now check which I want to be true
         for a in other_data['aktivita']:
             if a == str(c.AKTIVITA_SIDLISTNI_ID):
                 komponenta.aktivita_sidlistni = True
@@ -1056,14 +1116,18 @@ def filter_documents(o, options):
         )
     if options['specifikace_predmetu']:
         logger.debug("Filtruji podle specifikace_predmetu...")
-        o = o.distinct().filter(
-            jednotkadokument__komponentadokument__nalezdokument__specifikace=options['specifikace_predmetu']).filter(
-            jednotkadokument__komponentadokument__nalezdokument__typ_nalezu=2
-        )
-
+        queries = [Q(jednotkadokument__komponentadokument__nalezdokument__specifikace=value) for value in options['specifikace_predmetu']]
+        query = queries.pop()
+        for item in queries:
+            query |= item
+        o = o.distinct().filter(query).filter(jednotkadokument__komponentadokument__nalezdokument__typ_nalezu=2)
     if options['zmeny']:
         logger.debug("Filtruji podle typu zmeny...")
-        o = o.distinct().filter(historiedokumentu__typ_zmeny=options['zmeny'])
+        queries = [Q(historiedokumentu__typ_zmeny=value) for value in options['zmeny']]
+        query = queries.pop()
+        for item in queries:
+            query |= item
+        o = o.filter(query)
     if options['zmena_od']:
         from_date = datetime.strptime(options['zmena_od'], "%d/%m/%Y")
         if options['zmeny']:

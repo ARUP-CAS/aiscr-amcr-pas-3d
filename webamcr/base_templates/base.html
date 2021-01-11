@@ -1,52 +1,42 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
 <html class="no-js" lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>{% trans "AMČR - webová aplikace" %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/png" href="{% static "loga/favicon.png" %}">
-    <!-- jQuery -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-79200582-5"></script>
     <script src="{% static "/js/vendor/jquery-2.2.4.min.js" %}"></script>
-    <!-- Custom Scrollbar for Tables -->
-    <!-- <link rel="stylesheet" href="{% static "/css/mCustomScrollbar.min.css" %}" /> -->
-    <!-- Bootstrap -->
+    <script src="{% static "/js/popper.min.js" %}"></script>
+    <script src="{% static "/js/bootstrap.min.js" %}"></script>
     <link rel="stylesheet" text="text/css" href="{% static "/css/bootstrap.min.css" %}">
-    <!-- Datepicker -->
     <link rel="stylesheet" type="text/css" href="{% static "/css/bootstrap-datepicker.css" %}">
-    <!-- Web icons -->
     <link rel="stylesheet" text="text/css" href="{% static "/css/font-awesome.min.css" %}">
     <link rel="stylesheet" text="text/css" href="{% static "/css/themify-icons.css" %}">
-    <!-- Sidebar main menu -->
     <link rel="stylesheet" text="text/css" href="{% static "/css/metisMenu.css" %}">
-    <!-- Sliders and Carousels -->
     <link rel="stylesheet" text="text/css" href="{% static "/css/owl.carousel.min.css" %}">
     <link rel="stylesheet" text="text/css" href="{% static "/css/owl.theme.default.css" %}">
-    <!-- Mobile Menu -->
-    <!-- <link rel="stylesheet" text="text/css" href="{% static "/css/slicknav.min.css" %}"> -->
-    <!-- Searchable dropdown -->
-    <link rel="stylesheet" text="text/css" href="{% static "/css/bootstrap-select.css" %}">
-    <!-- others css -->
+    <link rel="stylesheet" text="text/css" href="{% static "/css/bootstrap-select.min.css" %}">
     <link rel="stylesheet" text="text/css" href="{% static "/css/typography.css" %}">
     <link rel="stylesheet" text="text/css" href="{% static "/css/default-css.css" %}">
     <link rel="stylesheet" text="text/css" href="{% static "/css/styles.css" %}">
     <link rel="stylesheet" text="text/css" href="{% static "/css/responsive.css" %}">
-    <!-- Bootstrap-table  -->
-    <link rel="stylesheet" href="{% static "/css/bootstrap-table.min.css" %}">
+    <link rel="stylesheet" text="text/css" href="{% static "/css/bootstrap-table.min.css" %}">
+    <link rel="stylesheet" text="text/css" href="{% static "/css/animate.min.css" %}">
     <script src="{% static "/js/bootstrap-table.min.js" %}"></script>
     <script src="{% static "/js/bootstrap-table-page-jump-to.min.js" %}"></script>
     <script src="{% static "/js/bootstrap-table-export.js" %}"></script>
     <script src="{% static "/js/bootstrap-table-cz-locale.js" %}"></script>
-    <!-- Forms validation -->
     <script src="{% static "/js/bootstrap-validate.js" %}"></script>
-    <!-- modernizr css -->
     <script src="{% static "/js/vendor/modernizr-2.8.3.min.js" %}"></script>
-    <!-- Alerts/Toasts messages -->
-    <link rel="stylesheet" href="{% static "/css/animate.min.css" %}">
+    <script src="{% static "/js/bootstrap-select.min.js" %}"></script>
+    <script src="{% static "/js/load_scripts.js" %}"></script>
+
     <style>
         @font-face {
             font-family: muli;
@@ -55,9 +45,7 @@
     </style>
 
     {% block head %}{% endblock %}
-
 </head>
-
 <body>
     <!-- preloader area start -->
     <div id="preloader">
@@ -80,15 +68,18 @@
                         <ul class="metismenu" id="menu">
                             <!--- Library 3D - menu itemn -->
                             <li class="menu_library">
-                                <a href="javascript:void(0)"><span class="fa fa-cube"></span><span>{{LIBRARY_3D}}</span></a>
+                                <a href="javascript:void(0)"><span
+                                        class="fa fa-cube"></span><span>{{LIBRARY_3D}}</span></a>
                                 <ul class="collapse">
                                     <li class="menu_home_3d"><a href="{% url 'documents:index' %}">{{HOME}}</a></li>
-                                    <li class="menu_create_3d"><a href="{% url 'documents:create' %}">{{CREATE_ENTRY}}</a>
+                                    <li class="menu_create_3d"><a
+                                            href="{% url 'documents:create' %}">{{CREATE_ENTRY}}</a>
                                     </li>
-                                    <li class="menu_list_3d"><a
-                                            href="{% url 'documents:my_models'%}">{{MY_ENTRY}}</a></li>
+                                    <li class="menu_list_3d"><a href="{% url 'documents:my_models'%}">{{MY_MODELS}}</a>
+                                    </li>
                                     {% if 'Správce 3D' in userDetail.role_opravneni.opravneni %}
-                                    <li class="menu_choose_3d"><a href="{% url 'documents:choose' %}">{{CHOOSE_ENTRY}}</a>
+                                    <li class="menu_choose_3d"><a
+                                            href="{% url 'documents:choose' %}">{{CHOOSE_ENTRY}}</a>
                                     </li>
                                     <li class="menu_manage_3d"><a
                                             href="{% url 'documents:manage_models'%}">{{MANAGE_DOC}}</a></li>
@@ -97,8 +88,8 @@
                             </li>
                             <!-- Detectors - menu iem -->
                             <li class="menu_detectors">
-                                <a href="javascript:void(0)"><span
-                                        class="fa fa-map-marker"></span><span class="map-marker-text">{{MODUL_DETECTOR}}</span></a>
+                                <a href="javascript:void(0)"><span class="fa fa-map-marker"></span><span
+                                        class="map-marker-text">{{MODUL_DETECTOR}}</span></a>
                                 <!-- Detectors - submenu -->
                                 <ul class="collapse">
                                     <!-- Detectors - Home -->
@@ -111,7 +102,7 @@
                                     </li>
                                     <!-- Detectors - My detector -->
                                     {% if userDetail.role_opravneni.role in list_badatel %}
-                                    <li class="menu_list_det"><a href="{% url 'pas:moje_list' %}">{{MY_ENTRY}}</a>
+                                    <li class="menu_list_det"><a href="{% url 'pas:moje_list' %}">{{MY_FINDS}}</a>
                                     </li>
                                     {% endif %}
                                     <!-- Detectors - Choose detector -->
@@ -139,10 +130,12 @@
                             <li class="menu_administration">
                                 {% with 'Admin' as list_admin %}
                                 {% if userDetail.role_opravneni.role in list_admin %}
-                                <a href="javascript:void(0)"><span class="ti-settings"></span><span>{% trans "Administrace" %}</span></a>
+                                <a href="javascript:void(0)"><span
+                                        class="ti-settings"></span><span>{% trans "Administrace" %}</span></a>
                                 <!-- Administration - users page -->
                                 <ul class="collapse">
-                                    <li class="menu_users"><a href="{% url 'amcrusers:users_list' %}">{% trans "Uživatelé" %}</a></li>
+                                    <li class="menu_users"><a
+                                            href="{% url 'amcrusers:users_list' %}">{% trans "Uživatelé" %}</a></li>
                                 </ul>
                                 {% endif %}
                                 {% endwith %}
@@ -159,7 +152,7 @@
             <div class="header-area">
                 <div class="row align-items-center">
                     <!-- nav and search button -->
-                    <div class="col-md-2 col-sm-2 col-2 clearfix">
+                    <div class="col-2 clearfix">
                         <div class="nav-btn pull-left">
                             <span></span>
                             <span></span>
@@ -167,12 +160,13 @@
                         </div>
                     </div>
                     <!-- profile info & task notification -->
-                    <div class="col-10 col-sm-10 col-md-10 clearfix">
+                    <div class="col-10  clearfix pr-0">
                         <ul class="notification-area pull-right">
                             <li id="timeCounter" class="login-prepend">
                             </li>
                             <li class="d-lg-none">
-                                <span class="fa fa-info top-panel-icon" data-toggle="modal" data-target="#currentUser"></span>
+                                <span class="fa fa-info top-panel-icon" data-toggle="modal"
+                                    data-target="#currentUser"></span>
                             </li>
                             <li class="login-prepend d-none d-lg-inline-block">
                                 <span class="login-first">{% trans "Přihlášen" %}:</span>
@@ -190,8 +184,16 @@
                             </li>
                             <!-- Log out -->
                             <li>
-                                <span class="fa fa-sign-out top-panel-icon" onclick="location.href='{% url 'logout' %}'">
-                                </span>
+                                <span class="fa fa-sign-out top-panel-icon" onclick="location.href='{% url 'logout' %}'"></span>
+                            </li>
+                            <li>
+                                <span class="vertical-sep-top"></span>
+                            </li>
+                            <li>
+                                <img class="flag" alt="czFlag" src="{% static "flags/cz.svg" %}" id="czechLang"></img>
+                            </li>
+                            <li>
+                                <img class="flag" alt="enFlag" src="{% static "flags/en.svg" %}" id="engLang"></img>
                             </li>
                             </li>
                         </ul>
@@ -213,99 +215,113 @@
     <!-- footer area start-->
     <footer>
         <div class="row footer-area mr-0">
-            <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 footer-col">
+            <div class="col-12 col-md-4 footer-col">
                 <p class="footer-heading">{% trans "Licence" %}</p>
                 <hr>
-                <p class="text-justify">{% trans "Databáze Archeologická mapa České republiky, jejímž autorem je" %} <a
-                    href="http://www.arup.cas.cz/" target="_blank">{% trans "Archeologický ústav AV ČR, Praha, v. v. i." %}</a> a
-                    <a href="http://arub.avcr.cz/" target="_blanl">{% trans "Archeologický ústav AV ČR, Brno, v. v. i." %}</a>,
-                    {% trans "podléhá licenci" %} <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">{% trans "Creative Commons Uveďte původ - Neužívejte komerčně 4.0 Mezinárodní (CC BY-NC 4.0)." %}</a> {% trans "Užití dat i metadat podléhá této licenci, pokud není explicitně stanoveno jinak." %}</p>
-                        <p class="amcr-version mt-2 mt-sm-4">{% trans "Verze" %}: {{AMCR_VERSION}}</p>
+                <p class="text-justify">{% trans "Databáze Archeologická mapa České republiky, jejímž autorem je" %}
+                    <a href="http://www.arup.cas.cz/"
+                        target="_blank">{% trans "Archeologický ústav AV ČR, Praha, v. v. i." %}</a> a
+                    <a href="http://arub.avcr.cz/"
+                        target="_blank">{% trans "Archeologický ústav AV ČR, Brno, v. v. i." %}</a>,
+                    {% trans "podléhá licenci" %} <a href="https://creativecommons.org/licenses/by-nc/4.0/"
+                        target="_blank">{% trans "Creative Commons Uveďte původ - Neužívejte komerčně 4.0 Mezinárodní (CC BY-NC 4.0)." %}</a>
+                    {% trans "Užití dat i metadat podléhá této licenci, pokud není explicitně stanoveno jinak." %}</p>
+                <p class="amcr-version mt-2 mt-sm-4">{% trans "Verze" %}: {{AMCR_VERSION}}</p>
+            </div>
+            <div class="col-12 col-md-4 pt-xs-5 footer-col ">
+                <p class="footer-heading">{% trans "Kontakt" %}</p>
+                <hr>
+                <ul>
+                    <li>
+                        <p>{% trans "Správa dat, uživatelů a podpora pro oblast Čech" %}</p>
+                    </li>
+                    <li>
+                        <p> {% trans "Archeologický ústav AV ČR, Praha,v.v.i." %}</p>
+                    </li>
+                    <li>
+                        <p><a href="mailto:amcr@arup.cas.cz">{% trans "amcr@arup.cas.cz" %}</a></p>
+                    </li>
+                    <hr>
+                    <li>
+                        <p>{% trans "Správa dat, uživatelů a podpora pro oblast Moravy a Slezska (vč. kraje Vysočina)" %}
+                        </p>
+                    </li>
+                    <li>
+                        <p>{% trans "Archeologický ústav AV ČR, Brno, v. v. i." %}</p>
+                    </li>
+                    <li>
+                        <p><a href="mailto:amcr@arub.cz">{% trans "amcr@arub.cz" %}</a></p>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-4 pt-xs-5 footer-col">
+                <p class="footer-heading">{% trans "Partneři" %} </p>
+                <hr>
+                <div class="row">
+                    <!-- Footer logo - EU -->
+                    <div class="col-12 col-xl-6 mt-3">
+                        <a href="https://opvvv.msmt.cz/" target="_blank">
+                            <img class="footer-logo" alt="EU" src="{% static "loga/footer-eu.png" %}">
+                        </a>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 pt-xs-5 footer-col ">
-                        <p class="footer-heading">{% trans "Kontakt" %}</p>
-                        <hr>
-                        <ul>
-                            <li>
-                                <p>{% trans "Správa dat, uživatelů a podpora pro oblast Čech" %}</p>
-                            </li>
-                            <li>
-                                <p> {% trans "Archeologický ústav AV ČR, Praha,v.v.i." %}</p>
-                            </li>
-                            <li>
-                                <p><a href="mailto:amcr@arup.cas.cz">{% trans "amcr@arup.cas.cz" %}</a></p>
-                            </li>
-                            <hr>
-                            <li>
-                                <p>{% trans "Správa dat, uživatelů a podpora pro oblast Moravy a Slezska (vč. kraje Vysočina)" %}</p>
-                            </li>
-                            <li>
-                                <p>{% trans "Archeologický ústav AV ČR, Brno, v. v. i." %}</p>
-                            </li>
-                            <li>
-                                <p><a href="mailto:amcr@arup.cas.cz">{% trans "amcr@arup.cas.cz" %}</a></p>
-                            </li>
-                        </ul>
+                    <!-- Footer logo - msmt -->
+                    <div class="col-6 col-lg-4 col-xl-3 mt-3">
+                        <a href="http://www.msmt.cz/" target="_blank">
+                            <img class="footer-logo"
+                                alt="{% trans "Ministerstvo školství, mládeže a tělovýchovy České republiky" %}"
+                                src="{% static "loga/footer-msmt.png" %}">
+                        </a>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 pt-xs-5 footer-col">
-                        <p class="footer-heading">{% trans "Partneři" %} </p>
-                        <hr>
-                        <div class="row">
-                            <!-- Footer logo - EU -->
-                            <div class="col-12 col-md-12 col-lg-12 col-xl-6 mt-3">
-                                <a href="https://opvvv.msmt.cz/" target="_blank">
-                                    <img class="footer-logo" alt="EU" src="{% static "loga/footer-eu.png" %}">
-                                </a>
-                            </div>
-                            <!-- Footer logo - msmt -->
-                            <div class="col-6 col-lg-4 col-xl-3 mt-3">
-                                <a href="http://www.msmt.cz/" target="_blank">
-                                    <img class="footer-logo" alt="{% trans "Ministerstvo školství, mládeže a tělovýchovy České republiky" %}"
-                                    src="{% static "loga/footer-msmt.png" %}">
-                                </a>
-                            </div>
-                            <!-- Footer logo - AISCR -->
-                            <div class="col-6 col-lg-4 col-xl-3 mt-3">
-                                <a href="http://www.aiscr.cz/" target="_blank">
-                                    <img class="footer-logo" alt="{% trans "Archeologický informační systém České republiky" %}"
-                                    src="{% static "loga/footer-aiscr.png" %}">
-                                </a>
-                            </div>
-                            <!-- Footer logo - ARUP -->
-                            <div class="col-6 col-lg-4 col-xl-3 mt-3">
-                                <a href="http://www.arup.cas.cz/" target="_blank">
-                                    <img class="footer-logo" alt="{% trans "Archeologický ústav AV ČR, Praha, v. v. i." %}"
-                                    src="{% static "loga/footer-arup.png" %}">
-                                </a>
-                            </div>
-                            <!-- Footer logo - ARUB -->
-                            <div class="col-6 col-lg-4 col-xl-3 mt-3">
-                                <a href="http://arub.avcr.cz/" target="_blank">
-                                    <img class="footer-logo" alt="{% trans "Archeologický ústav AV ČR, Brno, v. v. i." %}"
-                                    src="{% static "loga/footer-arub.png" %}">
-                                </a>
-                            </div>
-                            <!-- Footer logo - AVCR -->
-                            <div class="col-6 col-lg-4 col-xl-3 mt-3">
-                                <a href="http://www.avcr.cz/cs/strategie/vyzkumne-programy/prehled-programu/index.html"
-                                target="_blank">
-                                <img class="footer-logo" alt="{% trans "Akademie Věd České Republiky" %}"
+                    <!-- Footer logo - AISCR -->
+                    <div class="col-6 col-lg-4 col-xl-3 mt-3">
+                        <a href="http://www.aiscr.cz/" target="_blank">
+                            <img class="footer-logo" alt="{% trans "Archeologický informační systém České republiky" %}"
+                                src="{% static "loga/footer-aiscr.png" %}">
+                        </a>
+                    </div>
+                    <!-- Footer logo - ARUP -->
+                    <div class="col-6 col-lg-4 col-xl-3 mt-3">
+                        <a href="http://www.arup.cas.cz/" target="_blank">
+                            <img class="footer-logo" alt="{% trans "Archeologický ústav AV ČR, Praha, v. v. i." %}"
+                                src="{% static "loga/footer-arup.png" %}">
+                        </a>
+                    </div>
+                    <!-- Footer logo - ARUB -->
+                    <div class="col-6 col-lg-4 col-xl-3 mt-3">
+                        <a href="http://arub.avcr.cz/" target="_blank">
+                            <img class="footer-logo" alt="{% trans "Archeologický ústav AV ČR, Brno, v. v. i." %}"
+                                src="{% static "loga/footer-arub.png" %}">
+                        </a>
+                    </div>
+                    <!-- Footer logo - AVCR -->
+                    <div class="col-6 col-lg-4 col-xl-3 mt-3">
+                        <a href="http://www.avcr.cz/cs/strategie/vyzkumne-programy/prehled-programu/index.html"
+                            target="_blank">
+                            <img class="footer-logo" alt="{% trans "Akademie Věd České Republiky" %}"
                                 src="{% static "loga/footer-avcr.png" %}">
-                            </a>
+                        </a>
+                    </div>
+                    <!-- Footer logo - Interreg-central -->
+                    <div class="col-6 col-lg-4 col-xl-3 mt-3">
+                        <a href="https://www.interreg-central.eu/Content.Node/VirtualArch.html" target="_blank">
+                            <img class="footer-logo" alt="{% trans "Interreg-central" %}"
+                                src="{% static "loga/footer-interreg.png" %}">
+                        </a>
                     </div>
                     <!-- Footer logo - HULD -->
                     <div class="col-6 col-lg-4 col-xl-3 mt-3">
                         <a href="http://www.huld.io" target="_blank">
-                            <img class="footer-logo" alt="{% trans "Huld s. r. o." %}" src="{% static "loga/footer-huld.png" %}">
+                            <img class="footer-logo" alt="{% trans "Huld s. r. o." %}"
+                                src="{% static "loga/footer-huld.png" %}">
                         </a>
                     </div>
                 </div>
             </div>
     </footer>
-        <!-- footer area end -->
+    <!-- footer area end -->
 
-        <!-- Current user modal -->
-        <div class="modal fade" id="currentUser" tabindex="-1" role="dialog" aria-labelledby="currentUserLabel"
+    <!-- Current user modal -->
+    <div class="modal fade" id="currentUser" tabindex="-1" role="dialog" aria-labelledby="currentUserLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -328,7 +344,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">{% trans "Zavřít" %}</button>
+                    <button type="button" class="btn btn-secondary btn-block"
+                        data-dismiss="modal">{% trans "Zavřít" %}</button>
                 </div>
             </div>
         </div>
@@ -336,49 +353,63 @@
     <!-- Current user modal end -->
     <!-- Cookie expired modal -->
     <div class="modal fade" id="expiredCookie" tabindex="-1" role="dialog" aria-labelledby="expiredCookieLabel"
-    aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="expiredCookieLabel">{% trans "Automatické odhlášení" %}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="logout()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p class="text-center">{% trans "Platnost příhlašení vypršela. Musíte se znovu přihlásit." %}</p>
-            </div>
-            <div class="modal-footer">
-                <a type="button" class="btn btn-secondary btn-block" href="{% url 'logout' %}">{% trans "OK" %}</a>
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="expiredCookieLabel">{% trans "Automatické odhlášení" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="logout()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">{% trans "Platnost příhlašení vypršela. Musíte se znovu přihlásit." %}</p>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-secondary btn-block" href="{% url 'logout' %}">{% trans "OK" %}</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Cookie expired modal end-->
-<!-- Inactive user modal -->
-<div class="modal fade" id="inactiveUser" tabindex="-1" role="dialog" aria-labelledby="inactiveUserLabel"
-aria-hidden="true" data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="inactiveUserLabel">{% trans "Automatické odhlášení" %}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="logout()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <p class="text-center">{% trans "Přejete si pokračovat v práci?" %}</p>
-            <p class="text-center" id="timeLeft"></p>
-        </div>
-        <div class="modal-footer">
+    <!-- Cookie expired modal end-->
+    <!-- Inactive user modal -->
+    <div class="modal fade" id="inactiveUser" tabindex="-1" role="dialog" aria-labelledby="inactiveUserLabel"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inactiveUserLabel">{% trans "Automatické odhlášení" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="logout()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">{% trans "Přejete si pokračovat v práci?" %}</p>
+                    <p class="text-center" id="timeLeft"></p>
+                </div>
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-block" onclick="extendAllowedInactiveIntTime()"
-                    data-dismiss="modal">{% trans "Ano" %}</button>
+                        data-dismiss="modal">{% trans "Ano" %}</button>
                 </div>
             </div>
         </div>
     </div>
     <!-- Inactive modal end-->
     <script>
+        $(document).ready(function (){
+
+        //Active language
+        var current_language = "{{LANGUAGE_CODE}}"
+
+        if (current_language == "cs"){
+            $('#czechLang').addClass('flag-active');
+            $('#engLang').removeClass('flag-active');
+        }
+        else if(current_language == "en"){
+            $('#engLang').addClass('flag-active');
+            $('#czechLang').removeClass('flag-active');
+        }
+        });
         //Back button
         function goBack() {
             window.history.back();
@@ -389,10 +420,25 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false">
             window.location = "{% url 'logout' %}"
         }
 
+        function setCookie(name, value, path){
+            var cookieString = name + '=' + value + ';path=' + path
+            document.cookie = cookieString
+        }
+
         function getCookie(name) {
             var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
             return v ? v[2] : null;
         }
+
+        //Temporary language switch
+        $('#czechLang').on('click', function(){
+            setCookie('django_language', 'cs', '/');
+            location.reload();
+        })
+        $('#engLang').on('click', function(){
+            setCookie('django_language', 'en', '/');
+            location.reload();
+        })
 
         // Set the date we're counting down to
         var loginStamp = parseInt(getCookie('lstamp'))
@@ -458,114 +504,106 @@ aria-hidden="true" data-backdrop="static" data-keyboard="false">
             console.log("Extending inactive time allowed to: " + allowedInactiveTimeInterval)
         }
 
-        </script>
+    </script>
 
-<!-- footer area end-->
-<!-- page container area end -->
-<!-- SCRIPTS -->
-<script src="{% static "/js/popper.min.js" %}"></script>
-<!-- Datepicker -->
-<script src="{% static "/js/bootstrap-datepicker.js" %}"></script>
-<script src="{% static "/js/bootstrap-datepicker.cs.js" %}"></script>
-<!-- Custom table scrollbar -->
-<!-- <script src="{% static "/js/mCustomScrollbar.min.js" %}"></script> -->
-<!-- Selectpicker - searchable dropdowns -->
-<script src="{% static "/js/bootstrap-select.js" %}"></script>
-<!-- bootstrap -->
-<script src="{% static "/js/bootstrap.min.js" %}"></script>
-<!-- Sliders and Carousels -->
-<script src="{% static "/js/owl.carousel.min.js" %}"></script>
-<!-- Main menu -->
-<script src="{% static "/js/metisMenu.min.js" %}"></script>
-<!-- Scrollbar on selected elements (menu) -->
-<script src="{% static "/js/jquery.slimscroll.min.js" %}"></script>
-<!--<script src="{% static "/js/plugins.js" %}"></script> -->
-<script src="{% static "/js/scripts.js" %}"></script>
-{% if context.message %}
-<!-- message type must be 'success' or 'danger'. -->
-<script>createAlert('', '', '{{ context.message.text }}', '{{ context.message.type }}', true, true, 'ToastAlerts');</script>
-{% endif %}
-
-{% if messages %}
+    <!-- footer area end-->
+    <!-- page container area end -->
+    <!-- SCRIPTS -->
+    <script src="{% static "/js/bootstrap-datepicker.js" %}"></script>
+    <script src="{% static "/js/bootstrap-datepicker.cs.js" %}"></script>
+    {% if LANGUAGE_CODE == 'cs' %}
+    <script src="{% static "/js/defaults-cs_CZ.min.js" %}"></script>
+    {% endif %}
+    <script src="{% static "/js/owl.carousel.min.js" %}"></script>
+    <script src="{% static "/js/metisMenu.min.js" %}"></script>
+    <script src="{% static "/js/jquery.slimscroll.min.js" %}"></script>
+    <script src="{% static "/js/scripts.js" %}"></script>
+    {% if context.message %}
+    <!-- message type must be 'success' or 'danger'. -->
+    <script>createAlert('', '', '{{ context.message.text }}', '{{ context.message.type }}', true, true, 'ToastAlerts');</script>
+    {% endif %}
+    {% if messages %}
     {% for message in messages %}
-        <script>createAlert('', '', '{{ message }}', '{{ message.tags }}', true, true, 'ToastAlerts');</script>
+    <script>createAlert('', '', '{{ message }}', '{{ message.tags }}', true, true, 'ToastAlerts');</script>
     {% endfor %}
-{% endif %}
+    {% endif %}
+    <!-- end of part required by the toast messages -->
 
-<!-- end of part required by the toast messages -->
+    <script>
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            $('.selectpicker').selectpicker('mobile');
+        }
+        //Auto dropup disable
+        $.fn.selectpicker.Constructor.DEFAULTS.dropupAuto = false;
 
-<script>
-// Metis menu items
-{% if context.active_items %}
-var menu_items = {{ context.active_items|safe }}
-for (item of menu_items){
-    switch(item){
-        case "menu_library":
-            $('.menu_library').addClass('active')
-            break
-        case "menu_home_3d":
-            $('.menu_home_3d').addClass('active')
-            break
-        case "menu_create_3d":
-            $('.menu_create_3d').addClass('active')
-            break
-        case "menu_list_3d":
-            $('.menu_list_3d').addClass('active')
-            break
-        case "menu_choose_3d":
-            $('.menu_choose_3d').addClass('active')
-            break
-        case "menu_manage_3d":
-            $('.menu_manage_3d').addClass('active')
-            break
-        case "menu_detectors":
-            $('.menu_detectors').addClass('active')
-            break
-        case "menu_home_det":
-            $('.menu_home_det').addClass('active')
-            break
-        case "menu_create_det":
-            $('.menu_create_det').addClass('active')
-            break
-        case "menu_list_det":
-            $('.menu_list_det').addClass('active')
-            break
-        case "mneu_choose_det":
-            $('.mneu_choose_det').addClass('active')
-            break
-        case "menu_confirm_det":
-            $('.menu_confirm_det').addClass('active')
-            break
-        case "menu_archive_det":
-            $('.menu_archive_det').addClass('active')
-            break
-        case "menu_adimistration":
-            $('.menu_adimistration').addClass('active')
-            break
-        case "menu_users":
-            $('.menu_users').addClass('active')
-            break
-        default:
-            console.log("Unknown menu item " + item)
-    }
-}
-{% endif %}
-$("#menu").metisMenu();
-
-// This magical piece will prevent all forms from submitting multiple times
-$('form').on('submit', function(e) {
-    if (!$(this).data('submitted')) {
-        $(this).data('submitted', true);
-    }
-    else {
-        e.preventDefault();
-    }
-});
-
-</script>
-
-
-{% block script %}{% endblock %}
+        // Metis menu items
+        {% if context.active_items %}
+        var menu_items = {{ context.active_items| safe }}
+        for (item of menu_items) {
+            switch (item) {
+                case "menu_library":
+                    $('.menu_library').addClass('active')
+                    break
+                case "menu_home_3d":
+                    $('.menu_home_3d').addClass('active')
+                    break
+                case "menu_create_3d":
+                    $('.menu_create_3d').addClass('active')
+                    break
+                case "menu_list_3d":
+                    $('.menu_list_3d').addClass('active')
+                    break
+                case "menu_choose_3d":
+                    $('.menu_choose_3d').addClass('active')
+                    break
+                case "menu_manage_3d":
+                    $('.menu_manage_3d').addClass('active')
+                    break
+                case "menu_detectors":
+                    $('.menu_detectors').addClass('active')
+                    break
+                case "menu_home_det":
+                    $('.menu_home_det').addClass('active')
+                    break
+                case "menu_create_det":
+                    $('.menu_create_det').addClass('active')
+                    break
+                case "menu_list_det":
+                    $('.menu_list_det').addClass('active')
+                    break
+                case "mneu_choose_det":
+                    $('.mneu_choose_det').addClass('active')
+                    break
+                case "menu_confirm_det":
+                    $('.menu_confirm_det').addClass('active')
+                    break
+                case "menu_archive_det":
+                    $('.menu_archive_det').addClass('active')
+                    break
+                case "menu_adimistration":
+                    $('.menu_adimistration').addClass('active')
+                    break
+                case "menu_users":
+                    $('.menu_users').addClass('active')
+                    break
+                default:
+                    console.log("Unknown menu item " + item)
+            }
+        }
+        {% endif %}
+        //Menu init
+        $("#menu").metisMenu();
+        // This magical piece will prevent all forms from submitting multiple times
+        $('form').on('submit', function (e) {
+            if (!$(this).data('submitted')) {
+                $(this).data('submitted', true);
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+    </script>
+    {% block script %}{% endblock %}
 
 </body>
 

@@ -28,7 +28,7 @@
     <div class="row mt-4 mb-5">
         <div class="owl-carousel owl-theme">
             <!-- Library 3D card-->
-            <div class="amcr-card mb-xs-30 cardhover documents">
+            <div class="amcr-card mb-xs-30 documents cardhover">
                 <a href="/documents/">
                     <div class="card">
                         <div class="text-wrapper-card d-flex justify-content-center">
@@ -45,7 +45,7 @@
                 </a>
             </div>
             <!-- Detectors card -->
-            <div class="amcr-card mb-xs-30 cardhover findings">
+            <div class="amcr-card mb-xs-30 findings cardhover">
                 <a href="/pas/">
                     <div class="card">
                         <div class="text-wrapper-card d-flex justify-content-center">
@@ -83,39 +83,13 @@
 
     {% block script %}
     <script>
-        $(".amcr-card").hover(
-            function (e) {
-                var hoveredElement = "." + e.currentTarget.classList[3]
-                $(hoveredElement).toggleClass('open');
-            });
-        //Removing breadcrumbs on homepage
         $(document).ready(function () {
+            //removing breadcrumbs on homepage
             $("#breadcrumbs_index").remove();
-
-            //Card slider
-            $('.owl-carousel').owlCarousel({
-                loop: false,
-                margin: 15,
-                dots: true,
-                navigation: false,
-                responsiveClass: true,
-                responsive: {
-                    0: {
-                        items: 2,
-                        nav: false,
-                        mergeFit: true
-                    },
-                    600: {
-                        items: 3,
-                        nav: false
-                    },
-                    1000: {
-                        items: 6,
-                        nav: false,
-                        loop: false
-                    }
-                }
-            })
+            //cards - text on hover
+            card_text();
+            //slider init
+            create_slider();
         });
     </script>
     {% endblock %}

@@ -1,6 +1,7 @@
 from detectors.models import UserStorage, UserGroupAuthStorage
 from documents import helper as doc_helper
 from documents.constants import AmcrConstants as c
+from webamcr.views import heslar_organizace
 
 import logging
 
@@ -13,9 +14,13 @@ def get_all_users():
     # Show all except system users (SmartGIS users)
     users = UserStorage.objects.select_related('organizace', 'id').all().exclude(organizace=3)
     auth_records = dict(UserGroupAuthStorage.objects.filter(id__item_type=-10).values_list('user_group', 'auth_level'))
+    organizace = heslar_organizace()
 
     for user in users:
-        user.organizace_zkr = c.ORGANIZATIONS_CACHE_DICT[user.organizace.id]
+        for o in organizace:
+            if o[0] == user.organizace.id:
+                user.organizace_zkr = o[1]
+                break
         auth_level = get_auth_level(user, auth_records)
         rolesAndPerm = doc_helper.get_roles_and_permissions(auth_level)
         user_dict = user.__dict__

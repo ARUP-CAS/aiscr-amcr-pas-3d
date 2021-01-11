@@ -1,7 +1,8 @@
 {% load i18n %}
 {% load amcr_tags %}
-<table id="documents_table" data-locale="cs-CZ" data-min-width="560" data-toggle="table" data-toolbar="#toolbar"
-    data-pagination="true" data-show-pagination-switch="true" data-pagination-pre-text="Předchozí" data-pagination-next-text="Další"
+{% get_current_language as LANGUAGE_CODE %}
+<table id="documents_table" data-locale="{{ LANGUAGE_CODE }}" data-min-width="560" data-toggle="table" data-toolbar="#toolbar"
+    data-pagination="true" data-show-pagination-switch="true" data-pagination-pre-text="{% trans "Předchozí" %}" data-pagination-next-text="{% trans "Další" %}"
     data-show-columns="true" data-show-toggle="true" data-show-export="true" data-page-size="100" data-pagination-loop="false"
     data-mobile-responsive="true" data-show-jump-to="true" data-search="true" data-buttons-class="amcr-3d btn-xs"
     class="table table-hover table-borderless table-amcr">
@@ -36,7 +37,7 @@
         {% for row in context.table %}
         <tr>
             <td>
-                <a class="icon-container" href="{% url 'documents:create' %}{{row.ident_cely}}" data-toggle="tooltip"
+                <a class="icon-container" href="{% url 'documents:create' %}{{row.ident_cely}}" target="_blank" data-toggle="tooltip"
                     data-placement="right" title="{% trans "Detail modelu" %} {{row.ident_cely}}">
                     <i class="ti-new-window"></i>
                 </a>
@@ -48,11 +49,19 @@
             </td>
             <td scope="row">{{row.ident_cely}}</td>
             <td>{{context.doc_states|get_item:row.stav}}</td>
-            <td>{{row.typ_dokumentu.nazev}}</td>
+            {% if LANGUAGE_CODE == 'en' %}
+                <td>{{row.typ_dokumentu.en}}</td>
+            {% else %}
+                <td>{{row.typ_dokumentu.nazev}}</td>
+            {% endif %}
             <td>{{context.org_dict|get_item:row.organizace}}</td>
             <td>{{row.autor}}</td>
             <td>{{row.rok_vzniku}}</td>
-            <td>{{row.extradata.zeme.nazev}}</td>
+            {% if LANGUAGE_CODE == 'en' %}
+                <td>{{row.extradata.zeme.nazev_en}}</td>
+            {% else %}
+                <td>{{row.extradata.zeme.nazev}}</td>
+            {% endif %}
             <td>{{row.extradata.region|default_if_none:"" }}</td>
             <td>{{row.extradata.odkaz|default_if_none:""}}</td>
             <td>{{row.extradata.duveryhodnost}} %</td>

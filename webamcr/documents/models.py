@@ -7,6 +7,7 @@ class HeslarRada(models.Model):
     nazev = models.TextField(blank=True, null=True)
     vysvetlivka = models.TextField(blank=True, null=True)
     validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -22,6 +23,7 @@ class HeslarTypDokumentu(models.Model):
     obrazove_plany = models.BooleanField()
     letecke_foto = models.BooleanField()
     model = models.BooleanField(blank=True, null=True)
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -31,6 +33,7 @@ class HeslarTypDokumentu(models.Model):
 class HeslarTypNalezu(models.Model):
     nazev = models.TextField(blank=True, null=True)
     validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -83,6 +86,7 @@ class HeslarObdobiPrvni(models.Model):
     nazev = models.TextField(blank=True, null=True)
     poradi = models.IntegerField(blank=True, null=True)
     validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -100,6 +104,7 @@ class HeslarObdobiDruha(models.Model):
     validated = models.SmallIntegerField()
     zahrnuje_take = models.TextField(blank=True, null=True)
     nadrazene = models.TextField(blank=True, null=True)
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -111,6 +116,7 @@ class HeslarArealPrvni(models.Model):
     napoveda = models.TextField(blank=True, null=True)
     poradi = models.IntegerField(blank=True, null=True)
     validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -124,6 +130,7 @@ class HeslarArealDruha(models.Model):
     napoveda = models.TextField(blank=True, null=True)
     validated = models.SmallIntegerField()
     rozsah_do = models.SmallIntegerField(blank=True, null=True)
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -134,6 +141,7 @@ class HeslarPredmetKategorie(models.Model):
     nazev = models.TextField()
     poradi = models.IntegerField()
     validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -149,6 +157,7 @@ class HeslarPredmetDruh(models.Model):
     poradi = models.IntegerField(blank=True, null=True)
     implicitni_material = models.IntegerField(blank=True, null=True)
     validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -159,6 +168,7 @@ class HeslarObjektKategorie(models.Model):
     nazev = models.TextField()
     poradi = models.SmallIntegerField()
     validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -170,6 +180,7 @@ class HeslarObjektDruh(models.Model):
     nazev = models.TextField(blank=True, null=True)
     poradi = models.IntegerField(blank=True, null=True)
     validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -180,10 +191,71 @@ class HeslarZeme(models.Model):
     nazev = models.TextField(blank=True, null=True)
     poradi = models.IntegerField(blank=True, null=True)
     validated = models.SmallIntegerField()
+    kod = models.TextField(blank=True, null=True)
+    nazev_en = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'heslar_zeme'
+
+
+class SpzStorage(models.Model):
+    id = models.OneToOneField(Atree, models.DO_NOTHING, db_column='id', primary_key=True)
+    full_name = models.TextField()
+    kraj = models.ForeignKey(Atree, models.DO_NOTHING, db_column='kraj', related_name='kraj_storage', blank=True, null=True)
+    spz = models.CharField(max_length=3, blank=True, null=True)
+    kod = models.IntegerField(blank=True, null=True)
+    en = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'spz_storage'
+
+
+class HeslarSpecifikacePredmetu(models.Model):
+    nazev = models.TextField(blank=True, null=True)
+    poradi = models.IntegerField(blank=True, null=True)
+    validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'heslar_specifikace_predmetu'
+
+
+class HeslarSpecifikaceObjektuPrvni(models.Model):
+    nazev = models.TextField(blank=True, null=True)
+    poradi = models.IntegerField(blank=True, null=True)
+    validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'heslar_specifikace_objektu_prvni'
+
+
+class HeslarSpecifikaceObjektuDruha(models.Model):
+    nazev = models.TextField(blank=True, null=True)
+    prvni = models.IntegerField()
+    poradi = models.IntegerField(blank=True, null=True)
+    validated = models.SmallIntegerField()
+    en = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'heslar_specifikace_objektu_druha'
+
+
+class HeslarFormatDokumentu(models.Model):
+    nazev = models.TextField(blank=True, null=True)
+    poradi = models.IntegerField(blank=True, null=True)
+    validated = models.SmallIntegerField()
+    model = models.BooleanField(blank=True, null=True)
+    en = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'heslar_format_dokumentu'
 
 
 class Dokument(models.Model):

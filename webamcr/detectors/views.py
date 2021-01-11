@@ -1,10 +1,13 @@
 import logging
+import subprocess
 
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
+from django.utils import translation
 
 from detectors import helper as helper_det
 from documents.constants import AmcrConstants as c
@@ -12,14 +15,20 @@ from documents import helper as helper_doc
 from documents import xmlrpc
 from documents.forms import AddNameForm
 from documents.decorators import login_required, min_user_group
+from documents.models import (HeslarPredmetDruh, HeslarObdobiDruha,
+    HeslarSpecifikacePredmetu)
 from webamcr import helper_general
+from webamcr.views import heslar_organizace
 
 from . import connector
 from . import amcemails
+from django.core.files import File
 from .constants import DetectorConstants as det_const
 from . import models
 from .forms import (CreateCooperateForm, UpdateCooperateForm,
                     make_ChooseDetectorForm, make_CreateDetectorForm, ReturnFindingForm)
+from io import BytesIO
+
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +43,26 @@ def upload(request, projectId, findingIdentCely, **kwargs):
         uploadedFile = request.FILES['myFile']
         originalName = uploadedFile.name
 
-        resp = xmlrpc.uploadProjectFile(sid, projectId, uploadedFile, nalez)
+        # Check if the file type is allowed
+        logger.debug("File name: " + str(originalName))
+        allowed_types = ['.jpg', '.jpeg', '.tiff', '.tif', '.png']
+        allowed_type = False
+        for i in allowed_types:
+            if uploadedFile.name.endswith(i):
+                allowed_type = True
+                break
+        if not allowed_type:
+            messages.add_message(request, messages.WARNING, _("Pouze soubory typu jpg, tiff a png je možné nahrávat."))
+            return render(request, 'detectors/uploadFile.html', {'findingIdentCely': findingIdentCely})
+        # Remove EXIF data using exiftools
+        args = ['exiftool', '-All=', '-']
+        p = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, err = p.communicate(input=uploadedFile.read())
+        sanitized_image = BytesIO(out)
+        f_new = File(sanitized_image)
+        f_new.name = originalName
+
+        resp = xmlrpc.uploadProjectFile(sid, projectId, f_new, nalez)
         if resp:
             soubor = models.Soubor.objects.get(pk=resp[0])
             soubor.samostatny_nalez = nalez
@@ -106,18 +134,28 @@ def create(request, ident_cely='0', **kwargs):
                 params['nalezce'] = str(detector_finder)
             if (detector_find_date):
                 params['datum_nalezu'] = helper_doc.date_to_psql_date(str(detector_find_date))
+            else:
+                params['datum_nalezu'] = '__NULL__'
             if (detector_circumstances):
                 params['okolnosti'] = str(detector_circumstances)
+            else:
+                params['okolnosti'] = '__NULL__'
             if (detector_depth):
                 params['hloubka'] = str(detector_depth)
             if (detector_dating):
                 params['obdobi'] = str(detector_dating)
+            else:
+                params['obdobi'] = '__NULL__'
             if (detector_exact_dating):
                 params['presna_datace'] = str(detector_exact_dating)
             if (detector_kind):
                 params['druh_nalezu'] = str(detector_kind)
+            else:
+                params['druh_nalezu'] = '__NULL__'
             if (detector_material):
                 params['specifikace'] = str(detector_material)
+            else:
+                params['specifikace'] = '__NULL__'
             if (detector_quantity):
                 params['pocet'] = str(detector_quantity)
             if (detector_note):
@@ -173,11 +211,9 @@ def create(request, ident_cely='0', **kwargs):
 
             return redirect('/pas/create/' + ident_cely)
 
-        print('Form create is not valid')
-        print('Form errors:')
-        print(form.errors)
-        print('Form field errors:')
-        print(form.non_field_errors)
+        logger.warning('Form create is not valid')
+        logger.warning(form.errors)
+        logger.warning(form.non_field_errors)
         return render(request, 'detectors/create.html', {'formDetCreate': form})
 
     elif request.method == 'GET':
@@ -186,7 +222,8 @@ def create(request, ident_cely='0', **kwargs):
         if(ident_cely == '0'):
             formDetCreate = make_CreateDetectorForm(user_id, user_sid, initial={
                 'detector_find_passed': False,
-                'detector_finder': str(connector.get_id_name_by_user_id(user_id))
+                'detector_finder': str(connector.get_id_name_by_user_id(user_id)),
+                'detector_accessibility': 3, # Admin
             }, editProject=True)
             context['showFiles'] = 'False'
             context['archivovano'] = False
@@ -249,6 +286,7 @@ def create(request, ident_cely='0', **kwargs):
             'canEdit': True,
             'canConfirm': False,
             'canArchive': False,
+            'canUnarchive': False,
             'canProject': True,
             'smStav': 0,
             'ident_cely': '0',
@@ -267,14 +305,21 @@ def create(request, ident_cely='0', **kwargs):
 
     # detector state in header
     detStav = int(db_param['stav'])
-    currentStav = det_const.DETECTOR_STATE_CACHE[detStav][1]
+    states_dict = dict(det_const.DETECTOR_STATE_CACHE)
+    currentStav = states_dict[detStav]
+    isOwner = str(db_param['odpovedny_pracovnik_vlozeni']) == str(current_user['id'])
+    isFromOrganisation = str(db_param['predano_organizace']) == str(current_user['organizace'])
+    isBadatel = curr_role == c.BADATEL
+    isArcheolog = curr_role == c.ARCHEOLOG
+    isArchivar = curr_role == c.ARCHIVAR
+    isAdmin = curr_role == c.ADMIN
 
-    if str(db_param['stav']) == str(det_const.ZAPSANY) and curr_role in ['Badatel', 'Archeolog', 'Archivář', 'Admin'] and str(db_param['odpovedny_pracovnik_vlozeni']) == str(current_user['id']):
+    if (str(db_param['stav']) == str(det_const.ZAPSANY) and isOwner) or (str(db_param['stav']) != str(det_const.ARCHIVOVANY) and (isArchivar or isAdmin)):
         canEdit = True
     else:
         canEdit = False
 
-    if str(db_param['stav']) == str(det_const.ODESLANY) and curr_role in ['Archeolog', 'Archivář', 'Admin'] and str(db_param['predano_organizace']) == str(current_user['organizace']):
+    if (str(db_param['stav']) == str(det_const.ODESLANY) and curr_role == 'Archeolog' and isFromOrganisation) or (str(db_param['stav']) != str(det_const.ARCHIVOVANY) and curr_role in ['Archivář', 'Admin']):
         canConfirm = True
     else:
         canConfirm = False
@@ -283,22 +328,32 @@ def create(request, ident_cely='0', **kwargs):
         canArchive = True
     else:
         canArchive = False
-    # print("canEdit= "+str(canEdit));
-    # print("canConfirm= "+str(canConfirm));
-    # print("canArchive= "+str(canArchive));
+    if str(db_param['stav']) == str(det_const.ARCHIVOVANY) and curr_role in ['Archivář', 'Admin']:
+        canUnarchive = True
+    else:
+        canUnarchive = False
 
-    return render(request, 'detectors/create.html', {
-        'canEdit': canEdit,      # Pokud jsem vlastnikem
-        'canConfirm': canConfirm,  # pokud jsem archeol & mam stejnou organizaci jako SN
-        'canArchive': canArchive,  # pokud jsem archiv
-        'canProject': True if ident_cely == '0' else False,
-        'smStav': int(db_param['stav']),
-        'currentStav': currentStav,
-        'ident_cely': ident_cely,
-        'projectId': projekt_id,
-        'addNameForm': addNameForm,
-        'formDetCreate': formDetCreate,
-        'context': context})
+    canSeeDetail = (isOwner and isBadatel) or (isArcheolog and isFromOrganisation) or isArchivar or isAdmin
+    #print("canEdit= "+str(canEdit));
+    #print("canConfirm= "+str(canConfirm));
+    #print("canArchive= "+str(canArchive));
+
+    if canSeeDetail:
+        return render(request, 'detectors/create.html', {
+            'canEdit': canEdit,      # Pokud jsem vlastnikem
+            'canConfirm': canConfirm,  # pokud jsem archeol & mam stejnou organizaci jako SN
+            'canArchive': canArchive,  # pokud jsem archiv
+            'canUnarchive': canUnarchive,
+            'canProject': True if ident_cely == '0' else False,
+            'smStav': int(db_param['stav']),
+            'currentStav': currentStav,
+            'ident_cely': ident_cely,
+            'projectId': projekt_id,
+            'addNameForm': addNameForm,
+            'formDetCreate': formDetCreate,
+            'context': context})
+    else:
+        return render(request, '403.html')
 
 
 @min_user_group(c.ARCHEOLOG)
@@ -309,9 +364,8 @@ def return_finding(request, ident_cely, **kwargs):
     user_id = str(current_user['id'])
     user = get_object_or_404(models.UserStorage, pk=user_id)
 
-    if (nalez.stav != det_const.ODESLANY) and (nalez.stav != det_const.POTVRZENY):
-        print("Nepovoleny stav vraceni: " + str(nalez.stav) + " Povolene stavy: " +
-              str(det_const.ODESLANY) + ", " + str(det_const.POTVRZENY))
+    if (nalez.stav != det_const.ODESLANY) and (nalez.stav != det_const.POTVRZENY) and (nalez.stav != det_const.ARCHIVOVANY):
+        print("Nepovoleny stav vraceni: " + str(nalez.stav) + " Povolene stavy: " + str(det_const.ODESLANY) + ", " + str(det_const.POTVRZENY)) + ", " + str(det_const.ARCHIVOVANY)
         return render(request, '403.html')
 
     stary_stav = stavy[nalez.stav]
@@ -326,6 +380,8 @@ def return_finding(request, ident_cely, **kwargs):
                 ret = helper_det.vraceni_k_odeslani(user, nalez, reason)
             if nalez.stav == det_const.POTVRZENY:
                 ret = helper_det.vraceni_k_potvrzeni(user, nalez, reason)
+            if nalez.stav == det_const.ARCHIVOVANY:
+                ret = helper_det.vraceni_k_archivaci(user, nalez, reason)
 
             response = redirect('/pas/create/' + ident_cely)
         else:
@@ -346,17 +402,17 @@ def return_finding(request, ident_cely, **kwargs):
 
 def table_view(request, params_dict):
     detektors = connector.detector(request, params_dict)
+    language = translation.get_language()
 
     docArray = []
     NAME_CACHE = dict(helper_doc.load_name_cache())
-    OBJECT_SPECIFICATION_CACHE = dict(c.OBJECT_SPECIFICATION_CACHE)
-    OBDOBI_DICT = dict(c.PERIOD_2_CACHE)
-    ORGANIZACE_DICT = dict(c.ORGANIZATIONS_CACHE)
-    PREDMET_KIND_CACHE = dict(c.PREDMET_KIND2_CACHE)
+    organizace = heslar_organizace()
+    predmet_druhy = HeslarPredmetDruh.objects.all()
+    odbodi_druha = HeslarObdobiDruha.objects.all()
+    specofikace_druha = HeslarSpecifikacePredmetu.objects.all()
 
     for det in detektors:
         f_data = det['0']
-
         try:
             for i in det_const.DETECTOR_STATE_CACHE:
                 if i[0] == int(f_data['stav']):
@@ -364,33 +420,54 @@ def table_view(request, params_dict):
                     break
         except Exception as ex:
             logger.warning(ex)
-            f_data['stav'] = 'N/A'
+            f_data['stav'] = ''
         try:
             f_data['nalezce'] = NAME_CACHE[int(f_data['nalezce'])]
         except:
             logger.debug("Could not map finder to name")
-            f_data['nalezce'] = 'N/A'
+            f_data['nalezce'] = ''
         try:
-            f_data['druh_nalezu'] = PREDMET_KIND_CACHE[int(f_data['druh_nalezu'])]
+            for druh in predmet_druhy:
+                if druh.id == int(f_data['druh_nalezu']):
+                    if language == 'cs':
+                        f_data['druh_nalezu'] = druh.nazev
+                    elif language == 'en':
+                        f_data['druh_nalezu'] = druh.en
+                    break
         except:
-            f_data['druh_nalezu'] = 'N/A'
+            f_data['druh_nalezu'] = ''
         try:
-            f_data['specifikace'] = OBJECT_SPECIFICATION_CACHE[int(f_data['specifikace'])]
+            for spec in specofikace_druha:
+                if spec.id == int(f_data['specifikace']):
+                    if language == 'cs':
+                        f_data['specifikace'] = spec.nazev
+                    elif language == 'en':
+                        f_data['specifikace'] = spec.en
+                    break
         except:
-            f_data['specifikace'] = 'N/A'
+            f_data['specifikace'] = ''
         try:
-            f_data['obdobi'] = OBDOBI_DICT[int(f_data['obdobi'])]
+            for obdobi in odbodi_druha:
+                if obdobi.id == int(f_data['obdobi']):
+                    if language == 'cs':
+                        f_data['obdobi'] = obdobi.nazev
+                    elif language == 'en':
+                        f_data['obdobi'] = obdobi.en
+                    break
         except:
-            f_data['obdobi'] = 'N/A'
+            f_data['obdobi'] = ''
         try:
-            f_data['predano_organizace'] = ORGANIZACE_DICT[int(f_data['predano_organizace'])]
+            for o in organizace:
+                if o[0] == int(f_data['predano_organizace']):
+                    f_data['predano_organizace'] = o[1]
+                    break
         except:
-            f_data['predano_organizace'] = 'N/A'
+            f_data['predano_organizace'] = ''
 
         if f_data['predano'] == 't':
-            f_data['predano'] = 'Ano'
+            f_data['predano'] = _('Ano')
         else:
-            f_data['predano'] = 'Ne'
+            f_data['predano'] = _('Ne')
 
         if f_data['inv_cislo'] == '-1':
             f_data['inv_cislo'] = ''
@@ -400,14 +477,14 @@ def table_view(request, params_dict):
             else:
                 f_data['datum_vlozeni'] = ''
         except:
-            f_data['datum_vlozeni'] = 'N/A'
+            f_data['datum_vlozeni'] = ''
         try:
             if f_data['datum_archivace'] != '-1':
                 f_data['datum_archivace'] = helper_doc.epoch_timestamp_to_datetime(int(f_data['datum_archivace']))
             else:
                 f_data['datum_archivace'] = ''
         except:
-            f_data['datum_archivace'] = 'N/A'
+            f_data['datum_archivace'] = ''
 
         try:
             kat_id = int(f_data['katastr'])
@@ -416,8 +493,8 @@ def table_view(request, params_dict):
             f_data['katastr'] = kataster[:kataster.index('(') - 1]
             f_data['okres'] = kataster[kataster.index('(') + 1:kataster.index(')')]
         except:
-            f_data['katastr'] = 'N/A'
-            f_data['okres'] = 'N/A'
+            f_data['katastr'] = ''
+            f_data['okres'] = ''
 
         docArray.append(f_data)
     return docArray
@@ -563,8 +640,8 @@ def cooperate(request, **kwargs):
         s['archeolog'] = archeolog.prijmeni + ', ' + archeolog.jmeno
         s['archeolog_organizace'] = archeologOrg.nazev_zkraceny
         s['archeolog_email'] = archeolog.email
-        s['aktivni'] = helper_doc.bool_to_str(s['aktivni'])
-        s['potvrzeno'] = helper_doc.bool_to_str(s['potvrzeno'])
+        s['aktivni'] = c.BOOL_DICT[s['aktivni']]
+        s['potvrzeno'] = c.BOOL_DICT[s['potvrzeno']]
         s['badatel_ident'] = badatel.ident_cely
         s['archeolog_ident'] = archeolog.ident_cely
         s['datum_vytvoreni'] = helper_doc.epoch_timestamp_to_datetime(s['datum_vytvoreni'])
@@ -746,6 +823,8 @@ def updateCooperation(request, pk, **kwargs):
         'spoluprace': spoluprace,
         'badatel_name': badatel_name,
         'archeolog_name': archeolog_name,
+        'archeolog_id': spoluprace.archeolog.id.id,
+        'badatel_id': spoluprace.badatel.id.id
     }
 
     return render(request, 'detectors/vazbaSpoluprace_update_form.html', {'form': form, 'context': context})

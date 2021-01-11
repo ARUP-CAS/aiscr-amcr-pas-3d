@@ -7,7 +7,7 @@
     $('.menu_detectors').addClass('active')
     $('.menu_cooperate_det').addClass('active')
 </script>
-<div class="page-title-area title-det mb-5">
+<div class="page-title-area title-det mb-4">
     <div class="row align-items-center">
         <div class="col-sm-12">
             <div class="breadcrumbs-area clearfix">
@@ -31,7 +31,7 @@
 </div>
 
 <div class="main-content-inner mr-5 mb-5">
-    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+    <div class="col-12 col-md-6">
         {% if context.nepotvrzeno %}
         <p class="h2 font-weight-light card-heading ml-0">{% trans "Potvrzení spolupráce" %}</p>
         {% else %}
@@ -41,69 +41,68 @@
             <div class="card-body">
                 <!-- First col -->
                 <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                        <form method="post">
+                    <div class="col-12 col-md-12">
+                        <form method="post" autocomplete="off">
                             {% csrf_token %}
                             {% if context.nepotvrzeno %}
-                            <div class="form-check" hidden>
-                                {% render_field form.aktivni class="form-check-input" id="aktivni" %}
-                                <label for="aktivni">{{ form.aktivni.label }}</label>
-                            </div>
-                            <div class="form-check" hidden>
-                                {% render_field form.potvrzeno class="form-check-input" id="Potvrzeno" checked="true" %}
-                                <label for="Potvrzeno">{{ form.potvrzeno.label }}</label>
-                            </div>
-                            <p class="coop-confirm-msg">Badatel {{ context.badatel_name }} žádá o potvrzení spolupráce s
-                                archeologem {{ context.archeolog_name }}.</p>
+                                <div class="form-check" hidden>
+                                    {% render_field form.aktivni class="form-check-input" id="aktivni" %}
+                                    <label for="aktivni">{{ form.aktivni.label }}</label>
+                                </div>
+                                <div class="form-check" hidden>
+                                    {% render_field form.potvrzeno class="form-check-input" id="Potvrzeno" checked="true" %}
+                                    <label for="Potvrzeno">{{ form.potvrzeno.label }}</label>
+                                </div>
+                                <p class="coop-confirm-msg">{% trans "Badatel" %} {{ context.badatel_name }} {% trans "žádá o potvrzení spolupráce s archeologem" %} {{ context.archeolog_name }}.</p>
                             {% else %}
-                            <p class="coop-confirm-msg">Spolupráce badatele {{ context.badatel_name }} a archeologa
-                                {{ context.archeolog_name }}.</p>
-                            <br>
-                            {% with 'Archeolog Archivář Admin' as list_archeolog %}
-                            <!-- Badatel nemuze aktivovat spolupraci -->
-                            {% if userDetail.role_opravneni.role in list_archeolog or context.aktivni_spoluprace%}
-                            <div class="form-check">
-                                {% render_field form.aktivni class="form-check-input" id="aktivni" %}
-                                <label for="aktivni">{{ form.aktivni.label }}</label>
-                            </div>
-                            {% else %}
-                            <div class="form-check">
-                                {% render_field form.aktivni disabled=True class="form-check-input" id="aktivni" %}
-                                <label for="aktivni">{{ form.aktivni.label }}</label>
-                            </div>
-                            {% endif %}
-                            {% endwith %}
-                            <div class="form-check" hidden>
-                                {% render_field form.potvrzeno class="form-check-input" id="Potvrzeno" %}
-                                <label for="Potvrzeno">{{ form.potvrzeno.label }}</label>
-                            </div>
+                                <p class="coop-confirm-msg">{% trans "Spolupráce badatele" %} {{ context.badatel_name }} {% trans "a archeologa" %}
+                                    {{ context.archeolog_name }}.</p>
+                                <br>
+                                {% with 'Archivář Admin' as list_archeolog %}
+                                    <!-- Badatel nemuze aktivovat spolupraci -->
+                                    {% if userDetail.role_opravneni.role in list_archeolog or context.badatel_id == userDetail.id or context.archeolog_id == userDetail.id %}
+                                        <div class="form-check">
+                                            {% render_field form.aktivni class="form-check-input" id="aktivni" %}
+                                            <label for="aktivni">{{ form.aktivni.label }}</label>
+                                        </div>
+                                    {% else %}
+                                        <div class="form-check">
+                                            {% render_field form.aktivni disabled=True class="form-check-input" id="aktivni" %}
+                                            <label for="aktivni">{{ form.aktivni.label }}</label>
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+                                <div class="form-check" hidden>
+                                    {% render_field form.potvrzeno class="form-check-input" id="Potvrzeno" %}
+                                    <label for="Potvrzeno">{{ form.potvrzeno.label }}</label>
+                                </div>
                             {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 pl-3">
+    <div class="col-12 col-md-6 pl-3">
         {% if context.nepotvrzeno %}
-        {% with 'Archeolog Archivář Admin' as list_archeolog %}
-        {% if userDetail.role_opravneni.role in list_archeolog %}
-        <input type="button" class="btn btn-amcr col-12 col-sm-12 col-md-5 col-lg-3 col-xl-3" data-toggle="modal"
-            data-target="#confirm_coop" value="{% trans "Potvrdit" %}">
+            {% with 'Archivář Admin' as list_archeolog %}
+                {% if userDetail.role_opravneni.role in list_archeolog or context.archeolog_id == userDetail.id %}
+                    <input type="button" class="btn btn-amcr col-12 col-md-5 col-lg-3 mt-2" data-toggle="modal"
+                        data-target="#confirm_coop" value="{% trans "Potvrdit" %}">
+                {% else %}
+                    <input type="submit" data-toggle="tooltip" title="{% trans "Spolupráci může potvrdit pouze archeolog a archivář." %}"
+                        data-placement="bottom" class="btn btn-amcr col-12 col-md-5 col-lg-3 mt-2" disabled
+                        value="{% trans "Potvrdit" %}">
+                {% endif %}
+            {% endwith %}
         {% else %}
-        <input type="submit" data-toggle="tooltip" title="Spolupráci může potvrdit pouze archeolog a archivář."
-            data-placement="bottom" class="btn btn-amcr col-12 col-sm-12 col-md-5 col-lg-3 col-xl-3" disabled
-            value="{% trans "Potvrdit" %}">
-        {% endif %}
-        {% endwith %}
-        {% else %}
-        {% with 'Archeolog Archivář Admin' as list_archeolog %}
-        {% if userDetail.role_opravneni.role in list_archeolog or context.aktivni_spoluprace %}
-        <input type="submit" class="btn btn-amcr col-12 col-sm-12 col-md-5 col-lg-3 col-xl-3" value="{% trans "Uložit" %}">
-        {% else %}
-        <input type="submit" title="Spolupráci může aktivovat pouze archeolog a archivář."
-            class="btn btn-amcr col-12 col-sm-12 col-md-5 col-lg-3 col-xl-3" disabled value="{% trans "Uložit" %}">
-        {% endif %}
-        {% endwith %}
+            {% with 'Archivář Admin' as list_archeolog %}
+                {% if userDetail.role_opravneni.role in list_archeolog or context.badatel_id == userDetail.id or context.archeolog_id == userDetail.id %}
+                    <input type="submit" class="btn btn-amcr col-12 col-md-5 col-lg-3 mt-2" value="{% trans "Uložit" %}">
+                {% else %}
+                    <input type="submit" title="{% trans "Spolupráci může aktivovat pouze archeolog a archivář." %}"
+                    class="btn btn-amcr col-12 col-md-5 col-lg-3 mt-2" disabled value="{% trans "Uložit" %}">
+                {% endif %}
+            {% endwith %}
         {% endif %}
         <!-- MODAL POTVRDIT SPOLUPRACI -->
         <div class="modal fade" id="confirm_coop" tabindex="-1" role="dialog" aria-labelledby="confirmCoopTitle"
