@@ -14,7 +14,7 @@ from xml.parsers.expat import ExpatError
 logger = logging.getLogger(__name__)
 
 MOCK_SERVER_ADDR = "http://localhost:8888/"
-DEV_SERVER_ADDR = 'http://' + settings.AMCR_API + "/xmlrpc/0/?t=600"
+DEV_SERVER_ADDR = 'https://' + settings.AMCR_API + "/xmlrpc/0/?t=600"
 SERVER_ADDR = ''
 
 # ------- Requests on the development server --------
@@ -160,7 +160,7 @@ def hledej_detektor(sessionId, params):
         'druh_nalezu': '',
         'specifikace': '',
         'pocet': '',
-        #'limit': '10', # Takle php server nestrankuje detektory
+        'limit': '10000', # Je potreba mit jinak server nastavi limit na 50
         #'stranka': '0',
         'poznamka': '',
         'nalezce': '-1',

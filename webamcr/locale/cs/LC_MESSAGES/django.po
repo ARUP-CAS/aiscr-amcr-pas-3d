@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AMCR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-12 19:25+0100\n"
+"POT-Creation-Date: 2021-03-04 12:09+0100\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +54,7 @@ msgstr "Jazyk"
 #: .\amcrusers\forms.py:21 .\amcrusers\forms.py:37
 #: .\amcrusers\templates\amcrusers\tables\users_table.html:20
 #: .\base_templates\base.html:177 .\base_templates\base.html:341
-#: .\detectors\forms.py:74
+#: .\detectors\forms.py:101
 #: .\detectors\templates\components\history_table.html:15
 #: .\documents\forms.py:37 .\documents\forms.py:79
 #: .\documents\templates\components\history_table_doc.html:15
@@ -366,7 +366,7 @@ msgstr "Huld s. r. o."
 msgid "Přihlášený uživatel"
 msgstr "Přihlášený uživatel"
 
-#: .\base_templates\base.html:337 .\detectors\forms.py:67
+#: .\base_templates\base.html:337 .\detectors\forms.py:94
 #: .\detectors\templates\components\history_table.html:13
 #: .\documents\forms.py:32
 #: .\documents\templates\components\history_table_doc.html:13
@@ -518,63 +518,86 @@ msgstr "Vytvoření uživatele"
 msgid "Změna role"
 msgstr "Změna role"
 
-#: .\detectors\forms.py:20 .\detectors\forms.py:54
+#: .\detectors\forms.py:21 .\detectors\forms.py:81
 msgid "Projekt"
 msgstr "Projekt"
 
-#: .\detectors\forms.py:21 .\detectors\forms.py:58
+#: .\detectors\forms.py:24
+msgid ""
+"Správné přiřazení k projektu ověřte u archeologa, se kterým spolupracujete."
+msgstr ""
+
+#: .\detectors\forms.py:26 .\detectors\forms.py:85
 msgid "Katastrální území"
 msgstr "Katastrální území"
 
-#: .\detectors\forms.py:22
+#: .\detectors\forms.py:27
 msgid "Vyplněno automaticky"
 msgstr "Vyplněno automaticky"
 
-#: .\detectors\forms.py:23 .\detectors\templates\components\table.html:24
+#: .\detectors\forms.py:29 .\detectors\templates\components\table.html:24
 #: .\documents\templates\documents\create.html:139
 msgid "Lokalizace"
 msgstr "Lokalizace"
 
-#: .\detectors\forms.py:25
+#: .\detectors\forms.py:31
+msgid ""
+"Slovní popis lokalizace formou parcelního čísla a/nebo pomístního jména "
+"(jména ulic, tratí, poloh)."
+msgstr ""
+
+#: .\detectors\forms.py:34
 msgid "Souř. systém"
 msgstr "Souř. systém"
 
-#: .\detectors\forms.py:26 .\documents\forms.py:68
+#: .\detectors\forms.py:35 .\documents\forms.py:68
 msgid "Šířka (N / Y)"
 msgstr "Šířka (N / Y)"
 
-#: .\detectors\forms.py:27 .\documents\forms.py:69
+#: .\detectors\forms.py:36 .\documents\forms.py:69
 msgid "Délka (E / X)"
 msgstr "Délka (E / X)"
 
-#: .\detectors\forms.py:28 .\detectors\forms.py:62
+#: .\detectors\forms.py:37 .\detectors\forms.py:89
 #: .\detectors\templates\components\table.html:28
 msgid "Nálezce"
 msgstr "Nálezce"
 
-#: .\detectors\forms.py:29 .\detectors\templates\components\table.html:29
+#: .\detectors\forms.py:38 .\detectors\templates\components\table.html:29
 msgid "Datum nálezu"
 msgstr "Datum nálezu"
 
-#: .\detectors\forms.py:30 .\detectors\templates\detectors\create.html:118
+#: .\detectors\forms.py:39 .\detectors\templates\detectors\create.html:118
 msgid "Nálezové okolnosti"
 msgstr "Nálezové okolnosti"
 
-#: .\detectors\forms.py:31
+#: .\detectors\forms.py:43
 msgid "Hloubka (cm)"
 msgstr "Hloubka (cm)"
 
-#: .\detectors\forms.py:32 .\detectors\forms.py:69
+#: .\detectors\forms.py:45
+msgid ""
+"Přibližná hloubka, ze které byl nález získán. Povrchové nálezy označte "
+"hloubkou 0."
+msgstr ""
+
+#: .\detectors\forms.py:47 .\detectors\forms.py:96
 #: .\detectors\templates\components\table.html:25 .\documents\forms.py:46
 #: .\documents\forms.py:84
 msgid "Období"
 msgstr "Období"
 
-#: .\detectors\forms.py:33 .\documents\forms.py:71
+#: .\detectors\forms.py:49 .\documents\forms.py:71
 msgid "Přesná datace"
 msgstr "Přesná datace"
 
-#: .\detectors\forms.py:34 .\detectors\forms.py:70
+#: .\detectors\forms.py:51
+msgid ""
+"Upřesněná datace, např. pomocí roku (pro mince) nebo stupňů (Lt B2/C1; "
+"nikoli však pouze B2/C1)."
+msgstr ""
+
+#: .\detectors\forms.py:53 .\detectors\forms.py:97
 #: .\detectors\templates\components\table.html:20
 #: .\detectors\templates\components\table.html:26
 #: .\detectors\templates\detectors\create.html:40
@@ -582,106 +605,116 @@ msgstr "Přesná datace"
 msgid "Nález"
 msgstr "Nález"
 
-#: .\detectors\forms.py:37 .\detectors\forms.py:72
+#: .\detectors\forms.py:56 .\detectors\forms.py:99
 #: .\detectors\templates\components\table.html:27
 msgid "Materiál"
 msgstr "Materiál"
 
-#: .\detectors\forms.py:38 .\documents\forms.py:94
+#: .\detectors\forms.py:57 .\documents\forms.py:94
 #: .\documents\templates\components\finding-table.html:16
 msgid "Počet"
 msgstr "Počet"
 
-#: .\detectors\forms.py:39
+#: .\detectors\forms.py:59
 msgid "Poznámka / bližší popis"
 msgstr "Poznámka / bližší popis"
 
-#: .\detectors\forms.py:42
+#: .\detectors\forms.py:61
+msgid "Interpretace či bližší popis nálezu a jeho okolností."
+msgstr ""
+
+#: .\detectors\forms.py:65
 msgid "Předáno organizaci"
 msgstr "Předáno organizaci"
 
-#: .\detectors\forms.py:43 .\detectors\forms.py:76
+#: .\detectors\forms.py:67 .\detectors\forms.py:103
 #: .\detectors\templates\components\table.html:31
 msgid "Evidenční číslo"
 msgstr "Evidenční číslo"
 
-#: .\detectors\forms.py:44
+#: .\detectors\forms.py:69
+msgid ""
+"Označení nálezu v organizaci, které byl předán. V případě využití čísla "
+"podle AMČR-PAS doplňte pouze \"PAS\"."
+msgstr ""
+
+#: .\detectors\forms.py:71
 msgid "Nález předán"
 msgstr "Nález předán"
 
-#: .\detectors\forms.py:45 .\detectors\forms.py:78
+#: .\detectors\forms.py:72 .\detectors\forms.py:105
 msgid "Přístupnost"
 msgstr "Přístupnost"
 
-#: .\detectors\forms.py:46 .\documents\forms.py:98
+#: .\detectors\forms.py:73 .\documents\forms.py:98
 #: .\documents\templates\components\finding-table.html:13
 msgid "Typ nálezu"
 msgstr "Typ nálezu"
 
-#: .\detectors\forms.py:55
+#: .\detectors\forms.py:82
 msgid "ID nálezu"
 msgstr "ID nálezu"
 
-#: .\detectors\forms.py:56 .\documents\forms.py:17
+#: .\detectors\forms.py:83 .\documents\forms.py:17
 msgid "Procesní stavy"
 msgstr "Procesní stavy"
 
-#: .\detectors\forms.py:60 .\detectors\templates\components\table.html:22
+#: .\detectors\forms.py:87 .\detectors\templates\components\table.html:22
 msgid "Okres"
 msgstr "Okres"
 
-#: .\detectors\forms.py:61 .\documents\forms.py:20
+#: .\detectors\forms.py:88 .\documents\forms.py:20
 msgid "Sledovat změny"
 msgstr "Sledovat změny"
 
-#: .\detectors\forms.py:63
+#: .\detectors\forms.py:90
 msgid "Datum změny od"
 msgstr "Datum změny od"
 
-#: .\detectors\forms.py:64
+#: .\detectors\forms.py:91
 msgid "Datum změny do"
 msgstr "Datum změny do"
 
-#: .\detectors\forms.py:65
+#: .\detectors\forms.py:92
 msgid "Nalezeno od"
 msgstr "Nalezeno od"
 
-#: .\detectors\forms.py:66
+#: .\detectors\forms.py:93
 msgid "Nalezeno do"
 msgstr "Nalezeno do"
 
-#: .\detectors\forms.py:68
+#: .\detectors\forms.py:95
 msgid "Popisné údaje"
 msgstr "Popisné údaje"
 
-#: .\detectors\forms.py:75
+#: .\detectors\forms.py:102
 msgid "Vedoucí projektu"
 msgstr "Vedoucí projektu"
 
-#: .\detectors\forms.py:77 .\detectors\templates\components\table.html:32
+#: .\detectors\forms.py:104 .\detectors\templates\components\table.html:32
 msgid "Předáno"
 msgstr "Předáno"
 
-#: .\detectors\forms.py:84
+#: .\detectors\forms.py:111
 #: .\detectors\templates\components\spoluprace_table.html:22
 msgid "Archeolog"
 msgstr "Archeolog"
 
-#: .\detectors\forms.py:84
+#: .\detectors\forms.py:111
 msgid "Zadejte email archeologa pro spolupráci"
 msgstr "Zadejte email archeologa pro spolupráci"
 
-#: .\detectors\forms.py:89
+#: .\detectors\forms.py:116
 #: .\detectors\templates\components\spoluprace_table.html:25
 msgid "Aktivní"
 msgstr "Aktivní"
 
-#: .\detectors\forms.py:90
+#: .\detectors\forms.py:117
 #: .\detectors\templates\components\spoluprace_table.html:26
 msgid "Potvrzeno"
 msgstr "Potvrzeno"
 
-#: .\detectors\forms.py:95
+#: .\detectors\forms.py:122
 msgid "Důvod vrácení"
 msgstr "Důvod vrácení"
 
@@ -706,7 +739,7 @@ msgstr "Výpis"
 
 #: .\detectors\templates\components\button-group-det.html:58
 #: .\detectors\templates\components\button-group-det.html:64
-#: .\documents\constants.py:299
+#: .\documents\constants.py:298
 #: .\documents\templates\components\button-group.html:34
 #: .\documents\templates\components\button-group.html:38
 msgid "Archivovat"
@@ -966,7 +999,7 @@ msgstr "Datum zápisu"
 msgid "Datum Archivace"
 msgstr "Datum archivace"
 
-#: .\detectors\templates\detectors\choose.html:212 .\documents\constants.py:286
+#: .\detectors\templates\detectors\choose.html:212 .\documents\constants.py:285
 #: .\documents\templates\documents\choose.html:192
 msgid "Vybrat"
 msgstr "Vybrat"
@@ -1003,7 +1036,7 @@ msgstr "Nemáte příslušné oprávnění."
 #: .\detectors\templates\detectors\create.html:105
 #: .\detectors\templates\detectors\vazbaSpoluprace_update_form.html:90
 #: .\detectors\templates\detectors\vazbaSpoluprace_update_form.html:94
-#: .\documents\constants.py:298
+#: .\documents\constants.py:297
 msgid "Potvrdit"
 msgstr "Potvrdit"
 
@@ -1152,7 +1185,7 @@ msgid "Nahrání fotografie"
 msgstr "Nahrání fotografie"
 
 #: .\detectors\templates\detectors\uploadFile.html:46
-#: .\documents\constants.py:287
+#: .\documents\constants.py:286
 #: .\documents\templates\documents\uploadFile.html:45
 msgid "Nahrát"
 msgstr "Nahrát"
@@ -1358,92 +1391,92 @@ msgstr "nerevidovaný"
 msgid "Změna autora"
 msgstr "Změna autora"
 
-#: .\documents\constants.py:232
+#: .\documents\constants.py:231
 msgid "Sídlištní"
 msgstr "Sídlištní"
 
-#: .\documents\constants.py:233
+#: .\documents\constants.py:232
 msgid "Pohřební"
 msgstr "Pohřební"
 
-#: .\documents\constants.py:234
+#: .\documents\constants.py:233
 msgid "Výrobní"
 msgstr "Výrobní"
 
-#: .\documents\constants.py:235
+#: .\documents\constants.py:234
 msgid "Těžební"
 msgstr "Těžební"
 
-#: .\documents\constants.py:236
+#: .\documents\constants.py:235
 msgid "Kulturní"
 msgstr "Kultovní"
 
-#: .\documents\constants.py:237
+#: .\documents\constants.py:236
 msgid "Komunikace"
 msgstr "Komunikace"
 
-#: .\documents\constants.py:238
+#: .\documents\constants.py:237
 msgid "Deponování"
 msgstr "Deponování"
 
-#: .\documents\constants.py:239
+#: .\documents\constants.py:238
 msgid "Boj"
 msgstr "Boj"
 
-#: .\documents\constants.py:240
+#: .\documents\constants.py:239
 msgid "Jiná"
 msgstr "Jiná"
 
-#: .\documents\constants.py:241
+#: .\documents\constants.py:240
 msgid "Intruze"
 msgstr "Intruze"
 
-#: .\documents\constants.py:282
+#: .\documents\constants.py:281
 msgid "Hlavní menu"
 msgstr "Hlavní menu"
 
-#: .\documents\constants.py:283
+#: .\documents\constants.py:282
 msgid "Domů"
 msgstr "Domů"
 
-#: .\documents\constants.py:284
+#: .\documents\constants.py:283
 #: .\documents\templates\components\create-basic-information.html:88
 msgid "Zapsat"
 msgstr "Zapsat"
 
-#: .\documents\constants.py:290
+#: .\documents\constants.py:289
 msgid "Knihovna 3D"
 msgstr "Knihovna 3D"
 
-#: .\documents\constants.py:291
+#: .\documents\constants.py:290
 msgid "AMČR-PAS"
 msgstr "AMČR-PAS"
 
-#: .\documents\constants.py:292
+#: .\documents\constants.py:291
 msgid "Spravovat"
 msgstr "Spravovat"
 
-#: .\documents\constants.py:293
+#: .\documents\constants.py:292
 msgid "Moje modely"
 msgstr "Moje modely"
 
-#: .\documents\constants.py:296
+#: .\documents\constants.py:295
 msgid "Samostatné nálezy"
 msgstr "Samostatné nálezy"
 
-#: .\documents\constants.py:297
+#: .\documents\constants.py:296
 msgid "Spolupráce"
 msgstr "Spolupráce"
 
-#: .\documents\constants.py:300
+#: .\documents\constants.py:299
 msgid "Vybrané nálezy"
 msgstr "Vybrané nálezy"
 
-#: .\documents\constants.py:301
+#: .\documents\constants.py:300
 msgid "Moje nálezy"
 msgstr "Moje nálezy"
 
-#: .\documents\constants.py:304
+#: .\documents\constants.py:303
 msgid "Uživatelský účet"
 msgstr "Uživatelský účet"
 
@@ -1837,6 +1870,21 @@ msgstr "Nemáte účet?"
 #: .\documents\templates\documents\login.html:84
 msgid "Zaregistrovat se"
 msgstr "Zaregistrovat se"
+
+#: .\documents\templates\documents\login.html:108
+msgid "Souhlas s používáním cookies"
+msgstr ""
+
+#: .\documents\templates\documents\login.html:111
+msgid ""
+"Tento web pro své fungování využívá cookies, které slouží k uložení "
+"základních informací o přihlášení a nastavení webu. Užívané cookies neslouží "
+"ke sběru žádných údajů o chování uživatele."
+msgstr ""
+
+#: .\documents\templates\documents\login.html:115
+msgid "Souhlasím"
+msgstr ""
 
 #: .\documents\templates\documents\uploadFile.html:35
 msgid "Nahrání obrázku"

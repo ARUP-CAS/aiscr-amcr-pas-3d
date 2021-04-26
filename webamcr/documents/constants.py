@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class AmcrConstants:
-    AMCR_VERSION = '1.1.3'
+    AMCR_VERSION = '1.1.7'
 
     BOOL_CHOICES = ((True, _('Ano')), (False, _('Ne')))
     BOOL_DICT = {

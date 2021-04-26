@@ -125,7 +125,7 @@
                                             <label
                                                 for="detector_project">{{ formDetCreate.detector_project.label }}</label>
                                             {% if canProject  %}
-                                            {% render_field formDetCreate.detector_project class="form-control form-control-sm selectpicker" id="detector_project" data-live-search="true"%}
+                                            {% render_field formDetCreate.detector_project class="form-control form-control-sm selectpicker" id="detector_project" data-live-search="true" %}
                                             {% else %}
                                             {% render_field formDetCreate.detector_project|append_attr:"readonly:readonly" class="form-control form-control-sm selectpicker" id="detector_project" data-live-search="true" %}
                                             {% endif %}
@@ -588,4 +588,5 @@
         });
 
     </script>
+
 {% endblock %}

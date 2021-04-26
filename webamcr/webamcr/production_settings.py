@@ -170,19 +170,19 @@ HOSTNAME = socket.gethostname()
 AMCR_API = ''
 DOMAIN_NAME = ''
 if (HOSTNAME == 'amc-test'):
-    AMCR_API = 'api-test.archeologickamapa.cz'
+    AMCR_API = 'backend-test.aiscr.cz'
     DOMAIN_NAME = 'amcr-test.aiscr.cz'
 elif (HOSTNAME == 'amc-tr'):
     AMCR_API = 'api-tr.archeologickamapa.cz'
     DOMAIN_NAME = 'amcr-tr.aiscr.cz'
 elif (HOSTNAME == 'amc'):
-    AMCR_API = 'api.archeologickamapa.cz'
+    AMCR_API = 'backend.aiscr.cz'
     DOMAIN_NAME = 'amcr.aiscr.cz'
 elif 'amcr-dev2' in HOSTNAME:
     AMCR_API = '192.168.254.21'
     DOMAIN_NAME = 'amcr-dev2.aiscr.cz'
 else:
-    AMCR_API = 'api-dev.archeologickamapa.cz'
+    AMCR_API = 'backend-dev.aiscr.cz'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

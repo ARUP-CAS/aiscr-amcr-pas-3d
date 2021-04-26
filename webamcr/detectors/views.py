@@ -517,7 +517,6 @@ def choose(request, **kwargs):
     user_id = str(curr_user['id'])
     if request.method == 'POST':
         form = make_ChooseDetectorForm(user_id, user_sid, request.POST)
-
         if form.is_valid():
             detector_project_id = form.data.get('detector_project_id')
             detector_finding_id = form.data.get('detector_finding_id')
@@ -529,7 +528,6 @@ def choose(request, **kwargs):
             detector_date_of_change_to = form.data.get('detector_date_of_change_to')
             detector_find_date_from = form.data.get('detector_find_date_from')
             detector_find_date_to = form.data.get('detector_find_date_to')
-            detector_user = form.data.get('detector_user')
             detector_description_details = form.data.get('detector_description_details')
             detector_dating = form.data.get('detector_dating')
             detector_kind = form.data.get('detector_kind')
@@ -564,8 +562,6 @@ def choose(request, **kwargs):
                 params['datum_nalezu_od'] = str(detector_find_date_from)
             if (detector_find_date_to):
                 params['datum_nalezu_do'] = str(detector_find_date_to)
-            if (detector_user):
-                params['uzivatel'] = str(detector_user)
             if (detector_description_details):
                 params['popis'] = str(detector_description_details)
             if (detector_dating):
