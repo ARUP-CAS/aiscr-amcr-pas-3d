@@ -113,7 +113,7 @@ def projekty_vyzkumne():
     return projekty
 
 def projekty_zahajene_ukoncene_v_terenu(projekty):
-    return projekty.filter(Q(stav=dc.PROJEKT_STAV_UKONCENY) | Q(stav=dc.PROJEKT_STAV_ZAHAJENY))
+    return projekty.filter(Q(stav=dc.PROJEKT_STAV_UKONCENY) | Q(stav=dc.PROJEKT_STAV_ZAHAJENY)).order_by("-ident_cely")
 
 def prijmeni_jmeno():
     qs = models.HeslarJmena.objects.annotate(prijmeni_jmeno=Concat('prijmeni', Value(', '), 'jmeno')).all()

@@ -2,6 +2,8 @@
 {% load static %}
 {% load i18n %}
 {% block head %}
+<script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/extensions/export/bootstrap-table-export.min.js"></script>
 <script src="{% static "/js/bootstrap-table-mobile.min.js" %}"></script>
 {% endblock %}
 {% block content %}
@@ -45,10 +47,22 @@
 
 {% block script %}
     <script>
-        $(document).ready(function () {
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
-            })
+    $(document).ready(function () {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
         })
-    </script>
+
+        var $table = $('#coop_table')
+        //Export data types
+        $table.bootstrapTable('refreshOptions',{
+            exportTypes: ['csv', 'xml', 'json'],
+            exportOptions: {
+                fileName: function () {
+                    return getExportDate()
+                },
+                ignoreColumn: ['detail', 'historie']
+            }
+        })
+    })
+</script>
 {% endblock %}

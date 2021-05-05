@@ -48,7 +48,7 @@ def upload(request, projectId, findingIdentCely, **kwargs):
         allowed_types = ['.jpg', '.jpeg', '.tiff', '.tif', '.png']
         allowed_type = False
         for i in allowed_types:
-            if uploadedFile.name.endswith(i):
+            if uploadedFile.name.lower().endswith(i):
                 allowed_type = True
                 break
         if not allowed_type:
