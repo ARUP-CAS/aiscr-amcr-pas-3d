@@ -274,7 +274,7 @@
                 point_global_JTSK = [-Math.round(jtsk_coor[0] * 100) / 100, -Math.round(jtsk_coor[1] * 100) / 100]
                 return true;
             } else if(document.getElementById('detector_system_coordinates').value ==2){
-                $.getJSON( "http://epsg.io/trans?x="+Math.round(corX * 100) / 100+"&y="+Math.round(corY * 100) / 100+"&s_srs=5514&t_srs=4326", function(data){
+                $.getJSON( "https://epsg.io/trans?x="+Math.round(corX * 100) / 100+"&y="+Math.round(corY * 100) / 100+"&s_srs=5514&t_srs=4326", function(data){
                             point_global_WGS84 = [Math.round(data.y * 1000000) / 1000000, Math.round(data.x * 1000000) / 1000000]
                             point_global_JTSK = [Math.round(corX * 100) / 100, Math.round(corY * 100) / 100]
                             return true;

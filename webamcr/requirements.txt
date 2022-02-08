@@ -15,3 +15,5 @@ rq==1.2.2
 Shapely==1.7.0
 six==1.14.0
 sqlparse==0.3.0
+django-debug-toolbar==3.1.1
+django-debug-toolbar-template-profiler==2.0.2

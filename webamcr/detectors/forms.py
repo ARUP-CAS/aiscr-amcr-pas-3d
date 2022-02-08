@@ -40,7 +40,7 @@ def make_CreateDetectorForm(user_id, user_sid, initial={}, editProject=False):
             max_value=2147483647, 
             label=_('Hloubka (cm)'), 
             required=False,
-            widget=forms.TextInput(attrs={'title':_("Přibližná hloubka, ze které byl nález získán. Povrchové nálezy označte hloubkou 0.")}),
+            widget=forms.NumberInput(attrs={'title':_("Přibližná hloubka, ze které byl nález získán. Povrchové nálezy označte hloubkou 0."), "min": 0}),
             )
         detector_dating = forms.CharField(label=_('Období'), widget=forms.Select(choices=heslar_obdobi_12()), required=False)
         detector_exact_dating = forms.CharField(

@@ -2,6 +2,7 @@ import xmlrpc.client
 import logging
 import hashlib
 import os
+import re
 #import inspect
 
 from .constants import AmcrConstants as constants
@@ -745,7 +746,21 @@ def uploadProjectFile(sessionId, projectId, f, nalez):
     #
     # Notes: Hash je pridan depozitarem dokumentace volane metodou ukonci_pripojovani_souboru_projekty php servru
     extension = os.path.splitext(f.name)[1]
-    number = nalez.soubor_set.count() + 1
+    connected_records = nalez.soubor_set.all()
+    number = 0
+    last_number_regex = re.compile(r"f\d+\.(?:jpg|jpeg|tiff|tif|png)")
+    """
+    This loop is used because data in database are corrupted and the last inserted number may not be the highest
+    one. Thus, all connected records need to be checked.
+    """
+    for record in connected_records:
+        last_file_name = record.nazev.lower()
+        results = last_number_regex.findall(last_file_name)
+        result: str = results[-1]
+        current_number = result[1:result.find(".")]
+        if current_number.isdigit() and int(current_number) > number:
+            number = int(current_number)
+    number += 1
     newName = nalez.ident_cely + 'F' + str(number) + extension
     f.name = newName
 
