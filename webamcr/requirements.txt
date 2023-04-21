@@ -14,6 +14,6 @@ redis==3.4.1
 rq==1.2.2
 Shapely==1.7.0
 six==1.14.0
-sqlparse==0.3.0
+sqlparse==0.4.4
 django-debug-toolbar==3.1.1
 django-debug-toolbar-template-profiler==2.0.2
